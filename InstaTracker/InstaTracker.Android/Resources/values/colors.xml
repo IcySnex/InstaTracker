@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="ic_launcher_background">#000000</color>
+	<color name="splash_background">#121212</color>
+	<color name="action_bar_color">#121212</color>
+	<color name="navigation_bar_color">#1d1d1d</color>
+	<color name="color_primary">#dbb2ff</color>
+	<color name="color_primary_dark">#30009c</color>
+	<color name="color_accent">#985eff</color>
+	<color name="color_control_normal">#373737</color>
+</resources>

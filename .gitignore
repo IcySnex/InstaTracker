@@ -1,0 +1,16 @@
+.vs/
+packages/
+
+*.suo
+*.user
+_ReSharper.*
+
+
+InstaTracker/InstaTracker/bin/
+InstaTracker/InstaTracker/obj/
+
+InstaTracker/InstaTracker.Android/bin/
+InstaTracker/InstaTracker.Android/obj/
+
+InstaTracker/InstaTracker.iOS/bin/
+InstaTracker/InstaTracker.iOS/obj/
