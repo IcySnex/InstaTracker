@@ -1,0 +1,50 @@
+﻿<ContentPage
+    x:Class="InstaTracker.Components.Page"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource bd00}"
+    NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.ControlTemplate>
+        <ControlTemplate>
+            <Grid>
+                <ScrollView Margin="12,8,12,0">
+                    <ContentPresenter Content="{Binding Content}" />
+                </ScrollView>
+
+                <Frame
+                    x:Name="snackBar"
+                    Margin="12"
+                    Padding="16,12"
+                    BackgroundColor="{DynamicResource bd04}"
+                    TranslationY="75"
+                    VerticalOptions="End">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label
+                            x:Name="snackBarLabel"
+                            Margin="0,0,12,0"
+                            LineBreakMode="TailTruncation"
+                            Text="This is a SnackBar!"
+                            TextColor="{DynamicResource tl01}" />
+                        <Button
+                            x:Name="snackBarButton"
+                            Grid.Column="1"
+                            Margin="-16,-12"
+                            BackgroundColor="{DynamicResource bd04}"
+                            Clicked="OnSnackbarButtonClicked"
+                            CornerRadius="0"
+                            Text="Okay"
+                            TextColor="{DynamicResource a07}" />
+                    </Grid>
+                </Frame>
+            </Grid>
+        </ControlTemplate>
+    </ContentPage.ControlTemplate>
+</ContentPage>

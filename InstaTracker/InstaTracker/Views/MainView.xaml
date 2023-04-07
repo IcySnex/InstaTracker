@@ -1,0 +1,35 @@
+﻿<TabbedPage
+    x:Class="InstaTracker.Views.MainView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:droid="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:local="clr-namespace:InstaTracker.Views"
+    Title="InstaTracker"
+    droid:TabbedPage.ToolbarPlacement="Bottom"
+    ios:TabbedPage.TranslucencyMode="Translucent"
+    BarBackgroundColor="{DynamicResource bd01}"
+    NavigationPage.HasBackButton="True"
+    NavigationPage.HasNavigationBar="false"
+    SelectedTabColor="{DynamicResource a07}"
+    UnselectedTabColor="{DynamicResource tl02}"
+    Visual="Material">
+
+    <NavigationPage Title="Home" IconImageSource="home.png">
+        <x:Arguments>
+            <local:HomeView />
+        </x:Arguments>
+    </NavigationPage>
+
+    <NavigationPage Title="Account" IconImageSource="account.png">
+        <x:Arguments>
+            <local:AccountView />
+        </x:Arguments>
+    </NavigationPage>
+
+    <NavigationPage Title="Settings" IconImageSource="settings.png">
+        <x:Arguments>
+            <local:SettingsView />
+        </x:Arguments>
+    </NavigationPage>
+</TabbedPage>

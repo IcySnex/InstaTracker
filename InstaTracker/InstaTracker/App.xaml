@@ -1,0 +1,250 @@
+﻿<Application
+    x:Class="InstaTracker.App"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components"
+    xmlns:conv="clr-namespace:InstaTracker.Converters"
+    UserAppTheme="Dark">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!--#region CONVERTERS-->
+
+            <conv:ColorOpacityModifier x:Key="ColorOpacityModifier" />
+            <conv:IntIsNot x:Key="IntIsNot" />
+            <conv:IsNotNull x:Key="IsNotNull" />
+            <conv:IsNotNullOrEmpty x:Key="IsNotNullOrEmpty" />
+            <conv:InverseBool x:Key="InverseBool" />
+            <conv:IfTrueParameter x:Key="IfTrueParameter" />
+
+            <!--#endregion-->
+
+
+            <!--#region COLORS-->
+
+            <!--#region Background dark/light-->
+            <Color x:Key="bd00">#121212</Color>
+            <Color x:Key="bd01">#1d1d1d</Color>
+            <Color x:Key="bd02">#212121</Color>
+            <Color x:Key="bd03">#242424</Color>
+            <Color x:Key="bd04">#262626</Color>
+            <Color x:Key="bd05">#2c2c2c</Color>
+            <Color x:Key="bd06">#2d2d2d</Color>
+            <Color x:Key="bd07">#323232</Color>
+            <Color x:Key="bd08">#343434</Color>
+            <Color x:Key="bd09">#373737</Color>
+
+            <Color x:Key="bl00">#ededed</Color>
+            <Color x:Key="bl01">#e2e2e2</Color>
+            <Color x:Key="bl02">#dedede</Color>
+            <Color x:Key="bl03">#dbdbdb</Color>
+            <Color x:Key="bl04">#d9d9d9</Color>
+            <Color x:Key="bl05">#d3d3d3</Color>
+            <Color x:Key="bl06">#d2d2d2</Color>
+            <Color x:Key="bl07">#cdcdcd</Color>
+            <Color x:Key="bl08">#cbcbcb</Color>
+            <Color x:Key="bl09">#c8c8c8</Color>
+            <!--#endregion-->
+
+            <!--#region Accent-->
+            <Color x:Key="a00">#23036a</Color>
+            <Color x:Key="a01">#30009c</Color>
+            <Color x:Key="a02">#3700b3</Color>
+            <Color x:Key="a03">#3700b3</Color>
+            <Color x:Key="a04">#5600e8</Color>
+            <Color x:Key="a05">#6200ee</Color>
+            <Color x:Key="a06">#7f39fb</Color>
+            <Color x:Key="a07">#985eff</Color>
+            <Color x:Key="a08">#bb86fc</Color>
+            <Color x:Key="a09">#dbb2ff</Color>
+            <Color x:Key="a10">#f2e7fe</Color>
+            <!--#endregion-->
+
+            <!--#region System-->
+            <Color x:Key="s00">#667bcf</Color>
+            <Color x:Key="s01">#66cf68</Color>
+            <Color x:Key="s02">#cfc866</Color>
+            <Color x:Key="s03">#cf6679</Color>
+            <!--#endregion-->
+
+            <!--#region Text light/dark-->
+            <Color x:Key="tl00">#ffffffff</Color>
+            <Color x:Key="tl01">#ddffffff</Color>
+            <Color x:Key="tl02">#99ffffff</Color>
+            <Color x:Key="tl03">#5Bffffff</Color>
+
+            <Color x:Key="td00">#ff000000</Color>
+            <Color x:Key="td01">#dd000000</Color>
+            <Color x:Key="td02">#99000000</Color>
+            <Color x:Key="td03">#5B000000</Color>
+            <!--#endregion-->
+
+            <!--#endregion-->
+
+
+            <!--#region STYLES-->
+
+            <!--#region Button-->
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource bd03}" />
+                <Setter Property="TextColor" Value="{DynamicResource tl01}" />
+            </Style>
+
+            <Style x:Key="Light" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource bl03}" />
+                <Setter Property="TextColor" Value="{DynamicResource td01}" />
+            </Style>
+
+
+            <Style x:Key="Accent" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource a00}" />
+                <Setter Property="TextColor" Value="{DynamicResource tl01}" />
+            </Style>
+
+            <Style x:Key="AccentLight" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource a09}" />
+                <Setter Property="TextColor" Value="{DynamicResource td01}" />
+            </Style>
+
+
+            <Style x:Key="Outlined" TargetType="Button">
+                <Setter Property="BorderWidth" Value="2" />
+                <Setter Property="BorderColor" Value="{DynamicResource tl01}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{DynamicResource tl01}" />
+            </Style>
+
+            <Style x:Key="OutlinedAccent" TargetType="Button">
+                <Setter Property="BorderWidth" Value="2" />
+                <Setter Property="BorderColor" Value="{DynamicResource a07}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{DynamicResource a07}" />
+            </Style>
+
+            <!--#endregion-->
+
+
+            <!--#region Label-->
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource tl02}" />
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="FontSize" Value="Body" />
+                <Setter Property="TextTransform" Value="Default" />
+                <Setter Property="FontAttributes" Value="None" />
+            </Style>
+
+            <Style x:Key="ContentSecondary" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource tl02}" />
+                <Setter Property="Opacity" Value="0.7" />
+                <Setter Property="FontSize" Value="Body" />
+                <Setter Property="TextTransform" Value="Default" />
+                <Setter Property="FontAttributes" Value="None" />
+            </Style>
+
+
+            <Style x:Key="Title" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource a09}" />
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="FontSize" Value="Title" />
+                <Setter Property="TextTransform" Value="Uppercase" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="TitleSecondary" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource a08}" />
+                <Setter Property="Opacity" Value="0.7" />
+                <Setter Property="FontSize" Value="Title" />
+                <Setter Property="TextTransform" Value="Default" />
+                <Setter Property="FontAttributes" Value="None" />
+            </Style>
+
+
+            <Style x:Key="Header" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource tl02}" />
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextTransform" Value="Uppercase" />
+                <Setter Property="FontAttributes" Value="None" />
+            </Style>
+
+
+            <Style x:Key="Subpoint" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource tl03}" />
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="FontSize" Value="Caption" />
+                <Setter Property="TextTransform" Value="Default" />
+                <Setter Property="FontAttributes" Value="Italic" />
+            </Style>
+
+            <Style x:Key="SubpointSecondary" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource tl03}" />
+                <Setter Property="Opacity" Value="0.7" />
+                <Setter Property="FontSize" Value="Caption" />
+                <Setter Property="TextTransform" Value="Default" />
+                <Setter Property="FontAttributes" Value="Italic" />
+            </Style>
+
+            <!--#endregion-->
+
+            <!--#region Entries-->
+
+            <Style TargetType="com:Entry">
+                <Setter Property="ParentBackgroundColor" Value="{DynamicResource bd00}" />
+                <Setter Property="EntryBackgroundColor" Value="{DynamicResource bd03}" />
+                <Setter Property="BorderColor" Value="{DynamicResource tl02}" />
+                <Setter Property="BorderColorActive" Value="{DynamicResource a07}" />
+                <Setter Property="TextColor" Value="{DynamicResource tl01}" />
+                <Setter Property="TextColorActive" Value="{DynamicResource a07}" />
+                <Setter Property="HelperTextColor" Value="{DynamicResource tl03}" />
+                <Setter Property="ErrorTextColor" Value="{DynamicResource s03}" />
+            </Style>
+
+            <!--#endregion-->
+
+
+            <!--#region States-->
+
+            <Style TargetType="CheckBox">
+                <Setter Property="Color" Value="{DynamicResource a07}" />
+            </Style>
+
+            <Style TargetType="Switch">
+                <Setter Property="ThumbColor" Value="{DynamicResource bl09}" />
+                <Setter Property="OnColor" Value="{DynamicResource a07}" />
+            </Style>
+
+            <Style TargetType="RadioButton">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{DynamicResource tl01}" />
+            </Style>
+
+            <Style TargetType="Picker">
+                <Setter Property="BackgroundColor" Value="{DynamicResource bd03}" />
+                <Setter Property="TextColor" Value="{DynamicResource tl01}" />
+                <Setter Property="TitleColor" Value="{DynamicResource tl02}" />
+            </Style>
+
+            <!--#endregion-->
+
+
+            <!--#region Chips-->
+
+            <Style TargetType="com:Chip">
+                <Setter Property="ChipBackgroundColor" Value="{DynamicResource bd02}" />
+                <Setter Property="ChipBackgroundColorChecked" Value="{DynamicResource a09}" />
+                <Setter Property="BorderColor" Value="{DynamicResource bd05}" />
+                <Setter Property="BorderColorChecked" Value="{DynamicResource a03}" />
+                <Setter Property="TextColor" Value="{DynamicResource tl02}" />
+                <Setter Property="TextColorChecked" Value="{DynamicResource a03}" />
+            </Style>
+
+            <!--#endregion-->
+
+
+            <!--#endregion-->
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
