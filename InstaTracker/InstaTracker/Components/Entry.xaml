@@ -1,0 +1,194 @@
+﻿<Grid
+    x:Class="InstaTracker.Components.Entry"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:effects="clr-namespace:InstaTracker.Effects"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    Padding="0,5,0,0"
+    BackgroundColor="Transparent"
+    ColumnDefinitions="*, Auto"
+    RowDefinitions="Auto, Auto">
+
+    <!--  To activate animation when entry is clicked  -->
+    <Grid.GestureRecognizers>
+        <TapGestureRecognizer Tapped="EntryTapped" />
+    </Grid.GestureRecognizers>
+
+    <Frame
+        x:Name="containerFrame"
+        Grid.Row="0"
+        Grid.Column="0"
+        Grid.ColumnSpan="2"
+        Padding="1"
+        BackgroundColor="{Binding EntryBackgroundColor}"
+        BorderColor="{Binding BorderColor}"
+        CornerRadius="4"
+        HasShadow="False">
+        <StackLayout Orientation="Horizontal">
+
+            <!--  Leading icon  -->
+            <Image
+                x:Name="leadingIcon"
+                HeightRequest="24"
+                IsVisible="{Binding LeadingIcon, Converter={StaticResource IsNotNull}}"
+                Source="{Binding LeadingIcon}"
+                WidthRequest="0">
+                <Image.Triggers>
+                    <Trigger TargetType="Image" Property="IsVisible" Value="True">
+                        <Setter Property="WidthRequest" Value="24" />
+                        <Setter Property="Margin" Value="18,0,0,0" />
+                    </Trigger>
+                </Image.Triggers>
+            </Image>
+
+            <!--  The Entry  -->
+            <Entry
+                x:Name="customEntry"
+                Margin="{x:OnPlatform Android='0,-8,0,4',
+                                      iOS='0,0,0,8'}"
+                ios:Entry.CursorColor="{Binding BorderColor}"
+                BackgroundColor="{Binding EntryBackgroundColor}"
+                Focused="CustomEntryFocused"
+                FontSize="Medium"
+                HorizontalOptions="FillAndExpand"
+                IsPassword="{Binding IsPassword}"
+                MaxLength="{Binding MaxLength}"
+                ReturnCommand="{Binding ReturnCommand}"
+                Text="{Binding Text}"
+                TextColor="{Binding TextColor}"
+                Unfocused="CustomEntryUnfocused">
+                <Entry.Effects>
+                    <effects:RemoveEntryBordersEffect />
+                    <effects:RemoveEntryUnderline />
+                </Entry.Effects>
+            </Entry>
+
+            <!--  Trailing icon  -->
+            <Image
+                x:Name="trailingIcon"
+                HeightRequest="24"
+                IsVisible="{Binding TrailingIcon, Converter={StaticResource IsNotNull}}"
+                Source="{Binding TrailingIcon}"
+                WidthRequest="0">
+                <Image.Triggers>
+                    <Trigger TargetType="Image" Property="IsVisible" Value="True">
+                        <Setter Property="WidthRequest" Value="24" />
+                        <Setter Property="Margin" Value="0,0,18,0" />
+                    </Trigger>
+                </Image.Triggers>
+            </Image>
+
+            <!--  Eye icon for password  -->
+            <Image
+                x:Name="passwordIcon"
+                HeightRequest="24"
+                IsVisible="{Binding IsPassword}"
+                Opacity="0.8">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="PasswordEyeTapped" />
+                </Image.GestureRecognizers>
+
+                <Image.Triggers>
+                    <Trigger TargetType="Image" Property="IsVisible" Value="True">
+                        <Setter Property="WidthRequest" Value="24" />
+                        <Setter Property="Margin" Value="0,0,18,0" />
+                    </Trigger>
+
+                    <Trigger TargetType="Image" Property="IsVisible" Value="False">
+                        <Setter Property="WidthRequest" Value="0" />
+                        <Setter Property="Margin" Value="0,0,0,0" />
+                    </Trigger>
+
+                    <DataTrigger
+                        Binding="{Binding Source={x:Reference customEntry}, Path=IsPassword}"
+                        TargetType="Image"
+                        Value="True">
+                        <Setter Property="Source" Value="eye_open.png" />
+                    </DataTrigger>
+
+                    <DataTrigger
+                        Binding="{Binding Source={x:Reference customEntry}, Path=IsPassword}"
+                        TargetType="Image"
+                        Value="False">
+                        <Setter Property="Source" Value="eye_closed.png" />
+                    </DataTrigger>
+                </Image.Triggers>
+            </Image>
+        </StackLayout>
+    </Frame>
+
+    <!--  Placeholder  -->
+    <Frame
+        x:Name="placeholderContainer"
+        Margin="15,16,40,0"
+        Padding="5,0"
+        BackgroundColor="{Binding EntryBackgroundColor}"
+        CornerRadius="4"
+        HasShadow="False"
+        HorizontalOptions="Start"
+        IsVisible="{Binding PlaceholderText, Converter={StaticResource IsNotNullOrEmpty}}"
+        VerticalOptions="Start">
+        <Frame.Triggers>
+            <DataTrigger
+                Binding="{Binding Source={x:Reference leadingIcon}, Path=IsVisible}"
+                TargetType="Frame"
+                Value="True">
+                <Setter Property="Margin" Value="45, 16, 40, 0" />
+            </DataTrigger>
+        </Frame.Triggers>
+
+        <Label
+            x:Name="placeholderText"
+            FontSize="Medium"
+            TextColor="{Binding BorderColor}">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="{Binding PlaceholderText}" />
+                    <Span Text="{Binding HasError, Converter={StaticResource IfTrueParameter}, ConverterParameter=*}" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+    </Frame>
+
+    <!--  Helper text  -->
+    <Label
+        x:Name="helperText"
+        Grid.Row="1"
+        Margin="18,0,0,0"
+        FontSize="Small"
+        IsVisible="{Binding HasError, Converter={StaticResource InverseBool}}"
+        LineBreakMode="WordWrap"
+        Text="{Binding HelperText}"
+        TextColor="{Binding HelperTextColor}" />
+
+    <!--  Char counter  -->
+    <Label
+        x:Name="charCounterText"
+        Grid.Row="1"
+        Grid.Column="1"
+        Margin="0,0,18,0"
+        FontSize="Small"
+        HorizontalTextAlignment="End"
+        IsVisible="{Binding MaxLength, Converter={StaticResource IntIsNot}, ConverterParameter={x:Static sys:Int32.MaxValue}}"
+        TextColor="{Binding HelperTextColor}">
+        <Label.FormattedText>
+            <FormattedString>
+                <Span Text="{Binding Text.Length, FallbackValue=0}" />
+                <Span Text=" / " />
+                <Span Text="{Binding MaxLength}" />
+            </FormattedString>
+        </Label.FormattedText>
+    </Label>
+
+    <!--  Error text  -->
+    <Label
+        x:Name="errorText"
+        Grid.Row="1"
+        Margin="18,0,0,0"
+        FontSize="Small"
+        IsVisible="{Binding HasError}"
+        LineBreakMode="WordWrap"
+        Text="{Binding ErrorText}"
+        TextColor="{Binding ErrorTextColor}" />
+</Grid>
