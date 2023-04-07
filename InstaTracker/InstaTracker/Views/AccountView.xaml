@@ -1,0 +1,106 @@
+﻿<com:Page
+    x:Class="InstaTracker.Views.AccountView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components">
+
+    <ScrollView Margin="12,8,12,0">
+        <StackLayout Spacing="12">
+            <Label Style="{StaticResource Header}" Text="Account" />
+
+            <Frame Padding="14" BackgroundColor="{DynamicResource bd01}">
+                <Label Text="InstaTracker has to login to your Instagram account to fetch API data.&#10;&#10;You can create a new account for this or you can use your exisisting account which is not recommended if 'Save login information' is enabled." />
+            </Frame>
+
+            <Frame
+                Margin="12"
+                Padding="12"
+                BackgroundColor="{DynamicResource bd01}"
+                CornerRadius="8"
+                IsVisible="{Binding IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}">
+                <Frame.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="{DynamicResource bd04}" />
+                        <GradientStop Offset="1" Color="{DynamicResource bd01}" />
+                    </LinearGradientBrush>
+                </Frame.Background>
+
+                <StackLayout Spacing="-12">
+                    <com:Entry
+                        Keyboard="Text"
+                        PlaceholderText="Username"
+                        ReturnType="Next" />
+                    <com:Entry
+                        IsPassword="True"
+                        Keyboard="Plain"
+                        PlaceholderText="Password"
+                        ReturnType="Done" />
+
+                    <Grid Margin="0,-4,0,0">
+                        <Label
+                            Margin="38,0,0,0"
+                            Text="Save login information"
+                            VerticalOptions="Center" />
+                        <CheckBox
+                            HorizontalOptions="Start"
+                            IsChecked="{Binding Config.SaveLoginInformation, Mode=TwoWay}"
+                            VerticalOptions="Start"
+                            WidthRequest="200" />
+                    </Grid>
+
+                    <Button
+                        Margin="0,24,0,0"
+                        Command="{Binding LoginCommand}"
+                        Style="{StaticResource AccentLight}"
+                        Text="Login" />
+                </StackLayout>
+            </Frame>
+
+            <Frame
+                Margin="12"
+                Padding="12"
+                BackgroundColor="{DynamicResource bd01}"
+                CornerRadius="8"
+                IsVisible="{Binding IsLoggedIn, Mode=OneWay}">
+                <Frame.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="{DynamicResource bd04}" />
+                        <GradientStop Offset="1" Color="{DynamicResource bd01}" />
+                    </LinearGradientBrush>
+                </Frame.Background>
+
+                <Grid>
+                    <Image
+                        HeightRequest="54"
+                        HorizontalOptions="Start"
+                        Source="icon.png"
+                        WidthRequest="54">
+                        <Image.Clip>
+                            <EllipseGeometry
+                                Center="27,27"
+                                RadiusX="27"
+                                RadiusY="27" />
+                        </Image.Clip>
+                    </Image>
+
+                    <Label
+                        Margin="66,0,110,0"
+                        LineBreakMode="TailTruncation"
+                        Style="{StaticResource TitleSecondary}"
+                        Text="Username" />
+                    <Label
+                        Margin="66,28,110,0"
+                        LineBreakMode="TailTruncation"
+                        Text="Full Name" />
+
+                    <Button
+                        Command="{Binding LogoutCommand}"
+                        HorizontalOptions="End"
+                        Style="{StaticResource AccentLight}"
+                        Text="Logout"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Frame>
+        </StackLayout>
+    </ScrollView>
+</com:Page>

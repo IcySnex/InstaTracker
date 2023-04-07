@@ -1,0 +1,35 @@
+﻿<ContentPage
+    x:Class="InstaTracker.Views.SettingsView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource bd00}"
+    NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Content>
+        <!--<StackLayout Margin="12" Spacing="12">
+            <Button Text="Hello World" />
+            <Button Style="{StaticResource Light}" Text="Hello World" />
+
+            <Button Style="{StaticResource Accent}" Text="Hello World" />
+            <Button Style="{StaticResource AccentLight}" Text="Hello World" />
+
+            <Button Style="{StaticResource Outlined}" Text="Hello World" />
+            <Button Style="{StaticResource OutlinedAccent}" Text="Hello World" />
+        </StackLayout>-->
+
+        <StackLayout Margin="12" Spacing="12">
+            <Label Text="Content" />
+            <Label Style="{StaticResource ContentSecondary}" Text="Content Secondary" />
+
+            <Label Style="{StaticResource Title}" Text="Title" />
+            <Label Style="{StaticResource TitleSecondary}" Text="Title Secondary" />
+
+            <Label Style="{StaticResource Header}" Text="Header" />
+
+            <Label Style="{StaticResource Subpoint}" Text="Subpoint" />
+            <Label Style="{StaticResource SubpointSecondary}" Text="Subpoint Secondary" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
