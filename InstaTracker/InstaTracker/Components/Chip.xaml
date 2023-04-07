@@ -1,0 +1,43 @@
+﻿<Grid
+    x:Class="InstaTracker.Components.Chip"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit"
+    HorizontalOptions="Start"
+    VerticalOptions="Start">
+
+    <Frame
+        x:Name="container"
+        Padding="18,0"
+        BackgroundColor="{Binding ChipBackgroundColor}"
+        BorderColor="{Binding BorderColor}"
+        CornerRadius="{x:OnPlatform Android=24,
+                                    iOS=18}"
+        HeightRequest="36"
+        HorizontalOptions="Start"
+        VerticalOptions="Start">
+        <Frame.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding Command}" Tapped="OnTapped" />
+        </Frame.GestureRecognizers>
+
+        <StackLayout Orientation="Horizontal" Spacing="8">
+            <Image
+                x:Name="checkIcon"
+                tlk:IconTintColorEffect.TintColor="{Binding TextColorChecked}"
+                IsVisible="False"
+                Source="checkmark.png"
+                WidthRequest="0" />
+
+            <Label
+                x:Name="textLabel"
+                Text="{Binding Text}"
+                TextColor="{Binding TextColor}"
+                VerticalOptions="Center" />
+            <Image
+                x:Name="iconImage"
+                tlk:IconTintColorEffect.TintColor="{Binding TextColor}"
+                IsVisible="False"
+                WidthRequest="20" />
+        </StackLayout>
+    </Frame>
+</Grid>
