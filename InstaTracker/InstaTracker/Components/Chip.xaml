@@ -3,39 +3,40 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:tlk="http://xamarin.com/schemas/2020/toolkit"
+    x:Name="root"
     HorizontalOptions="Start"
     VerticalOptions="Start">
 
     <Frame
         x:Name="container"
         Padding="18,0"
-        BackgroundColor="{Binding ChipBackgroundColor}"
-        BorderColor="{Binding BorderColor}"
+        BackgroundColor="{Binding ChipBackgroundColor, Source={x:Reference root}}"
+        BorderColor="{Binding BorderColor, Source={x:Reference root}}"
         CornerRadius="{x:OnPlatform Android=24,
                                     iOS=18}"
         HeightRequest="36"
         HorizontalOptions="Start"
         VerticalOptions="Start">
         <Frame.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding Command}" Tapped="OnTapped" />
+            <TapGestureRecognizer Command="{Binding Command, Source={x:Reference root}}" Tapped="OnTapped" />
         </Frame.GestureRecognizers>
 
         <StackLayout Orientation="Horizontal" Spacing="8">
             <Image
                 x:Name="checkIcon"
-                tlk:IconTintColorEffect.TintColor="{Binding TextColorChecked}"
+                tlk:IconTintColorEffect.TintColor="{Binding TextColorChecked, Source={x:Reference root}}"
                 IsVisible="False"
                 Source="checkmark.png"
                 WidthRequest="0" />
 
             <Label
                 x:Name="textLabel"
-                Text="{Binding Text}"
-                TextColor="{Binding TextColor}"
+                Text="{Binding Text, Source={x:Reference root}}"
+                TextColor="{Binding TextColor, Source={x:Reference root}}"
                 VerticalOptions="Center" />
             <Image
                 x:Name="iconImage"
-                tlk:IconTintColorEffect.TintColor="{Binding TextColor}"
+                tlk:IconTintColorEffect.TintColor="{Binding TextColor, Source={x:Reference root}}"
                 IsVisible="False"
                 WidthRequest="20" />
         </StackLayout>

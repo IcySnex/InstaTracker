@@ -9,8 +9,6 @@ public partial class Page : ContentPage
     public Page()
     {
         InitializeComponent();
-
-        BindingContext = this;
     }
 
 

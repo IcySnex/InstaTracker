@@ -14,6 +14,8 @@ public class SnackBar
         ILogger logger)
     {
         this.logger = logger;
+
+        logger.Log("Registered SnackBar");
     }
 
 

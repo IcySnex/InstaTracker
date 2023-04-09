@@ -5,6 +5,7 @@
     xmlns:effects="clr-namespace:InstaTracker.Effects"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    x:Name="root"
     Padding="0,5,0,0"
     BackgroundColor="Transparent"
     ColumnDefinitions="*, Auto"
@@ -21,8 +22,8 @@
         Grid.Column="0"
         Grid.ColumnSpan="2"
         Padding="1"
-        BackgroundColor="{Binding EntryBackgroundColor}"
-        BorderColor="{Binding BorderColor}"
+        BackgroundColor="{Binding EntryBackgroundColor, Source={x:Reference root}}"
+        BorderColor="{Binding BorderColor, Source={x:Reference root}}"
         CornerRadius="4"
         HasShadow="False">
         <StackLayout Orientation="Horizontal">
@@ -31,8 +32,8 @@
             <Image
                 x:Name="leadingIcon"
                 HeightRequest="24"
-                IsVisible="{Binding LeadingIcon, Converter={StaticResource IsNotNull}}"
-                Source="{Binding LeadingIcon}"
+                IsVisible="{Binding LeadingIcon, Converter={StaticResource IsNotNull}, Source={x:Reference root}}"
+                Source="{Binding LeadingIcon, Source={x:Reference root}}"
                 WidthRequest="0">
                 <Image.Triggers>
                     <Trigger TargetType="Image" Property="IsVisible" Value="True">
@@ -47,16 +48,15 @@
                 x:Name="customEntry"
                 Margin="{x:OnPlatform Android='0,-8,0,4',
                                       iOS='0,0,0,8'}"
-                ios:Entry.CursorColor="{Binding BorderColor}"
-                BackgroundColor="{Binding EntryBackgroundColor}"
+                ios:Entry.CursorColor="{Binding BorderColor, Source={x:Reference root}}"
+                BackgroundColor="{Binding EntryBackgroundColor, Source={x:Reference root}}"
                 Focused="CustomEntryFocused"
                 FontSize="Medium"
                 HorizontalOptions="FillAndExpand"
-                IsPassword="{Binding IsPassword}"
-                MaxLength="{Binding MaxLength}"
-                ReturnCommand="{Binding ReturnCommand}"
-                Text="{Binding Text}"
-                TextColor="{Binding TextColor}"
+                IsPassword="{Binding IsPassword, Source={x:Reference root}}"
+                MaxLength="{Binding MaxLength, Source={x:Reference root}}"
+                Text="{Binding Text, Source={x:Reference root}}"
+                TextColor="{Binding TextColor, Source={x:Reference root}}"
                 Unfocused="CustomEntryUnfocused">
                 <Entry.Effects>
                     <effects:RemoveEntryBordersEffect />
@@ -68,8 +68,8 @@
             <Image
                 x:Name="trailingIcon"
                 HeightRequest="24"
-                IsVisible="{Binding TrailingIcon, Converter={StaticResource IsNotNull}}"
-                Source="{Binding TrailingIcon}"
+                IsVisible="{Binding TrailingIcon, Converter={StaticResource IsNotNull}, Source={x:Reference root}}"
+                Source="{Binding TrailingIcon, Source={x:Reference root}}"
                 WidthRequest="0">
                 <Image.Triggers>
                     <Trigger TargetType="Image" Property="IsVisible" Value="True">
@@ -83,7 +83,7 @@
             <Image
                 x:Name="passwordIcon"
                 HeightRequest="24"
-                IsVisible="{Binding IsPassword}"
+                IsVisible="{Binding IsPassword, Source={x:Reference root}}"
                 Opacity="0.8">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Tapped="PasswordEyeTapped" />
@@ -101,14 +101,14 @@
                     </Trigger>
 
                     <DataTrigger
-                        Binding="{Binding Source={x:Reference customEntry}, Path=IsPassword}"
+                        Binding="{Binding IsPassword, Source={x:Reference customEntry}}"
                         TargetType="Image"
                         Value="True">
                         <Setter Property="Source" Value="eye_open.png" />
                     </DataTrigger>
 
                     <DataTrigger
-                        Binding="{Binding Source={x:Reference customEntry}, Path=IsPassword}"
+                        Binding="{Binding IsPassword, Source={x:Reference customEntry}}"
                         TargetType="Image"
                         Value="False">
                         <Setter Property="Source" Value="eye_closed.png" />
@@ -123,15 +123,15 @@
         x:Name="placeholderContainer"
         Margin="15,16,40,0"
         Padding="5,0"
-        BackgroundColor="{Binding EntryBackgroundColor}"
+        BackgroundColor="{Binding EntryBackgroundColor, Source={x:Reference root}}"
         CornerRadius="4"
         HasShadow="False"
         HorizontalOptions="Start"
-        IsVisible="{Binding PlaceholderText, Converter={StaticResource IsNotNullOrEmpty}}"
+        IsVisible="{Binding PlaceholderText, Converter={StaticResource IsNotNullOrEmpty}, Source={x:Reference root}}"
         VerticalOptions="Start">
         <Frame.Triggers>
             <DataTrigger
-                Binding="{Binding Source={x:Reference leadingIcon}, Path=IsVisible}"
+                Binding="{Binding IsVisible, Source={x:Reference leadingIcon}}"
                 TargetType="Frame"
                 Value="True">
                 <Setter Property="Margin" Value="45, 16, 40, 0" />
@@ -141,11 +141,11 @@
         <Label
             x:Name="placeholderText"
             FontSize="Medium"
-            TextColor="{Binding BorderColor}">
+            TextColor="{Binding BorderColor, Source={x:Reference root}}">
             <Label.FormattedText>
                 <FormattedString>
-                    <Span Text="{Binding PlaceholderText}" />
-                    <Span Text="{Binding HasError, Converter={StaticResource IfTrueParameter}, ConverterParameter=*}" />
+                    <Span Text="{Binding PlaceholderText, Source={x:Reference root}}" />
+                    <Span Text="{Binding HasError, Converter={StaticResource IfTrueParameter}, ConverterParameter=*, Source={x:Reference root}}" />
                 </FormattedString>
             </Label.FormattedText>
         </Label>
@@ -157,10 +157,10 @@
         Grid.Row="1"
         Margin="18,0,0,0"
         FontSize="Small"
-        IsVisible="{Binding HasError, Converter={StaticResource InverseBool}}"
+        IsVisible="{Binding HasError, Converter={StaticResource InverseBool}, Source={x:Reference root}}"
         LineBreakMode="WordWrap"
-        Text="{Binding HelperText}"
-        TextColor="{Binding HelperTextColor}" />
+        Text="{Binding HelperText, Source={x:Reference root}}"
+        TextColor="{Binding HelperTextColor, Source={x:Reference root}}" />
 
     <!--  Char counter  -->
     <Label
@@ -170,13 +170,13 @@
         Margin="0,0,18,0"
         FontSize="Small"
         HorizontalTextAlignment="End"
-        IsVisible="{Binding MaxLength, Converter={StaticResource IntIsNot}, ConverterParameter={x:Static sys:Int32.MaxValue}}"
-        TextColor="{Binding HelperTextColor}">
+        IsVisible="{Binding MaxLength, Converter={StaticResource IntIsNot}, ConverterParameter={x:Static sys:Int32.MaxValue}, Source={x:Reference root}}"
+        TextColor="{Binding HelperTextColor, Source={x:Reference root}}">
         <Label.FormattedText>
             <FormattedString>
-                <Span Text="{Binding Text.Length, FallbackValue=0}" />
+                <Span Text="{Binding Text.Length, FallbackValue=0, Source={x:Reference root}}" />
                 <Span Text=" / " />
-                <Span Text="{Binding MaxLength}" />
+                <Span Text="{Binding MaxLength, Source={x:Reference root}}" />
             </FormattedString>
         </Label.FormattedText>
     </Label>
@@ -187,8 +187,8 @@
         Grid.Row="1"
         Margin="18,0,0,0"
         FontSize="Small"
-        IsVisible="{Binding HasError}"
+        IsVisible="{Binding HasError, Source={x:Reference root}}"
         LineBreakMode="WordWrap"
-        Text="{Binding ErrorText}"
-        TextColor="{Binding ErrorTextColor}" />
+        Text="{Binding ErrorText, Source={x:Reference root}}"
+        TextColor="{Binding ErrorTextColor, Source={x:Reference root}}" />
 </Grid>

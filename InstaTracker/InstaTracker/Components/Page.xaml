@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    x:Name="root"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource bd00}"
     NavigationPage.HasNavigationBar="False">
@@ -11,7 +12,7 @@
         <ControlTemplate>
             <Grid>
                 <ScrollView Margin="12,8,12,0">
-                    <ContentPresenter Content="{Binding Content}" />
+                    <ContentPresenter Content="{Binding Content, Source={x:Reference root}}" />
                 </ScrollView>
 
                 <Frame

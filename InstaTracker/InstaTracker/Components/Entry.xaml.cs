@@ -13,7 +13,7 @@ public partial class Entry : Grid
         {
             Entry view = (Entry)bindable;
 
-            if (string.IsNullOrEmpty(view.PlaceholderText) || view.placeholderContainer.TranslationY == -20)
+            if (string.IsNullOrEmpty(view.PlaceholderText) || view.placeholderContainer.TranslationY == -24)
                 return;
 
             MainThread.BeginInvokeOnMainThread(async () =>
@@ -200,16 +200,6 @@ public partial class Entry : Grid
     }
 
 
-    public static readonly BindableProperty ReturnCommandProperty = BindableProperty.Create(
-        nameof(ReturnCommand), typeof(ICommand), typeof(Entry), default(ICommand), BindingMode.OneWay);
-
-    public ICommand ReturnCommand
-    {
-        get => (ICommand)GetValue(ReturnCommandProperty);
-        set => SetValue(ReturnCommandProperty, value);
-    }
-
-
     ImageSource tempIcon = default!;
 
     public Keyboard Keyboard
@@ -229,8 +219,6 @@ public partial class Entry : Grid
     public Entry()
     {
         InitializeComponent();
-
-        BindingContext = this;
     }
 
 

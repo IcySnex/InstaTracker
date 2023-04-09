@@ -2,6 +2,7 @@
 using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using InstaTracker.Helpers;
+using System.Windows.Input;
 
 namespace InstaTracker.Components;
 
@@ -9,7 +10,7 @@ namespace InstaTracker.Components;
 public partial class Chip : Grid
 {
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
-        nameof(Text), typeof(string), typeof(Entry), default(string), BindingMode.OneWay);
+        nameof(Text), typeof(string), typeof(Chip), default(string), BindingMode.OneWay);
 
     public string Text
     {
@@ -19,7 +20,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
-        nameof(TextColor), typeof(Color), typeof(Entry), Color.White, BindingMode.OneWay);
+        nameof(TextColor), typeof(Color), typeof(Chip), Color.White, BindingMode.OneWay);
 
     public Color TextColor
     {
@@ -29,7 +30,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty TextColorCheckedProperty = BindableProperty.Create(
-        nameof(TextColorChecked), typeof(Color), typeof(Entry), Color.Black, BindingMode.OneWay);
+        nameof(TextColorChecked), typeof(Color), typeof(Chip), Color.Black, BindingMode.OneWay);
 
     public Color TextColorChecked
     {
@@ -39,7 +40,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty ChipBackgroundColorProperty = BindableProperty.Create(
-        nameof(ChipBackgroundColor), typeof(Color), typeof(Entry), Color.Gray, BindingMode.OneWay);
+        nameof(ChipBackgroundColor), typeof(Color), typeof(Chip), Color.Gray, BindingMode.OneWay);
 
     public Color ChipBackgroundColor
     {
@@ -49,7 +50,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty ChipBackgroundColorCheckedProperty = BindableProperty.Create(
-        nameof(ChipBackgroundColorChecked), typeof(Color), typeof(Entry), Color.White, BindingMode.OneWay);
+        nameof(ChipBackgroundColorChecked), typeof(Color), typeof(Chip), Color.White, BindingMode.OneWay);
 
     public Color ChipBackgroundColorChecked
     {
@@ -59,7 +60,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty BorderColorProperty = BindableProperty.Create(
-        nameof(BorderColor), typeof(Color), typeof(Entry), Color.Black, BindingMode.OneWay);
+        nameof(BorderColor), typeof(Color), typeof(Chip), Color.Black, BindingMode.OneWay);
 
     public Color BorderColor
     {
@@ -69,7 +70,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty BorderColorCheckedProperty = BindableProperty.Create(
-        nameof(BorderColorChecked), typeof(Color), typeof(Entry), Color.Gray, BindingMode.OneWay);
+        nameof(BorderColorChecked), typeof(Color), typeof(Chip), Color.Gray, BindingMode.OneWay);
 
     public Color BorderColorChecked
     {
@@ -79,7 +80,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty IsCheckedProperty = BindableProperty.Create(
-        nameof(IsChecked), typeof(bool), typeof(Entry), false, BindingMode.OneWay, null,
+        nameof(IsChecked), typeof(bool), typeof(Chip), false, BindingMode.OneWay, null,
         async (bindable, oldValue, newValue) =>
         {
             Chip view = (Chip)bindable;
@@ -110,7 +111,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty ShowCheckmarkProperty = BindableProperty.Create(
-        nameof(ShowCheckmark), typeof(bool), typeof(Entry), true, BindingMode.OneWay);
+        nameof(ShowCheckmark), typeof(bool), typeof(Chip), true, BindingMode.OneWay);
 
     public bool ShowCheckmark
     {
@@ -135,13 +136,21 @@ public partial class Chip : Grid
     }
 
 
+    public static readonly BindableProperty CommandProperty = BindableProperty.Create(
+        nameof(ICommand), typeof(bool), typeof(Chip), default(ICommand), BindingMode.OneWay);
+
+    public ICommand Command
+    {
+        get => (ICommand)GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
+    }
+
+
 
 
     public Chip()
     {
         InitializeComponent();
-
-        BindingContext = this;
     }
 
 
