@@ -17,7 +17,7 @@
                 Padding="12"
                 BackgroundColor="{DynamicResource bd01}"
                 CornerRadius="8"
-                IsVisible="{Binding IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}">
+                IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}">
                 <Frame.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Offset="0" Color="{DynamicResource bd04}" />
@@ -29,12 +29,14 @@
                     <com:Entry
                         Keyboard="Text"
                         PlaceholderText="Username"
-                        ReturnType="Next" />
+                        ReturnType="Next"
+                        Text="{x:Binding Username}" />
                     <com:Entry
                         IsPassword="True"
                         Keyboard="Plain"
                         PlaceholderText="Password"
-                        ReturnType="Done" />
+                        ReturnType="Done"
+                        Text="{Binding Password}" />
 
                     <Grid Margin="0,-4,0,0">
                         <Label
@@ -61,7 +63,7 @@
                 Padding="12"
                 BackgroundColor="{DynamicResource bd01}"
                 CornerRadius="8"
-                IsVisible="{Binding IsLoggedIn, Mode=OneWay}">
+                IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay}">
                 <Frame.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Offset="0" Color="{DynamicResource bd04}" />

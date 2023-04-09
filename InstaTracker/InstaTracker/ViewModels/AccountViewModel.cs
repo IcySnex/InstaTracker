@@ -4,46 +4,52 @@ using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
 using Serilog;
-using Xamarin.Forms;
 
 namespace InstaTracker.ViewModels;
 
 public partial class AccountViewModel : ObservableObject
 {
     readonly ILogger logger;
+    readonly DatabaseConnection database;
     readonly SnackBar snackBar;
 
     public Config Config { get; }
-    
+    public AccountManager AccountManager { get; }
+
     public AccountViewModel(
         ILogger logger,
         Config config,
-        SnackBar snackBar)
+        DatabaseConnection database,
+        SnackBar snackBar,
+        AccountManager accountManager)
     {
         this.logger = logger;
         this.Config = config;
+        this.database = database;
         this.snackBar = snackBar;
+        this.AccountManager = accountManager;
     }
 
 
     [ObservableProperty]
-    bool isLoggedIn;
+    string username = default!;
+
+    [ObservableProperty]
+    string password = default!;
+
 
     [RelayCommand]
     async Task LoginAsync()
     {
-        snackBar.Show("I hate Xamarin <3", null);
-        IsLoggedIn = true;
-
-        logger.Log("Logged into Instagram account");
+        snackBar.Show("Logging in...", null);
+        await AccountManager.LoginAsync(Username, Password);
     }
+
 
     [RelayCommand]
     async Task LogoutAsync()
     {
-        snackBar.Show("I hate Xamarin <3", "me too");
-        IsLoggedIn = false;
-
-        logger.Log("Logged out of Instagram account");
+        snackBar.Show("Logging out...", null);
+        await AccountManager.LogoutAsync();
     }
 }

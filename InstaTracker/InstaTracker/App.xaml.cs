@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using InstaTracker.ViewModels;
+using InstagramApiSharp.API.Builder;
 
 namespace InstaTracker;
 
@@ -34,9 +35,12 @@ public partial class App : Application
         Provider = new ServiceCollection()
             .AddSingleton(logger)
             .AddSingleton(configuration)
+            .AddSingleton<DatabaseConnection>()
             .AddSingleton<AppHandler>()
             .AddSingleton<JsonConverter>()
             .AddSingleton<SnackBar>()
+            .AddSingleton(InstaApiBuilder.CreateBuilder().Build())
+            .AddSingleton<AccountManager>()
             .AddSingleton<AccountViewModel>()
             .BuildServiceProvider();
 
@@ -44,10 +48,8 @@ public partial class App : Application
     }
 
 
-    protected override void OnStart()
-    {
+    protected override void OnStart() =>
         AppHandler = Provider.GetRequiredService<AppHandler>();
-    }
 
     protected override void OnSleep() =>
         AppHandler.SaveConfig();

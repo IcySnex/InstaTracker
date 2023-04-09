@@ -11,20 +11,37 @@ public class AppHandler
 {
     readonly ILogger logger;
     readonly Config config;
+    readonly DatabaseConnection database;
     readonly JsonConverter converter;
+    readonly AccountManager accountManager;
 
     public AppHandler(
         ILogger logger,
         Config config,
-        JsonConverter converter)
+        DatabaseConnection database,
+        JsonConverter converter,
+        AccountManager accountManager)
     {
         this.logger = logger;
         this.config = config;
+        this.database = database;
         this.converter = converter;
+        this.accountManager = accountManager;
 
         Application.Current.MainPage = new MainView();
 
+        Initialize();
+
         logger.Log("App is ready");
+    }
+
+
+    public async void Initialize()
+    {
+        if (config.SaveLoginInformation && config.SavedLoginId.HasValue && await database.GetAccountAsync(config.SavedLoginId.Value) is Account savedLogin)
+        {
+            await accountManager.LoginAsync(savedLogin.Username, savedLogin.Password, savedLogin.StateJson);
+        }
     }
 
 
