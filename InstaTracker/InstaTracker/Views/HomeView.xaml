@@ -1,56 +1,55 @@
-﻿<ContentPage
+﻿<com:Page
     x:Class="InstaTracker.Views.HomeView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource bd00}"
     NavigationPage.HasNavigationBar="False">
 
-    <ScrollView Margin="12,8,12,0">
-        <StackLayout Spacing="12">
-            <Label Style="{StaticResource Header}" Text="Home" />
+    <StackLayout Spacing="12">
+        <Label Style="{StaticResource Header}" Text="Home" />
 
-            <Grid>
-                <Frame CornerRadius="8">
-                    <Frame.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Offset="0" Color="{DynamicResource bd02}" />
-                            <GradientStop Offset="1" Color="Transparent" />
-                        </LinearGradientBrush>
-                    </Frame.Background>
+        <Grid>
+            <Frame CornerRadius="8">
+                <Frame.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0" Color="{DynamicResource bd02}" />
+                        <GradientStop Offset="1" Color="Transparent" />
+                    </LinearGradientBrush>
+                </Frame.Background>
 
-                    <StackLayout Spacing="12">
-                        <StackLayout Orientation="Horizontal" Spacing="12">
-                            <Image
-                                HorizontalOptions="Start"
-                                Source="icon.png"
-                                WidthRequest="65" />
+                <StackLayout Spacing="12">
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Image
+                            HorizontalOptions="Start"
+                            Source="icon.png"
+                            WidthRequest="65" />
 
-                            <StackLayout Spacing="-4" VerticalOptions="Center">
-                                <Label Style="{StaticResource TitleSecondary}" Text="InstaTracker" />
-                                <Label Text="Track followers, following and fans of anyone!" />
-                            </StackLayout>
-                        </StackLayout>
-
-
-                        <StackLayout Orientation="Horizontal">
-                            <Button Style="{StaticResource OutlinedAccent}" Text="Search User" />
-                            <Button Style="{StaticResource Outlined}" Text="Login" />
+                        <StackLayout Spacing="-4" VerticalOptions="Center">
+                            <Label Style="{StaticResource TitleSecondary}" Text="InstaTracker" />
+                            <Label Text="Track followers, following and fans of anyone!" />
                         </StackLayout>
                     </StackLayout>
-                </Frame>
-            </Grid>
 
-            <Label
-                Margin="4,0,0,-8"
-                FontAttributes="Italic"
-                Text="How does it work?"
-                TextColor="{DynamicResource tl01}" />
-            <Frame Padding="14" BackgroundColor="{DynamicResource bd01}">
-                <Label Text="InstaTracker uses the Android-Instagram API to login into your Instagram account&#10;&#10;Then you can search for any user to save their current followers, following and fans.&#10;&#10;At a later date you can compare the current state of an user to any previosly saved state!" />
+
+                    <StackLayout Orientation="Horizontal">
+                        <Button Style="{StaticResource OutlinedAccent}" Text="Search User" />
+                        <Button Style="{StaticResource Outlined}" Text="Login" />
+                    </StackLayout>
+                </StackLayout>
             </Frame>
+        </Grid>
 
-        </StackLayout>
-    </ScrollView>
-</ContentPage>
+        <Label
+            Margin="4,0,0,-8"
+            FontAttributes="Italic"
+            Text="How does it work?"
+            TextColor="{DynamicResource tl01}" />
+        <Frame Padding="14" BackgroundColor="{DynamicResource bd01}">
+            <Label Text="InstaTracker uses the Android-Instagram API to login into your Instagram account&#10;&#10;Then you can search for any user to save their current followers, following and fans.&#10;&#10;At a later date you can compare the current state of an user to any previosly saved state!" />
+        </Frame>
+
+    </StackLayout>
+</com:Page>

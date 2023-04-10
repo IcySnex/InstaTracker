@@ -39,12 +39,12 @@ public class DatabaseConnection
     }
 
 
-    public async Task<List<Account>> GetAccountsAsync()
+    public async Task<Account[]> GetAccountsAsync()
     {
         await EnsureInitializedAsync();
 
         logger.Log("Getting accounts from database");
-        return await database.Table<Account>().ToListAsync();
+        return await database.Table<Account>().ToArrayAsync();
     }
 
 
