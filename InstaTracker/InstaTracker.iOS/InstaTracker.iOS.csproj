@@ -173,4 +173,10 @@
   <ItemGroup>
     <BundleResource Include="Resources\account.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\nopicture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\delete.png" />
+  </ItemGroup>
 </Project>

@@ -2,107 +2,186 @@
     x:Class="InstaTracker.Views.AccountView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:com="clr-namespace:InstaTracker.Components">
+    xmlns:com="clr-namespace:InstaTracker.Components"
+    xmlns:mds="clr-namespace:InstaTracker.Models">
 
-    <ScrollView Margin="12,8,12,0">
-        <StackLayout Spacing="12">
-            <Label Style="{StaticResource Header}" Text="Account" />
+    <StackLayout Margin="0,0,0,48" Spacing="12">
+        <Label Style="{StaticResource Header}" Text="Account" />
 
-            <Frame Padding="14" BackgroundColor="{DynamicResource bd01}">
-                <Label Text="InstaTracker has to login to your Instagram account to fetch API data.&#10;&#10;You can create a new account for this or you can use your exisisting account which is not recommended if 'Save login information' is enabled." />
-            </Frame>
+        <Frame Padding="14" BackgroundColor="{DynamicResource bd01}">
+            <Label Text="InstaTracker has to login to your Instagram account to fetch API data.&#10;&#10;You can create a new account for this or you can use your exisisting account which is not recommended if 'Save login information' is enabled." />
+        </Frame>
 
-            <Frame
-                Margin="12"
-                Padding="12"
-                BackgroundColor="{DynamicResource bd01}"
-                CornerRadius="8"
-                IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}">
-                <Frame.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Offset="0" Color="{DynamicResource bd04}" />
-                        <GradientStop Offset="1" Color="{DynamicResource bd01}" />
-                    </LinearGradientBrush>
-                </Frame.Background>
+        <Frame
+            Margin="12"
+            Padding="12"
+            CornerRadius="8"
+            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}">
+            <Frame.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="{DynamicResource bd04}" />
+                    <GradientStop Offset="1" Color="{DynamicResource bd01}" />
+                </LinearGradientBrush>
+            </Frame.Background>
 
-                <StackLayout Spacing="-12">
-                    <com:Entry
-                        Keyboard="Text"
-                        PlaceholderText="Username"
-                        ReturnType="Next"
-                        Text="{x:Binding Username}" />
-                    <com:Entry
-                        IsPassword="True"
-                        Keyboard="Plain"
-                        PlaceholderText="Password"
-                        ReturnType="Done"
-                        Text="{Binding Password}" />
+            <StackLayout Spacing="-12">
+                <com:Entry
+                    Keyboard="Plain"
+                    PlaceholderText="Username"
+                    ReturnType="Next"
+                    Text="{Binding Username, Mode=TwoWay}" />
+                <com:Entry
+                    IsPassword="True"
+                    Keyboard="Plain"
+                    PlaceholderText="Password"
+                    ReturnType="Done"
+                    Text="{Binding Password, Mode=TwoWay}" />
 
-                    <Grid Margin="0,-4,0,0">
-                        <Label
-                            Margin="38,0,0,0"
-                            Text="Save login information"
-                            VerticalOptions="Center" />
-                        <CheckBox
-                            HorizontalOptions="Start"
-                            IsChecked="{Binding Config.SaveLoginInformation, Mode=TwoWay}"
-                            VerticalOptions="Start"
-                            WidthRequest="200" />
-                    </Grid>
-
-                    <Button
-                        Margin="0,24,0,0"
-                        Command="{Binding LoginCommand}"
-                        Style="{StaticResource AccentLight}"
-                        Text="Login" />
-                </StackLayout>
-            </Frame>
-
-            <Frame
-                Margin="12"
-                Padding="12"
-                BackgroundColor="{DynamicResource bd01}"
-                CornerRadius="8"
-                IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay}">
-                <Frame.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Offset="0" Color="{DynamicResource bd04}" />
-                        <GradientStop Offset="1" Color="{DynamicResource bd01}" />
-                    </LinearGradientBrush>
-                </Frame.Background>
-
-                <Grid>
-                    <Image
-                        HeightRequest="54"
-                        HorizontalOptions="Start"
-                        Source="icon.png"
-                        WidthRequest="54">
-                        <Image.Clip>
-                            <EllipseGeometry
-                                Center="27,27"
-                                RadiusX="27"
-                                RadiusY="27" />
-                        </Image.Clip>
-                    </Image>
-
+                <Grid Margin="0,-4,0,0">
                     <Label
-                        Margin="66,0,110,0"
-                        LineBreakMode="TailTruncation"
-                        Style="{StaticResource TitleSecondary}"
-                        Text="Username" />
-                    <Label
-                        Margin="66,28,110,0"
-                        LineBreakMode="TailTruncation"
-                        Text="Full Name" />
-
-                    <Button
-                        Command="{Binding LogoutCommand}"
-                        HorizontalOptions="End"
-                        Style="{StaticResource AccentLight}"
-                        Text="Logout"
+                        Margin="38,0,0,0"
+                        Text="Save login information"
                         VerticalOptions="Center" />
+                    <CheckBox
+                        HorizontalOptions="Start"
+                        IsChecked="{Binding Config.SaveAccount, Mode=TwoWay}"
+                        VerticalOptions="Start"
+                        WidthRequest="200" />
                 </Grid>
-            </Frame>
+
+                <Button
+                    Margin="0,24,0,0"
+                    Command="{Binding LoginCommand}"
+                    Style="{StaticResource AccentLight}"
+                    Text="Login" />
+            </StackLayout>
+        </Frame>
+
+        <Frame
+            Margin="12"
+            Padding="12"
+            CornerRadius="8"
+            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay}">
+            <Frame.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="{DynamicResource bd04}" />
+                    <GradientStop Offset="1" Color="{DynamicResource bd01}" />
+                </LinearGradientBrush>
+            </Frame.Background>
+
+            <Grid>
+                <Image
+                    HeightRequest="54"
+                    HorizontalOptions="Start"
+                    Source="{Binding AccountManager.LoggedUser.ProfilePicture, Mode=OneWay, FallbackValue=nopicture.png, TargetNullValue=nopicture.png}"
+                    WidthRequest="54">
+                    <Image.Clip>
+                        <EllipseGeometry
+                            Center="27,27"
+                            RadiusX="27"
+                            RadiusY="27" />
+                    </Image.Clip>
+                </Image>
+
+                <Label
+                    Margin="66,0,110,0"
+                    LineBreakMode="TailTruncation"
+                    Style="{StaticResource TitleSecondary}"
+                    Text="{Binding AccountManager.LoggedUser.UserName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
+                <Label
+                    Margin="66,28,110,0"
+                    LineBreakMode="TailTruncation"
+                    Text="{Binding AccountManager.LoggedUser.FullName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
+
+                <Button
+                    Command="{Binding LogoutCommand}"
+                    HorizontalOptions="End"
+                    Style="{StaticResource AccentLight}"
+                    Text="Logout"
+                    VerticalOptions="Center" />
+            </Grid>
+        </Frame>
+
+        <Label
+            Margin="16,0,0,-8"
+            FontAttributes="Italic"
+            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            Text="Saved Accounts"
+            TextColor="{DynamicResource tl01}" />
+        <StackLayout
+            Margin="12,0"
+            BindableLayout.ItemsSource="{Binding SavedAccounts, Mode=OneWay}"
+            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            Spacing="8">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                        x:Name="root"
+                        Padding="12"
+                        BackgroundColor="{DynamicResource bd01}"
+                        CornerRadius="8">
+
+                        <Grid>
+                            <Image
+                                HeightRequest="54"
+                                HorizontalOptions="Start"
+                                Source="{Binding ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
+                                WidthRequest="54">
+                                <Image.Clip>
+                                    <EllipseGeometry
+                                        Center="27,27"
+                                        RadiusX="27"
+                                        RadiusY="27" />
+                                </Image.Clip>
+                            </Image>
+
+                            <Label
+                                Margin="66,0,130,0"
+                                LineBreakMode="TailTruncation"
+                                Opacity="1"
+                                Style="{StaticResource TitleSecondary}"
+                                Text="{Binding Username, Mode=OneWay, TargetNullValue=N/A}"
+                                TextColor="{DynamicResource tl00}" />
+                            <Label Margin="66,28,130,0" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding FullName, Mode=OneWay, TargetNullValue=N/A}" />
+                                        <Span Style="{StaticResource Subpoint}" Text=" - " />
+                                        <Span Style="{StaticResource Subpoint}" Text="{Binding Id, Mode=OneWay, TargetNullValue=N/A}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <StackLayout
+                                HorizontalOptions="End"
+                                Orientation="Horizontal"
+                                Spacing="4"
+                                VerticalOptions="Center">
+                                <Button
+                                    Command="{Binding Parent.BindingContext.LoginCommand, Source={x:Reference root}}"
+                                    CommandParameter="{Binding}"
+                                    Text="Login" />
+                                <Button
+                                    Command="{Binding Parent.BindingContext.DeleteSavedAccountCommand, Source={x:Reference root}}"
+                                    CommandParameter="{Binding Id}"
+                                    HeightRequest="36"
+                                    ImageSource="delete.png"
+                                    WidthRequest="36" />
+                            </StackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+
+            <BindableLayout.EmptyView>
+                <Frame
+                    Padding="12"
+                    BackgroundColor="{DynamicResource bd01}"
+                    CornerRadius="8">
+
+                    <Label Text="There are currently no accounts saved." />
+                </Frame>
+            </BindableLayout.EmptyView>
         </StackLayout>
-    </ScrollView>
+    </StackLayout>
 </com:Page>

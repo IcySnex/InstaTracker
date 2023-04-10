@@ -33,39 +33,41 @@ public partial class AccountManager : ObservableObject
     [ObservableProperty]
     bool isLoggedIn;
 
+    [ObservableProperty]
+    InstaUserShort? loggedUser = null;
 
-    public async Task<InstaCurrentUser> GetCurrentUserAsync()
+    public InstaUserShort GetLoggedUser()
     {
+        // Check if logged in
+        if (!instagram.IsUserAuthenticated)
+        {
+            logger.Log("Failed gettings user information", new("No user is currently logged in."));
+            throw new("No user is currently logged in.");
+        }
+
+        // Get user information
         logger.Log("Getting currently logged in user");
-        IResult<InstaCurrentUser> result = await instagram.GetCurrentUserAsync();
+        UserSessionData result = instagram.GetLoggedUser();
+        if (result is null)
+        {
+            logger.Log("Failed get user information", new NullReferenceException());
+            throw new NullReferenceException();
+        }
 
-        if (!result.Succeeded)
-            throw result.Info.Exception;
-
-        return result.Value;
+        return result.LoggedInUser;
     }
 
 
-    public async Task<bool> LoginAsync(
+    public async Task LoginAsync(
         string username,
         string password,
-        string? stateJson = null)
+        bool saveAccount = false)
     {
         // Check if already logged in
         if (instagram.IsUserAuthenticated)
         {
             logger.Log("Failed logging into Instagram API", new("An user is already logged in."));
-            return false;
-        }
-
-        // Login with state data if exists
-        if (stateJson is not null)
-        {
-            logger.Log("Logging into Instagram API with state data");
-            instagram.LoadStateDataFromString(stateJson);
-
-            IsLoggedIn = true;
-            return true;
+            throw new("An user is already logged in.");
         }
 
         // Login with username and password
@@ -78,31 +80,72 @@ public partial class AccountManager : ObservableObject
         if (!result.Succeeded)
         {
             logger.Log("Failed logging into Instagram API", result.Info.Exception);
-            return false;
+            throw result.Info.Exception;
         }
+
+        // Set logged user
+        LoggedUser = GetLoggedUser();
+        IsLoggedIn = true;
 
         // Save login to database if saveLoginInformation is true
-        if (config.SaveLoginInformation)
-        {
-            logger.Log("Saving login state to database");
-            string newStateJson = instagram.GetStateDataAsString();
-            int id = await database.AddAccountAsync(new Account(username, password, newStateJson));
+        if (!saveAccount)
+            return;
 
-            config.SavedLoginId = id;
+        logger.Log("Saving login state to database");
+        int accountId = await database.AddAccountAsync(new(
+            LoggedUser.UserName,
+            LoggedUser.FullName,
+            LoggedUser.ProfilePicture,
+            instagram.GetStateDataAsString(),
+            await database.GetAccountAsync(username) is Account account ? account.Id : null));
+
+        if (config.AutoLoginId.HasValue)
+            config.AutoLoginId = accountId;
+    }
+
+    public async Task LoginAsync(
+        string stateJson,
+        bool saveAccount = false)
+    {
+        // Check if already logged in
+        if (instagram.IsUserAuthenticated)
+        {
+            logger.Log("Failed logging into Instagram API", new("An user is already logged in."));
+            throw new("An user is already logged in.");
         }
 
+        // Login with state
+        logger.Log("Logging into Instagram API with state data");
+        instagram.LoadStateDataFromString(stateJson);
+
+        // Update logged user
+        LoggedUser = GetLoggedUser();
         IsLoggedIn = true;
-        return true;
+
+        // Save login to database if saveLoginInformation is true
+        if (!saveAccount)
+            return;
+
+        logger.Log("Saving login state to database");
+        int accountId = await database.AddAccountAsync(new(
+            LoggedUser.UserName,
+            LoggedUser.FullName,
+            LoggedUser.ProfilePicture,
+            instagram.GetStateDataAsString(),
+            await database.GetAccountAsync(LoggedUser.UserName) is Account account ? account.Id : null));
+
+        if (config.AutoLoginId.HasValue)
+            config.AutoLoginId = accountId;
     }
 
 
-    public async Task<bool> LogoutAsync()
+    public async Task LogoutAsync()
     {
         // Check if logged in
         if (!instagram.IsUserAuthenticated)
         {
-            logger.Log("Failed logging out of Instagram API", new("No user is logged in."));
-            return false;
+            logger.Log("Failed logging out of Instagram API", new("No user is currently logged in."));
+            throw new("No user is currently logged in.");
         }
 
         // Logout
@@ -111,10 +154,11 @@ public partial class AccountManager : ObservableObject
         if (!result.Succeeded)
         {
             logger.Log("Failed logging out of Instagram API", result.Info.Exception);
-            return false;
+            throw result.Info.Exception;
         }
 
+        LoggedUser = null;
         IsLoggedIn = false;
-        return result.Value;
+        return;
     }
 }

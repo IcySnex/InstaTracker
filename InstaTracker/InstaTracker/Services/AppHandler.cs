@@ -4,6 +4,7 @@ using Serilog;
 using InstaTracker.Models;
 using Xamarin.Forms;
 using InstaTracker.Helpers;
+using InstaTracker.ViewModels;
 
 namespace InstaTracker.Services;
 
@@ -11,22 +12,19 @@ public class AppHandler
 {
     readonly ILogger logger;
     readonly Config config;
-    readonly DatabaseConnection database;
     readonly JsonConverter converter;
-    readonly AccountManager accountManager;
+    readonly AccountViewModel accountViewModel;
 
     public AppHandler(
         ILogger logger,
         Config config,
-        DatabaseConnection database,
         JsonConverter converter,
-        AccountManager accountManager)
+        AccountViewModel accountViewModel)
     {
         this.logger = logger;
         this.config = config;
-        this.database = database;
         this.converter = converter;
-        this.accountManager = accountManager;
+        this.accountViewModel = accountViewModel;
 
         Application.Current.MainPage = new MainView();
 
@@ -38,10 +36,7 @@ public class AppHandler
 
     public async void Initialize()
     {
-        if (config.SaveLoginInformation && config.SavedLoginId.HasValue && await database.GetAccountAsync(config.SavedLoginId.Value) is Account savedLogin)
-        {
-            await accountManager.LoginAsync(savedLogin.Username, savedLogin.Password, savedLogin.StateJson);
-        }
+        await accountViewModel.InitializeAsync();
     }
 
 

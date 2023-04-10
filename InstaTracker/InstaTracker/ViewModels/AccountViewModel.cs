@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using InstagramApiSharp.Classes.Models;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
 using Serilog;
+using System;
+using Xamarin.Forms;
 
 namespace InstaTracker.ViewModels;
 
@@ -11,7 +14,9 @@ public partial class AccountViewModel : ObservableObject
 {
     readonly ILogger logger;
     readonly DatabaseConnection database;
+    readonly Message message;
     readonly SnackBar snackBar;
+    readonly SettingsViewModel settingsViewModel;
 
     public Config Config { get; }
     public AccountManager AccountManager { get; }
@@ -20,14 +25,68 @@ public partial class AccountViewModel : ObservableObject
         ILogger logger,
         Config config,
         DatabaseConnection database,
+        Message message,
         SnackBar snackBar,
-        AccountManager accountManager)
+        AccountManager accountManager,
+        SettingsViewModel settingsViewModel)
     {
         this.logger = logger;
         this.Config = config;
         this.database = database;
+        this.message = message;
         this.snackBar = snackBar;
         this.AccountManager = accountManager;
+        this.settingsViewModel = settingsViewModel;
+    }
+
+    public async Task InitializeAsync()
+    {
+        if (Config.AutoLoginId.HasValue && await database.GetAccountAsync(Config.AutoLoginId.Value) is Account savedLogin)
+            await ExecuteNotifiedAsync(
+                AccountManager.LoginAsync(savedLogin.StateJson, false),
+                "Logging in...",
+                "Failed to login!",
+                "The saved login information is not valid. Please make sure your selected account's username and password is correct and if two-factor authorization is enabled, please disable it.\n");
+
+        await LoadSavedAccountsAsync();
+
+        logger.Log("Initialized AccountViewModel");
+    }
+
+
+    async Task ExecuteNotifiedAsync(
+        Task task,
+        string startingMessage,
+        string failedTitle,
+        string failedMessage)
+    {
+        try
+        {
+            snackBar.Show(startingMessage, null, 2000, awaitPreviousSnackBar: true);
+            await task;
+        }
+        catch (Exception ex)
+        {
+            snackBar.Show(failedTitle, "More", 10000, onButtonClicked: async () => await message.ShowAsync(failedTitle, $"{failedMessage}({ex.Message})"));
+        }
+    }
+
+
+    [ObservableProperty]
+    Account[] savedAccounts = Array.Empty<Account>();
+
+    async Task LoadSavedAccountsAsync()
+    {
+        try
+        {
+            snackBar.Show("Loading saved accounts...", null, 2000, awaitPreviousSnackBar: true);
+            SavedAccounts = await database.GetAccountsAsync();
+            settingsViewModel.ReloadAccountSettings(SavedAccounts);
+        }
+        catch (Exception ex)
+        {
+            snackBar.Show("Failed loading saved accounts!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed loading saved accounts!", $"({ex.Message})"));
+        }
     }
 
 
@@ -37,19 +96,40 @@ public partial class AccountViewModel : ObservableObject
     [ObservableProperty]
     string password = default!;
 
-
     [RelayCommand]
-    async Task LoginAsync()
+    async Task LoginAsync(
+        Account? account = null)
     {
-        snackBar.Show("Logging in...", null);
-        await AccountManager.LoginAsync(Username, Password);
+        await ExecuteNotifiedAsync(
+            account is null ? AccountManager.LoginAsync(Username, Password, Config.SaveAccount) : AccountManager.LoginAsync(account.StateJson, false),
+            "Logging in...",
+            "Failed to login!",
+            "Please make sure you entered your correct username and password and if two-factor authorization is enabled, please disable it.\n\n");
+
+        if (Config.SaveAccount)
+            await LoadSavedAccountsAsync();
     }
 
 
     [RelayCommand]
-    async Task LogoutAsync()
+    async Task LogoutAsync() =>
+        await ExecuteNotifiedAsync(
+            AccountManager.LogoutAsync(),
+            "Logging out...",
+            "Failed to log out!",
+            "");
+
+
+    [RelayCommand]
+    async Task DeleteSavedAccountAsync(
+        int id)
     {
-        snackBar.Show("Logging out...", null);
-        await AccountManager.LogoutAsync();
+        await ExecuteNotifiedAsync(
+            database.RemoveAccountAsync(id),
+            "Removing saved account...",
+            "Failed removing saved account",
+            "");
+
+        await LoadSavedAccountsAsync();
     }
 }
