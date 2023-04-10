@@ -4,13 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:com="clr-namespace:InstaTracker.Components"
     xmlns:conv="clr-namespace:InstaTracker.Converters"
+    xmlns:hlp="clr-namespace:InstaTracker.Helpers"
     UserAppTheme="Dark">
     <Application.Resources>
         <ResourceDictionary>
 
             <!--#region CONVERTERS-->
 
-            <conv:ColorOpacityModifier x:Key="ColorOpacityModifier" />
+            <conv:OpacitySwitcher x:Key="OpacitySwitcher" />
             <conv:IntIsNot x:Key="IntIsNot" />
             <conv:IsNotNull x:Key="IsNotNull" />
             <conv:IsNotNullOrEmpty x:Key="IsNotNullOrEmpty" />
@@ -124,7 +125,6 @@
 
             <!--#endregion-->
 
-
             <!--#region Label-->
 
             <Style TargetType="Label">
@@ -173,7 +173,7 @@
             <Style x:Key="Subpoint" TargetType="Label">
                 <Setter Property="TextColor" Value="{DynamicResource tl03}" />
                 <Setter Property="Opacity" Value="1" />
-                <Setter Property="FontSize" Value="Caption" />
+                <Setter Property="FontSize" Value="Small" />
                 <Setter Property="TextTransform" Value="Default" />
                 <Setter Property="FontAttributes" Value="Italic" />
             </Style>
@@ -181,7 +181,7 @@
             <Style x:Key="SubpointSecondary" TargetType="Label">
                 <Setter Property="TextColor" Value="{DynamicResource tl03}" />
                 <Setter Property="Opacity" Value="0.7" />
-                <Setter Property="FontSize" Value="Caption" />
+                <Setter Property="FontSize" Value="Small" />
                 <Setter Property="TextTransform" Value="Default" />
                 <Setter Property="FontAttributes" Value="Italic" />
             </Style>
@@ -202,7 +202,6 @@
             </Style>
 
             <!--#endregion-->
-
 
             <!--#region States-->
 
@@ -228,7 +227,6 @@
 
             <!--#endregion-->
 
-
             <!--#region Chips-->
 
             <Style TargetType="com:Chip">
@@ -242,6 +240,42 @@
 
             <!--#endregion-->
 
+            <!--#endregion-->
+
+
+            <!--#region TEMPLATES-->
+
+            <!--#region SettingsCard-->
+            <ControlTemplate x:Key="SettingsCard">
+                <Frame
+                    Padding="12"
+                    BackgroundColor="{DynamicResource bd01}"
+                    CornerRadius="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid VerticalOptions="Center">
+                            <Label
+                                FontSize="Medium"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding ClassId, Source={RelativeSource TemplatedParent}}" />
+                            <Label
+                                Margin="0,22,0,0"
+                                LineBreakMode="WordWrap"
+                                Style="{StaticResource Subpoint}"
+                                Text="{Binding AutomationId, Source={RelativeSource TemplatedParent}}" />
+                        </Grid>
+
+                        <ContentPresenter
+                            Grid.Column="1"
+                            Margin="4,0,0,0"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </Frame>
+            </ControlTemplate>
+            <!--#endregion-->
 
             <!--#endregion-->
 

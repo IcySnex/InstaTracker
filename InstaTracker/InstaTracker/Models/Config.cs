@@ -5,7 +5,9 @@ namespace InstaTracker.Models;
 public partial class Config : ObservableObject
 {
     [ObservableProperty]
-    bool saveLoginInformation = false;
+    public bool saveAccount = false;
 
-    public int? SavedLoginId { get; set; } = null;
+
+    [ObservableProperty]
+    public int? autoLoginId = null;
 }

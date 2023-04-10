@@ -11,8 +11,8 @@
     <ContentPage.ControlTemplate>
         <ControlTemplate>
             <Grid>
-                <ScrollView Margin="12,8,12,0">
-                    <ContentPresenter Content="{Binding Content, Source={x:Reference root}}" />
+                <ScrollView>
+                    <ContentPresenter Margin="12,8" Content="{Binding Content, Source={x:Reference root}}" />
                 </ScrollView>
 
                 <Frame
@@ -20,6 +20,7 @@
                     Margin="12"
                     Padding="16,12"
                     BackgroundColor="{DynamicResource bd04}"
+                    HasShadow="True"
                     TranslationY="75"
                     VerticalOptions="End">
                     <Grid>

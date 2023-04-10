@@ -1,35 +1,41 @@
-﻿<ContentPage
+﻿<com:Page
     x:Class="InstaTracker.Views.SettingsView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource bd00}"
     NavigationPage.HasNavigationBar="False">
 
-    <ContentPage.Content>
-        <!--<StackLayout Margin="12" Spacing="12">
-            <Button Text="Hello World" />
-            <Button Style="{StaticResource Light}" Text="Hello World" />
+    <StackLayout Margin="0,0,0,48" Spacing="12">
+        <Label Style="{StaticResource Header}" Text="Settings" />
 
-            <Button Style="{StaticResource Accent}" Text="Hello World" />
-            <Button Style="{StaticResource AccentLight}" Text="Hello World" />
+        <Label
+            Margin="4,0,0,-8"
+            FontAttributes="Italic"
+            Text="Accounts"
+            TextColor="{DynamicResource tl01}" />
 
-            <Button Style="{StaticResource Outlined}" Text="Hello World" />
-            <Button Style="{StaticResource OutlinedAccent}" Text="Hello World" />
-        </StackLayout>-->
+        <ContentView
+            AutomationId="Automatically log in when starting the app"
+            ClassId="Auto Login"
+            ControlTemplate="{StaticResource SettingsCard}">
+            <Switch IsToggled="{Binding AutoLogin, Mode=TwoWay}" />
+        </ContentView>
 
-        <StackLayout Margin="12" Spacing="12">
-            <Label Text="Content" />
-            <Label Style="{StaticResource ContentSecondary}" Text="Content Secondary" />
-
-            <Label Style="{StaticResource Title}" Text="Title" />
-            <Label Style="{StaticResource TitleSecondary}" Text="Title Secondary" />
-
-            <Label Style="{StaticResource Header}" Text="Header" />
-
-            <Label Style="{StaticResource Subpoint}" Text="Subpoint" />
-            <Label Style="{StaticResource SubpointSecondary}" Text="Subpoint Secondary" />
-        </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+        <ContentView
+            AutomationId="Automatically log in with this account when starting the app"
+            ClassId="Auto Login Account"
+            ControlTemplate="{StaticResource SettingsCard}"
+            IsEnabled="{Binding AutoLogin, Mode=OneWay}"
+            Opacity="{Binding AutoLogin, Mode=OneWay, Converter={StaticResource OpacitySwitcher}, ConverterParameter=0.5}">
+            <Picker
+                Title="Username"
+                ItemDisplayBinding="{Binding Username}"
+                ItemsSource="{Binding SavedAccounts, Mode=OneWay}"
+                SelectedItem="{Binding AutoLoginAccount, Mode=TwoWay}"
+                WidthRequest="150" />
+        </ContentView>
+    </StackLayout>
+</com:Page>

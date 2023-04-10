@@ -38,10 +38,12 @@ public partial class App : Application
             .AddSingleton<DatabaseConnection>()
             .AddSingleton<AppHandler>()
             .AddSingleton<JsonConverter>()
+            .AddSingleton<Message>()
             .AddSingleton<SnackBar>()
             .AddSingleton(InstaApiBuilder.CreateBuilder().Build())
             .AddSingleton<AccountManager>()
             .AddSingleton<AccountViewModel>()
+            .AddSingleton<SettingsViewModel>()
             .BuildServiceProvider();
 
         InitializeComponent();
