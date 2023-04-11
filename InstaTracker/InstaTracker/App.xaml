@@ -13,6 +13,7 @@
             <conv:OpacitySwitcher x:Key="OpacitySwitcher" />
             <conv:IntIsNot x:Key="IntIsNot" />
             <conv:IsNotNull x:Key="IsNotNull" />
+            <conv:IsNull x:Key="IsNull" />
             <conv:IsNotNullOrEmpty x:Key="IsNotNullOrEmpty" />
             <conv:InverseBool x:Key="InverseBool" />
             <conv:IfTrueParameter x:Key="IfTrueParameter" />

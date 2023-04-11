@@ -9,14 +9,14 @@
         <Label Style="{StaticResource Header}" Text="Account" />
 
         <Frame Padding="14" BackgroundColor="{DynamicResource bd01}">
-            <Label Text="InstaTracker has to login to your Instagram account to fetch API data.&#10;&#10;You can create a new account for this or you can use your exisisting account which is not recommended if 'Save login information' is enabled." />
+            <Label Text="InstaTracker has to login to your Instagram account to fetch API data.&#10;&#10;You can create a new account for this or you can use your exisisting account which is not recommended if 'Save account' is enabled.&#10;&#10;You may get a natification that says some random Android device has logged into your account, dont worry!" />
         </Frame>
 
         <Frame
             Margin="12"
             Padding="12"
             CornerRadius="8"
-            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}">
+            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNull}}">
             <Frame.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Offset="0" Color="{DynamicResource bd04}" />
@@ -62,7 +62,7 @@
             Margin="12"
             Padding="12"
             CornerRadius="8"
-            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay}">
+            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNotNull}}">
             <Frame.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Offset="0" Color="{DynamicResource bd04}" />
@@ -106,13 +106,14 @@
         <Label
             Margin="16,0,0,-8"
             FontAttributes="Italic"
-            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNull}}"
             Text="Saved Accounts"
             TextColor="{DynamicResource tl01}" />
         <StackLayout
+            x:Name="SavedAccountsCollection"
             Margin="12,0"
             BindableLayout.ItemsSource="{Binding SavedAccounts, Mode=OneWay}"
-            IsVisible="{Binding AccountManager.IsLoggedIn, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNull}}"
             Spacing="8">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
