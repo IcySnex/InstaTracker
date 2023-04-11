@@ -35,8 +35,14 @@
 
 
                     <StackLayout Orientation="Horizontal">
-                        <Button Style="{StaticResource OutlinedAccent}" Text="Search User" />
-                        <Button Style="{StaticResource Outlined}" Text="Login" />
+                        <Button
+                            Command="{Binding NavigateToSearchCommand}"
+                            Style="{StaticResource OutlinedAccent}"
+                            Text="Search User" />
+                        <Button
+                            Command="{Binding NavigateToLoginCommand}"
+                            Style="{StaticResource Outlined}"
+                            Text="Login" />
                     </StackLayout>
                 </StackLayout>
             </Frame>

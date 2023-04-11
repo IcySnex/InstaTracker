@@ -18,15 +18,22 @@
             TextColor="{DynamicResource tl01}" />
 
         <ContentView
+            AutomationId="Automatically save new accounts"
+            ClassId="Save account"
+            ControlTemplate="{StaticResource SettingsCard}">
+            <Switch IsToggled="{Binding Config.SaveAccount, Mode=TwoWay}" />
+        </ContentView>
+
+        <ContentView
             AutomationId="Automatically log in when starting the app"
-            ClassId="Auto Login"
+            ClassId="Auto login"
             ControlTemplate="{StaticResource SettingsCard}">
             <Switch IsToggled="{Binding AutoLogin, Mode=TwoWay}" />
         </ContentView>
 
         <ContentView
             AutomationId="Automatically log in with this account when starting the app"
-            ClassId="Auto Login Account"
+            ClassId="Auto login account"
             ControlTemplate="{StaticResource SettingsCard}"
             IsEnabled="{Binding AutoLogin, Mode=OneWay}"
             Opacity="{Binding AutoLogin, Mode=OneWay, Converter={StaticResource OpacitySwitcher}, ConverterParameter=0.5}">

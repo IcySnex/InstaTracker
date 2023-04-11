@@ -10,7 +10,6 @@ public partial class HomeView : Components.Page
     public HomeView()
     {
         InitializeComponent();
-
         BindingContext = App.Provider.GetRequiredService<HomeViewModel>();
     }
 }

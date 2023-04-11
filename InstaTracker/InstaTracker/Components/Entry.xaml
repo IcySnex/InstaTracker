@@ -46,9 +46,9 @@
             <!--  The Entry  -->
             <Entry
                 x:Name="customEntry"
-                Margin="{x:OnPlatform Android='0,-8,0,4',
-                                      iOS='0,0,0,8'}"
-                ios:Entry.CursorColor="{Binding BorderColor, Source={x:Reference root}}"
+                Margin="{OnPlatform Android='0,-8,0,4',
+                                    iOS='0,0,0,8'}"
+                ios:Entry.CursorColor="{DynamicResource a07}"
                 BackgroundColor="{Binding EntryBackgroundColor, Source={x:Reference root}}"
                 Focused="CustomEntryFocused"
                 FontSize="Medium"

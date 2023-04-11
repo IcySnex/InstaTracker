@@ -10,7 +10,6 @@ public partial class SettingsView : Components.Page
     public SettingsView()
     {
         InitializeComponent();
-
         BindingContext = App.Provider.GetRequiredService<SettingsViewModel>();
     }
 }

@@ -24,7 +24,7 @@
                 </LinearGradientBrush>
             </Frame.Background>
 
-            <StackLayout Spacing="-12">
+            <StackLayout Spacing="{OnPlatform Android=-12, iOS=0}">
                 <com:Entry
                     Keyboard="Plain"
                     PlaceholderText="Username"
@@ -40,7 +40,7 @@
                 <Grid Margin="0,-4,0,0">
                     <Label
                         Margin="38,0,0,0"
-                        Text="Save login information"
+                        Text="Save account"
                         VerticalOptions="Center" />
                     <CheckBox
                         HorizontalOptions="Start"
@@ -50,7 +50,8 @@
                 </Grid>
 
                 <Button
-                    Margin="0,24,0,0"
+                    Margin="{OnPlatform Android='0,24,0,0',
+                                        iOS='0,12,0,0'}"
                     Command="{Binding LoginCommand}"
                     Style="{StaticResource AccentLight}"
                     Text="Login" />
@@ -162,6 +163,7 @@
                                     CommandParameter="{Binding}"
                                     Text="Login" />
                                 <Button
+                                    Padding="0"
                                     Command="{Binding Parent.BindingContext.DeleteSavedAccountCommand, Source={x:Reference root}}"
                                     CommandParameter="{Binding Id}"
                                     HeightRequest="36"

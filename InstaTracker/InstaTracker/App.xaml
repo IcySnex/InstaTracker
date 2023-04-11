@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:com="clr-namespace:InstaTracker.Components"
     xmlns:conv="clr-namespace:InstaTracker.Converters"
-    xmlns:hlp="clr-namespace:InstaTracker.Helpers"
     UserAppTheme="Dark">
     <Application.Resources>
         <ResourceDictionary>
