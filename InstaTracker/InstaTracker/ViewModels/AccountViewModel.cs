@@ -1,12 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using InstagramApiSharp.Classes.Models;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
 using Serilog;
 using System;
-using Xamarin.Forms;
+using System.Threading.Tasks;
 
 namespace InstaTracker.ViewModels;
 
@@ -106,7 +105,7 @@ public partial class AccountViewModel : ObservableObject
             "Failed to login!",
             "Please make sure you entered your correct username and password and if two-factor authorization is enabled, please disable it.\n\n");
 
-        if (Config.SaveAccount)
+        if (Config.SaveAccount && account is null)
             await LoadSavedAccountsAsync();
     }
 

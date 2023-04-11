@@ -2,6 +2,7 @@
 using InstaTracker.Models;
 using Serilog;
 using SQLite;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 
 namespace InstaTracker.Services;

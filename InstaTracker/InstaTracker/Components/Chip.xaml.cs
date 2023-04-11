@@ -3,6 +3,8 @@ using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using InstaTracker.Helpers;
 using System.Windows.Input;
+using System;
+using System.Threading.Tasks;
 
 namespace InstaTracker.Components;
 

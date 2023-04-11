@@ -5,6 +5,8 @@ using InstagramApiSharp.Classes.Models;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using Serilog;
+using System;
+using System.Threading.Tasks;
 
 namespace InstaTracker.Services;
 
@@ -29,9 +31,6 @@ public partial class AccountManager : ObservableObject
         logger.Log("Registered AccountManager");
     }
 
-
-    [ObservableProperty]
-    bool isLoggedIn;
 
     [ObservableProperty]
     InstaUserShort? loggedUser = null;
@@ -85,7 +84,6 @@ public partial class AccountManager : ObservableObject
 
         // Set logged user
         LoggedUser = GetLoggedUser();
-        IsLoggedIn = true;
 
         // Save login to database if saveLoginInformation is true
         if (!saveAccount)
@@ -120,7 +118,6 @@ public partial class AccountManager : ObservableObject
 
         // Update logged user
         LoggedUser = GetLoggedUser();
-        IsLoggedIn = true;
 
         // Save login to database if saveLoginInformation is true
         if (!saveAccount)
@@ -158,7 +155,6 @@ public partial class AccountManager : ObservableObject
         }
 
         LoggedUser = null;
-        IsLoggedIn = false;
         return;
     }
 }

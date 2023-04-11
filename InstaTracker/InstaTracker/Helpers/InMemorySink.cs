@@ -2,6 +2,8 @@
 using Serilog.Events;
 using Serilog.Formatting.Display;
 using Serilog.Formatting;
+using System;
+using System.IO;
 
 namespace InstaTracker.Helpers;
 

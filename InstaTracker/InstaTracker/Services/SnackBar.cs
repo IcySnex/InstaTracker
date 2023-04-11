@@ -1,7 +1,9 @@
 ﻿using InstaTracker.Helpers;
 using InstaTracker.Models;
 using Serilog;
+using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace InstaTracker.Services;

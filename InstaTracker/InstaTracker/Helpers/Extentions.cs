@@ -2,6 +2,10 @@
 using Xamarin.Forms;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Threading;
 
 namespace InstaTracker.Helpers;
     
@@ -78,22 +82,5 @@ public static class Extentions
 
         element.Animate(name, transform, callback, 16, length, easing, (v, c) => tcs.SetResult(c));
         return tcs.Task;
-    }
-
-
-    public static async Task<T> WithCancellation<T>(this Task<T> input,
-        CancellationToken cancellationToken)
-    {
-        TaskCompletionSource<object?> tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
-
-        using (cancellationToken.Register(state => ((TaskCompletionSource<object?>)state).TrySetResult(null), tcs))
-        {
-            Task result = await Task.WhenAny(input, tcs.Task);
-
-            if (result == tcs.Task)
-                throw new OperationCanceledException(cancellationToken);
-
-            return await input;
-        };
     }
 }

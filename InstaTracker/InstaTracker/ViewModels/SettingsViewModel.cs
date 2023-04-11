@@ -1,8 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
-using InstaTracker.Services;
 using Serilog;
+using System;
+using System.Linq;
 
 namespace InstaTracker.ViewModels;
 

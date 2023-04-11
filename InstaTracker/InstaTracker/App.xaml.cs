@@ -1,5 +1,4 @@
-﻿using InstaTracker.Views;
-using InstaTracker.Helpers;
+﻿using InstaTracker.Helpers;
 using InstaTracker.Services;
 using InstaTracker.Models;
 using Serilog;
@@ -9,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using InstaTracker.ViewModels;
 using InstagramApiSharp.API.Builder;
+using System;
+using System.IO;
 
 namespace InstaTracker;
 

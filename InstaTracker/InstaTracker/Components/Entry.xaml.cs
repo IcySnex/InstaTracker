@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Essentials;
 using Xamarin.Forms;
