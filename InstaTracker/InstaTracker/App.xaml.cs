@@ -42,6 +42,7 @@ public partial class App : Application
             .AddSingleton<SnackBar>()
             .AddSingleton(InstaApiBuilder.CreateBuilder().Build())
             .AddSingleton<AccountManager>()
+            .AddSingleton<HomeViewModel>()
             .AddSingleton<AccountViewModel>()
             .AddSingleton<SettingsViewModel>()
             .BuildServiceProvider();
