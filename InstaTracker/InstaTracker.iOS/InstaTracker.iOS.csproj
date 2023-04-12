@@ -179,4 +179,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\delete.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\search.png" />
+  </ItemGroup>
 </Project>

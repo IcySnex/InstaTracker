@@ -21,6 +21,8 @@ public partial class HomeViewModel : ObservableObject
     [RelayCommand]
     void NavigateToSearch()
     {
+        MainView mainView = (MainView)Application.Current.MainPage;
+        mainView.CurrentPage = mainView.Children[1];
 
         logger.Log("Navigated to search page");
     }
@@ -29,7 +31,7 @@ public partial class HomeViewModel : ObservableObject
     void NavigateToLogin()
     {
         MainView mainView = (MainView)Application.Current.MainPage;
-        mainView.CurrentPage = mainView.Children[1];
+        mainView.CurrentPage = mainView.Children[2];
 
         logger.Log("Navigated to login page");
     }

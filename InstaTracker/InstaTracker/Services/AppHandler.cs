@@ -14,17 +14,20 @@ public class AppHandler
     readonly ILogger logger;
     readonly Config config;
     readonly JsonConverter converter;
+    readonly SearchViewModel searchViewModel;
     readonly AccountViewModel accountViewModel;
 
     public AppHandler(
         ILogger logger,
         Config config,
         JsonConverter converter,
+        SearchViewModel searchViewModel,
         AccountViewModel accountViewModel)
     {
         this.logger = logger;
         this.config = config;
         this.converter = converter;
+        this.searchViewModel = searchViewModel;
         this.accountViewModel = accountViewModel;
 
         Application.Current.MainPage = new MainView();
@@ -37,6 +40,7 @@ public class AppHandler
 
     public async void Initialize()
     {
+        await searchViewModel.InitializeAsync();
         await accountViewModel.InitializeAsync();
     }
 

@@ -21,6 +21,12 @@
         </x:Arguments>
     </NavigationPage>
 
+    <NavigationPage Title="Search" IconImageSource="search.png">
+        <x:Arguments>
+            <local:SearchView />
+        </x:Arguments>
+    </NavigationPage>
+
     <NavigationPage Title="Account" IconImageSource="account.png">
         <x:Arguments>
             <local:AccountView />

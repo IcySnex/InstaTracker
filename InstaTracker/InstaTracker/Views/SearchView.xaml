@@ -1,0 +1,119 @@
+﻿<com:Page
+    x:Class="InstaTracker.Views.SearchView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components"
+    xmlns:mds="clr-namespace:InstaTracker.Models"
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit">
+
+    <StackLayout Margin="0,0,0,48" Spacing="12">
+        <Label Style="{StaticResource Header}" Text="Search" />
+
+        <Frame Padding="14" BackgroundColor="{DynamicResource bd01}">
+            <Label Text="InstaTracker allows you to save the followers, following and fans of any Instagram account to compare at a later date and time.&#10;&#10;But you can only save the stats of public profiles or profiles you follow." />
+        </Frame>
+
+        <Frame
+            Margin="12"
+            Padding="12"
+            CornerRadius="8">
+            <Frame.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="{DynamicResource bd04}" />
+                    <GradientStop Offset="1" Color="{DynamicResource bd01}" />
+                </LinearGradientBrush>
+            </Frame.Background>
+
+            <StackLayout Spacing="-7">
+                <com:Entry
+                    Keyboard="Plain"
+                    LeadingIcon="search.png"
+                    PlaceholderText="Username"
+                    ReturnType="Next"
+                    Text="{Binding SearchUsername, Mode=TwoWay}" />
+
+                <Button
+                    Command="{Binding SearchCommand}"
+                    Style="{StaticResource AccentLight}"
+                    Text="Search" />
+            </StackLayout>
+        </Frame>
+
+        <Label
+            Margin="16,0,0,-8"
+            FontAttributes="Italic"
+            IsVisible="{Binding HasSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            Text="History"
+            TextColor="{DynamicResource tl01}" />
+        <StackLayout
+            Margin="12,0"
+            BindableLayout.ItemsSource="{Binding SearchHistory, Mode=OneWay}"
+            IsVisible="{Binding HasSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            Spacing="4">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                        x:Name="root"
+                        Padding="12,4"
+                        BackgroundColor="Transparent"
+                        CornerRadius="8"
+                        HasShadow="False">
+
+                        <Grid>
+                            <Image
+                                HeightRequest="44"
+                                HorizontalOptions="Start"
+                                Source="{Binding ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
+                                WidthRequest="44">
+                                <Image.Clip>
+                                    <EllipseGeometry
+                                        Center="22,25"
+                                        RadiusX="22"
+                                        RadiusY="22" />
+                                </Image.Clip>
+                            </Image>
+
+                            <Label
+                                Margin="56,0,35,0"
+                                LineBreakMode="TailTruncation"
+                                Opacity="1"
+                                Style="{StaticResource TitleSecondary}"
+                                Text="{Binding Username, Mode=OneWay, TargetNullValue=N/A}"
+                                TextColor="{DynamicResource tl00}" />
+                            <Label Margin="56,28,35,0" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding FullName, Mode=OneWay, TargetNullValue=N/A}" />
+                                        <Span Style="{StaticResource Subpoint}" Text=" - " />
+                                        <Span Style="{StaticResource Subpoint}" Text="{Binding Id, Mode=OneWay, TargetNullValue=N/A}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Grid Margin="-12,-4" tlk:TouchEffect.NativeAnimation="True">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                            <Button
+                                Padding="-36"
+                                tlk:ShadowEffect.Color="Transparent"
+                                BackgroundColor="Transparent"
+                                Command="{Binding Parent.BindingContext.RemoveSearchedAccountCommand, Source={x:Reference root}}"
+                                CommandParameter="{Binding Id}"
+                                HeightRequest="36"
+                                HorizontalOptions="End"
+                                ImageSource="delete.png"
+                                VerticalOptions="Center"
+                                WidthRequest="36" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+
+            <BindableLayout.EmptyView>
+                <Label Style="{StaticResource ContentSecondary}" Text="The history is currently empty." />
+            </BindableLayout.EmptyView>
+        </StackLayout>
+    </StackLayout>
+</com:Page>
