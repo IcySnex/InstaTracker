@@ -119,7 +119,7 @@ public partial class AccountViewModel : ObservableObject
             "");
 
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = true)]
     async Task DeleteSavedAccountAsync(
         int id)
     {

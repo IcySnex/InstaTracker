@@ -3,7 +3,8 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:com="clr-namespace:InstaTracker.Components"
-    xmlns:mds="clr-namespace:InstaTracker.Models">
+    xmlns:mds="clr-namespace:InstaTracker.Models"
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit">
 
     <StackLayout Margin="0,0,0,48" Spacing="12">
         <Label Style="{StaticResource Header}" Text="Account" />
@@ -114,37 +115,38 @@
             Margin="12,0"
             BindableLayout.ItemsSource="{Binding SavedAccounts, Mode=OneWay}"
             IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNull}}"
-            Spacing="8">
+            Spacing="4">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <Frame
                         x:Name="root"
-                        Padding="12"
-                        BackgroundColor="{DynamicResource bd01}"
-                        CornerRadius="8">
+                        Padding="12,4"
+                        BackgroundColor="Transparent"
+                        CornerRadius="8"
+                        HasShadow="False">
 
                         <Grid>
                             <Image
-                                HeightRequest="54"
+                                HeightRequest="44"
                                 HorizontalOptions="Start"
                                 Source="{Binding ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
-                                WidthRequest="54">
+                                WidthRequest="44">
                                 <Image.Clip>
                                     <EllipseGeometry
-                                        Center="27,27"
-                                        RadiusX="27"
-                                        RadiusY="27" />
+                                        Center="22,25"
+                                        RadiusX="22"
+                                        RadiusY="22" />
                                 </Image.Clip>
                             </Image>
 
                             <Label
-                                Margin="66,0,130,0"
+                                Margin="56,0,35,0"
                                 LineBreakMode="TailTruncation"
                                 Opacity="1"
                                 Style="{StaticResource TitleSecondary}"
                                 Text="{Binding Username, Mode=OneWay, TargetNullValue=N/A}"
                                 TextColor="{DynamicResource tl00}" />
-                            <Label Margin="66,28,130,0" LineBreakMode="TailTruncation">
+                            <Label Margin="56,28,35,0" LineBreakMode="TailTruncation">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding FullName, Mode=OneWay, TargetNullValue=N/A}" />
@@ -154,36 +156,29 @@
                                 </Label.FormattedText>
                             </Label>
 
-                            <StackLayout
+                            <Grid
+                                Margin="-12,-4"
+                                tlk:TouchEffect.Command="{Binding Parent.BindingContext.LoginCommand, Source={x:Reference root}}"
+                                tlk:TouchEffect.CommandParameter="{Binding}"
+                                tlk:TouchEffect.NativeAnimation="True" />
+                            <Button
+                                Padding="-36"
+                                tlk:ShadowEffect.Color="Transparent"
+                                BackgroundColor="Transparent"
+                                Command="{Binding Parent.BindingContext.DeleteSavedAccountCommand, Source={x:Reference root}}"
+                                CommandParameter="{Binding Id}"
+                                HeightRequest="36"
                                 HorizontalOptions="End"
-                                Orientation="Horizontal"
-                                Spacing="4"
-                                VerticalOptions="Center">
-                                <Button
-                                    Command="{Binding Parent.BindingContext.LoginCommand, Source={x:Reference root}}"
-                                    CommandParameter="{Binding}"
-                                    Text="Login" />
-                                <Button
-                                    Padding="0"
-                                    Command="{Binding Parent.BindingContext.DeleteSavedAccountCommand, Source={x:Reference root}}"
-                                    CommandParameter="{Binding Id}"
-                                    HeightRequest="36"
-                                    ImageSource="delete.png"
-                                    WidthRequest="36" />
-                            </StackLayout>
+                                ImageSource="delete.png"
+                                VerticalOptions="Center"
+                                WidthRequest="36" />
                         </Grid>
                     </Frame>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
 
             <BindableLayout.EmptyView>
-                <Frame
-                    Padding="12"
-                    BackgroundColor="{DynamicResource bd01}"
-                    CornerRadius="8">
-
-                    <Label Text="There are currently no accounts saved." />
-                </Frame>
+                <Label Style="{StaticResource ContentSecondary}" Text="There are currently no accounts saved." />
             </BindableLayout.EmptyView>
         </StackLayout>
     </StackLayout>

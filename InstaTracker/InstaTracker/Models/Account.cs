@@ -1,5 +1,4 @@
-﻿using InstagramApiSharp.Classes;
-using SQLite;
+﻿using SQLite;
 
 namespace InstaTracker.Models;
 
