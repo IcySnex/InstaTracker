@@ -21,7 +21,12 @@ public partial class AccountView : Components.Page
                 return;
 
             BindableLayout.SetItemsSource(SavedAccountsCollection, null);
-            BindableLayout.SetItemsSource(SavedAccountsCollection, viewModel.SavedAccounts);
+            SavedAccountsCollection.SetBinding(BindableLayout.ItemsSourceProperty, new Binding()
+            {
+                Source = viewModel,
+                Path = "SavedAccounts",
+                Mode = BindingMode.OneWay   
+            });
         };
     }
 }
