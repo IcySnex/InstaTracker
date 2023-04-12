@@ -1,5 +1,4 @@
 ﻿using InstaTracker.Helpers;
-using InstaTracker.Models;
 using Serilog;
 using System;
 using System.Threading;
@@ -30,7 +29,7 @@ public class SnackBar
     public async Task ShowAsync(
         string message,
         string? buttonText = "Okay",
-        int millisecondsDelay = 4000,
+        int millisecondsDelay = 2000,
         bool closeOnButtonClicked = true,
         Action? onButtonClicked = null,
         Action? onClosing = null,
@@ -97,7 +96,7 @@ public class SnackBar
     public async void Show(
         string message,
         string? buttonText = "Okay",
-        int millisecondsDelay = 4000,
+        int millisecondsDelay = 2000,
         bool closeOnButtonClicked = true,
         Action? onButtonClicked = null,
         Action? onClosing = null,

@@ -61,7 +61,7 @@ public partial class AccountViewModel : ObservableObject
     {
         try
         {
-            snackBar.Show(startingMessage, null, 2000, awaitPreviousSnackBar: true);
+            snackBar.Show(startingMessage, null, awaitPreviousSnackBar: true);
             await task;
         }
         catch (Exception ex)
@@ -78,7 +78,7 @@ public partial class AccountViewModel : ObservableObject
     {
         try
         {
-            snackBar.Show("Loading saved accounts...", null, 2000, awaitPreviousSnackBar: true);
+            snackBar.Show("Loading saved accounts...", null, awaitPreviousSnackBar: true);
             SavedAccounts = await database.GetAllAsync();
             settingsViewModel.ReloadAccountSettings(SavedAccounts);
         }

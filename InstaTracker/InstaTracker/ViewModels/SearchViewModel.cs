@@ -44,7 +44,7 @@ public partial class SearchViewModel : ObservableObject
     {
         try
         {
-            snackBar.Show(startingMessage, null, 2000, awaitPreviousSnackBar: true);
+            snackBar.Show(startingMessage, null, awaitPreviousSnackBar: true);
             await task;
         }
         catch (Exception ex)
@@ -61,7 +61,7 @@ public partial class SearchViewModel : ObservableObject
     {
         try
         {
-            snackBar.Show("Loading search history...", null, 2000, awaitPreviousSnackBar: true);
+            snackBar.Show("Loading search history...", null, awaitPreviousSnackBar: true);
             SearchHistory = await database.GetAllAsync();
         }
         catch (Exception ex)
