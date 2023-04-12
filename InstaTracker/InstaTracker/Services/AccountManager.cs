@@ -14,13 +14,13 @@ public partial class AccountManager : ObservableObject
 {
     readonly ILogger logger;
     readonly Config config;
-    readonly DatabaseConnection database;
+    readonly AccountDatabaseConnection database;
     readonly IInstaApi instagram;
 
     public AccountManager(
         ILogger logger,
         Config config,
-        DatabaseConnection database,
+        AccountDatabaseConnection database,
         IInstaApi instagram)
     {
         this.logger = logger;
@@ -90,12 +90,12 @@ public partial class AccountManager : ObservableObject
             return;
 
         logger.Log("Saving login state to database");
-        int accountId = await database.AddAccountAsync(new(
+        int accountId = await database.AddAsync(new(
             LoggedUser.UserName,
             LoggedUser.FullName,
             LoggedUser.ProfilePicture,
             instagram.GetStateDataAsString(),
-            await database.GetAccountAsync(username) is Account account ? account.Id : null));
+            await database.GetAsync(username) is Account account ? account.Id : null));
 
         if (config.AutoLoginId.HasValue)
             config.AutoLoginId = accountId;
@@ -124,12 +124,12 @@ public partial class AccountManager : ObservableObject
             return;
 
         logger.Log("Saving login state to database");
-        int accountId = await database.AddAccountAsync(new(
+        int accountId = await database.AddAsync(new(
             LoggedUser.UserName,
             LoggedUser.FullName,
             LoggedUser.ProfilePicture,
             instagram.GetStateDataAsString(),
-            await database.GetAccountAsync(LoggedUser.UserName) is Account account ? account.Id : null));
+            await database.GetAsync(LoggedUser.UserName) is Account account ? account.Id : null));
 
         if (config.AutoLoginId.HasValue)
             config.AutoLoginId = accountId;

@@ -37,6 +37,8 @@ public partial class App : Application
             .AddSingleton(logger)
             .AddSingleton(configuration)
             .AddSingleton<DatabaseConnection>()
+            .AddSingleton<AccountDatabaseConnection>()
+            .AddSingleton<SearchedAccountDatabaseConnection>()
             .AddSingleton<AppHandler>()
             .AddSingleton<JsonConverter>()
             .AddSingleton<Message>()
@@ -44,6 +46,7 @@ public partial class App : Application
             .AddSingleton(InstaApiBuilder.CreateBuilder().Build())
             .AddSingleton<AccountManager>()
             .AddSingleton<HomeViewModel>()
+            .AddSingleton<SearchViewModel>()
             .AddSingleton<AccountViewModel>()
             .AddSingleton<SettingsViewModel>()
             .BuildServiceProvider();

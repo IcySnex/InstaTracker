@@ -165,7 +165,7 @@
                                 Padding="-36"
                                 tlk:ShadowEffect.Color="Transparent"
                                 BackgroundColor="Transparent"
-                                Command="{Binding Parent.BindingContext.DeleteSavedAccountCommand, Source={x:Reference root}}"
+                                Command="{Binding Parent.BindingContext.RemoveSavedAccountCommand, Source={x:Reference root}}"
                                 CommandParameter="{Binding Id}"
                                 HeightRequest="36"
                                 HorizontalOptions="End"

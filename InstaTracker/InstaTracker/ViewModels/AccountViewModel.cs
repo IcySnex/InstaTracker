@@ -12,7 +12,7 @@ namespace InstaTracker.ViewModels;
 public partial class AccountViewModel : ObservableObject
 {
     readonly ILogger logger;
-    readonly DatabaseConnection database;
+    readonly AccountDatabaseConnection database;
     readonly Message message;
     readonly SnackBar snackBar;
     readonly SettingsViewModel settingsViewModel;
@@ -23,7 +23,7 @@ public partial class AccountViewModel : ObservableObject
     public AccountViewModel(
         ILogger logger,
         Config config,
-        DatabaseConnection database,
+        AccountDatabaseConnection database,
         Message message,
         SnackBar snackBar,
         AccountManager accountManager,
@@ -40,7 +40,7 @@ public partial class AccountViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
-        if (Config.AutoLoginId.HasValue && await database.GetAccountAsync(Config.AutoLoginId.Value) is Account savedLogin)
+        if (Config.AutoLoginId.HasValue && await database.GetAsync(Config.AutoLoginId.Value) is Account savedLogin)
             await ExecuteNotifiedAsync(
                 AccountManager.LoginAsync(savedLogin.StateJson, false),
                 "Logging in...",
@@ -79,7 +79,7 @@ public partial class AccountViewModel : ObservableObject
         try
         {
             snackBar.Show("Loading saved accounts...", null, 2000, awaitPreviousSnackBar: true);
-            SavedAccounts = await database.GetAccountsAsync();
+            SavedAccounts = await database.GetAllAsync();
             settingsViewModel.ReloadAccountSettings(SavedAccounts);
         }
         catch (Exception ex)
@@ -90,12 +90,17 @@ public partial class AccountViewModel : ObservableObject
 
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
     string username = default!;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
     string password = default!;
 
-    [RelayCommand]
+    bool CanLoginCommandExecute(Account? account) =>
+        account is null ? !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password) : true;
+
+    [RelayCommand(CanExecute = nameof(CanLoginCommandExecute))]
     async Task LoginAsync(
         Account? account = null)
     {
@@ -120,11 +125,11 @@ public partial class AccountViewModel : ObservableObject
 
 
     [RelayCommand(AllowConcurrentExecutions = true)]
-    async Task DeleteSavedAccountAsync(
+    async Task RemoveSavedAccountAsync(
         int id)
     {
         await ExecuteNotifiedAsync(
-            database.RemoveAccountAsync(id),
+            database.RemoveAsync(id),
             "Removing saved account...",
             "Failed removing saved account",
             "");
