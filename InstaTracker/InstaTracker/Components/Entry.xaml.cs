@@ -231,6 +231,9 @@ public partial class Entry : Grid
         customEntry.TextColor = HasError ? ErrorTextColor : TextColorActive;
         containerFrame.BorderColor = HasError ? ErrorTextColor : BorderColorActive;
         placeholderText.TextColor = HasError ? ErrorTextColor : BorderColorActive;
+        IconTintColorEffect.SetTintColor(leadingIcon, HasError ? ErrorTextColor : BorderColorActive);
+        IconTintColorEffect.SetTintColor(trailingIcon, HasError ? ErrorTextColor : BorderColorActive);
+        IconTintColorEffect.SetTintColor(passwordIcon, HasError ? ErrorTextColor : BorderColorActive);
 
         if (string.IsNullOrEmpty(PlaceholderText))
             return;
@@ -246,6 +249,9 @@ public partial class Entry : Grid
         customEntry.TextColor = HasError ? ErrorTextColor : TextColor;
         containerFrame.BorderColor = HasError ? ErrorTextColor : BorderColor;
         placeholderText.TextColor = HasError ? ErrorTextColor : BorderColor;
+        IconTintColorEffect.SetTintColor(leadingIcon, HasError ? ErrorTextColor : BorderColor);
+        IconTintColorEffect.SetTintColor(trailingIcon, HasError ? ErrorTextColor : BorderColor);
+        IconTintColorEffect.SetTintColor(passwordIcon, HasError ? ErrorTextColor : BorderColor);
 
         if (!string.IsNullOrEmpty(customEntry.Text) && customEntry.MaxLength > 0)
             return;

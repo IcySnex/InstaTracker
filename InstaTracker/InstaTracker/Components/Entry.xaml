@@ -5,6 +5,7 @@
     xmlns:effects="clr-namespace:InstaTracker.Effects"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit"
     x:Name="root"
     Padding="0,5,0,0"
     BackgroundColor="Transparent"
@@ -31,14 +32,15 @@
             <!--  Leading icon  -->
             <Image
                 x:Name="leadingIcon"
-                HeightRequest="24"
+                tlk:IconTintColorEffect.TintColor="{Binding BorderColor, Source={x:Reference root}}"
+                HeightRequest="22"
                 IsVisible="{Binding LeadingIcon, Converter={StaticResource IsNotNull}, Source={x:Reference root}}"
                 Source="{Binding LeadingIcon, Source={x:Reference root}}"
                 WidthRequest="0">
                 <Image.Triggers>
                     <Trigger TargetType="Image" Property="IsVisible" Value="True">
-                        <Setter Property="WidthRequest" Value="24" />
-                        <Setter Property="Margin" Value="18,0,0,0" />
+                        <Setter Property="WidthRequest" Value="22" />
+                        <Setter Property="Margin" Value="16,0,0,0" />
                     </Trigger>
                 </Image.Triggers>
             </Image>
@@ -67,13 +69,14 @@
             <!--  Trailing icon  -->
             <Image
                 x:Name="trailingIcon"
-                HeightRequest="24"
+                tlk:IconTintColorEffect.TintColor="{Binding BorderColor, Source={x:Reference root}}"
+                HeightRequest="22"
                 IsVisible="{Binding TrailingIcon, Converter={StaticResource IsNotNull}, Source={x:Reference root}}"
                 Source="{Binding TrailingIcon, Source={x:Reference root}}"
                 WidthRequest="0">
                 <Image.Triggers>
                     <Trigger TargetType="Image" Property="IsVisible" Value="True">
-                        <Setter Property="WidthRequest" Value="24" />
+                        <Setter Property="WidthRequest" Value="22" />
                         <Setter Property="Margin" Value="0,0,18,0" />
                     </Trigger>
                 </Image.Triggers>
@@ -82,17 +85,17 @@
             <!--  Eye icon for password  -->
             <Image
                 x:Name="passwordIcon"
-                HeightRequest="24"
-                IsVisible="{Binding IsPassword, Source={x:Reference root}}"
-                Opacity="0.8">
+                tlk:IconTintColorEffect.TintColor="{Binding BorderColor, Source={x:Reference root}}"
+                HeightRequest="22"
+                IsVisible="{Binding IsPassword, Source={x:Reference root}}">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Tapped="PasswordEyeTapped" />
                 </Image.GestureRecognizers>
 
                 <Image.Triggers>
                     <Trigger TargetType="Image" Property="IsVisible" Value="True">
-                        <Setter Property="WidthRequest" Value="24" />
-                        <Setter Property="Margin" Value="0,0,18,0" />
+                        <Setter Property="WidthRequest" Value="22" />
+                        <Setter Property="Margin" Value="0,0,16,0" />
                     </Trigger>
 
                     <Trigger TargetType="Image" Property="IsVisible" Value="False">
