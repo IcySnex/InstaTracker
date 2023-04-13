@@ -154,7 +154,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\icon.png" />
     <BundleResource Include="Resources\settings.png" />
     <BundleResource Include="Resources\home.png" />
   </ItemGroup>
@@ -177,9 +176,12 @@
     <BundleResource Include="Resources\nopicture.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\delete.png" />
+    <BundleResource Include="Resources\search.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\search.png" />
+    <BundleResource Include="Resources\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\delete.png" />
   </ItemGroup>
 </Project>

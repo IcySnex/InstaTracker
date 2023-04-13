@@ -16,6 +16,7 @@ public class RemoveEntryBordersEffect : PlatformEffect
 
         textField.BorderStyle = UITextBorderStyle.None;
         textField.BackgroundColor = Color.Transparent.ToUIColor();
+        textField.TintColor = UIColor.FromRGB(37, 150, 190);
     }
 
     protected override void OnDetached()
