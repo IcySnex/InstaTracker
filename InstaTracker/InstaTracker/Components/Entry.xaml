@@ -48,9 +48,7 @@
             <!--  The Entry  -->
             <Entry
                 x:Name="customEntry"
-                Margin="{OnPlatform Android='0,-8,0,4',
-                                    iOS='0,0,0,8'}"
-                ios:Entry.CursorColor="{DynamicResource a07}"
+                Margin="0,-4,0,8"
                 BackgroundColor="{Binding EntryBackgroundColor, Source={x:Reference root}}"
                 Focused="CustomEntryFocused"
                 FontSize="Medium"
@@ -124,7 +122,7 @@
     <!--  Placeholder  -->
     <Frame
         x:Name="placeholderContainer"
-        Margin="15,16,40,0"
+        Margin="15,20,40,0"
         Padding="5,0"
         BackgroundColor="{Binding EntryBackgroundColor, Source={x:Reference root}}"
         CornerRadius="4"
@@ -137,7 +135,7 @@
                 Binding="{Binding IsVisible, Source={x:Reference leadingIcon}}"
                 TargetType="Frame"
                 Value="True">
-                <Setter Property="Margin" Value="45, 16, 40, 0" />
+                <Setter Property="Margin" Value="45, 20, 40, 0" />
             </DataTrigger>
         </Frame.Triggers>
 

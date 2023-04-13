@@ -133,7 +133,8 @@
                                 WidthRequest="44">
                                 <Image.Clip>
                                     <EllipseGeometry
-                                        Center="22,25"
+                                        Center="{OnPlatform Android='22,25',
+                                                            iOS='22,22'}"
                                         RadiusX="22"
                                         RadiusY="22" />
                                 </Image.Clip>

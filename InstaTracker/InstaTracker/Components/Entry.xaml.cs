@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -15,11 +14,11 @@ public partial class Entry : Grid
         {
             Entry view = (Entry)bindable;
 
-            if (string.IsNullOrEmpty(view.PlaceholderText) || view.placeholderContainer.TranslationY == -24)
+            if (string.IsNullOrEmpty(view.PlaceholderText) || view.placeholderContainer.TranslationY == -28)
                 return;
 
             MainThread.BeginInvokeOnMainThread(async () =>
-                await view.placeholderContainer.TranslateTo(0, -24, 150, Easing.Linear));
+                await view.placeholderContainer.TranslateTo(0, -28, 150, Easing.Linear));
             view.placeholderText.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label));
         });
 
@@ -238,7 +237,7 @@ public partial class Entry : Grid
         if (string.IsNullOrEmpty(PlaceholderText))
             return;
 
-        await placeholderContainer.TranslateTo(0, -24, 150, Easing.Linear);
+        await placeholderContainer.TranslateTo(0, -28, 150, Easing.Linear);
         placeholderText.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label));
     }
 

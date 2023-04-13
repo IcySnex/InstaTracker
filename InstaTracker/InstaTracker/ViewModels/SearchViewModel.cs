@@ -84,7 +84,7 @@ public partial class SearchViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanSearchCommandExecute))]
     async Task SearchAsync()
     {
-        await database.AddAsync(new("Oops", "fff", null));
+        await database.AddAsync(new(SearchUsername, "Full Name", null));
 
         await LoadSearchHistory();
     }

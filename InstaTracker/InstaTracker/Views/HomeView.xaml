@@ -16,7 +16,7 @@
                 <Frame.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Offset="0" Color="{DynamicResource bd02}" />
-                        <GradientStop Offset="1" Color="Transparent" />
+                        <GradientStop Offset="1" Color="{DynamicResource bd01}" />
                     </LinearGradientBrush>
                 </Frame.Background>
 
