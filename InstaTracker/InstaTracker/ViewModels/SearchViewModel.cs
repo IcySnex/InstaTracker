@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using InstagramApiSharp.Classes.Models;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InstaTracker.ViewModels;
@@ -15,17 +17,20 @@ public partial class SearchViewModel : ObservableObject
     readonly SearchedAccountDatabaseConnection database;
     readonly Message message;
     readonly SnackBar snackBar;
+    readonly SearchManager searchmanager;
 
     public SearchViewModel(
         ILogger logger,
         SearchedAccountDatabaseConnection database,
         Message message,
-        SnackBar snackBar)
+        SnackBar snackBar,
+        SearchManager searchmanager)
     {
         this.logger = logger;
         this.database = database;
         this.message = message;
         this.snackBar = snackBar;
+        this.searchmanager = searchmanager;
     }
 
     public async Task InitializeAsync()
@@ -33,24 +38,6 @@ public partial class SearchViewModel : ObservableObject
         await LoadSearchHistory();
 
         logger.Log("Initialized SearchViewModel");
-    }
-
-
-    async Task ExecuteNotifiedAsync(
-        Task task,
-        string startingMessage,
-        string failedTitle,
-        string failedMessage)
-    {
-        try
-        {
-            snackBar.Show(startingMessage, null, awaitPreviousSnackBar: true);
-            await task;
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show(failedTitle, "More", 10000, onButtonClicked: async () => await message.ShowAsync(failedTitle, $"{failedMessage}({ex.Message})"));
-        }
     }
 
 
@@ -66,40 +53,69 @@ public partial class SearchViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            snackBar.Show("Failed loading search history!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed loading search history!", $"({ex.Message})"));
+            snackBar.Show("Failed loading search history!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed loading search history!", ex.Message));
         }
     }
 
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    async Task RemoveSearchedAccountFromHistoryAsync(
+        int id)
+    {
+        try
+        {
+            snackBar.Show("Removing account from history...", null, awaitPreviousSnackBar: true);
+            await database.RemoveAsync(id);
+        }
+        catch (Exception ex)
+        {
+            snackBar.Show("Failed removing account from history", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed removing account from history", ex.Message));
+        }
+
+        await LoadSearchHistory();
+    }
+
+
+    [ObservableProperty]
+    List<InstaUser>? searchResults = null;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SearchCommand))]
     string searchUsername = default!;
 
     [ObservableProperty]
-    bool hasSearchResults = false;
+    bool showSearchResults = false;
 
     bool CanSearchCommandExecute =>
         !string.IsNullOrWhiteSpace(SearchUsername);
 
-    [RelayCommand(CanExecute = nameof(CanSearchCommandExecute))]
+    [RelayCommand]
     async Task SearchAsync()
     {
-        await database.AddAsync(new(SearchUsername, "Full Name", null));
+        try
+        {
+            snackBar.Show("Searching for username...", null, awaitPreviousSnackBar: true);
+            SearchResults = await searchmanager.SearchAccountsAsync(SearchUsername);
+            ShowSearchResults = true;
+        }
+        catch (Exception ex)
+        {
+            snackBar.Show("Failed to search for username!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to search for username!", ex.Message));
+        }
 
-        await LoadSearchHistory();
     }
 
-
-    [RelayCommand(AllowConcurrentExecutions = true)]
-    async Task RemoveSearchedAccountAsync(
-        int id)
+    [RelayCommand]
+    void ClearSearch()
     {
-        await ExecuteNotifiedAsync(
-            database.RemoveAsync(id),
-            "Removing account from history...",
-            "Failed removing account from history",
-            "");
-
-        await LoadSearchHistory();
+        try
+        {
+            snackBar.Show("Clearing search results...", null, awaitPreviousSnackBar: true);
+            SearchResults = null;
+            ShowSearchResults = false;
+        }
+        catch (Exception ex)
+        {
+            snackBar.Show("Failed to clear search results!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to clear search results!", ex.Message));
+        }
     }
 }

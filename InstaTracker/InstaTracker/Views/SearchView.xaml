@@ -33,88 +33,58 @@
                     Text="{Binding SearchUsername, Mode=TwoWay}"
                     VerticalOptions="Start" />
 
-                <Button
-                    Command="{Binding SearchCommand}"
-                    Style="{StaticResource AccentLight}"
-                    Text="Search" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Command="{Binding SearchCommand}"
+                        Style="{StaticResource Accent}"
+                        Text="Search" />
+                    <Button
+                        Grid.Column="1"
+                        Command="{Binding ClearSearchCommand}"
+                        IsVisible="{Binding ShowSearchResults, Mode=OneWay}"
+                        Style="{StaticResource Light}"
+                        Text="Clear" />
+                </Grid>
             </StackLayout>
         </Frame>
 
         <Label
             Margin="16,0,0,-8"
             FontAttributes="Italic"
-            IsVisible="{Binding HasSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            IsVisible="{Binding ShowSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
             Text="History"
             TextColor="{DynamicResource tl01}" />
         <StackLayout
             Margin="12,0"
+            BindableLayout.ItemTemplate="{StaticResource SearchedAccountDataTemplate}"
             BindableLayout.ItemsSource="{Binding SearchHistory, Mode=OneWay}"
-            IsVisible="{Binding HasSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
+            IsVisible="{Binding ShowSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
             Spacing="4">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate>
-                    <Frame
-                        x:Name="root"
-                        Padding="12,4"
-                        BackgroundColor="Transparent"
-                        CornerRadius="8"
-                        HasShadow="False">
-
-                        <Grid>
-                            <Image
-                                HeightRequest="44"
-                                HorizontalOptions="Start"
-                                Source="{Binding ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
-                                WidthRequest="44">
-                                <Image.Clip>
-                                    <EllipseGeometry
-                                        Center="{OnPlatform Android='22,25',
-                                                            iOS='22,22'}"
-                                        RadiusX="22"
-                                        RadiusY="22" />
-                                </Image.Clip>
-                            </Image>
-
-                            <Label
-                                Margin="56,0,35,0"
-                                LineBreakMode="TailTruncation"
-                                Opacity="1"
-                                Style="{StaticResource TitleSecondary}"
-                                Text="{Binding Username, Mode=OneWay, TargetNullValue=N/A}"
-                                TextColor="{DynamicResource tl00}" />
-                            <Label Margin="56,28,35,0" LineBreakMode="TailTruncation">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding FullName, Mode=OneWay, TargetNullValue=N/A}" />
-                                        <Span Style="{StaticResource Subpoint}" Text=" - " />
-                                        <Span Style="{StaticResource Subpoint}" Text="{Binding Id, Mode=OneWay, TargetNullValue=N/A}" />
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-
-                            <Grid Margin="-12,-4" tlk:TouchEffect.NativeAnimation="True">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer />
-                                </Grid.GestureRecognizers>
-                            </Grid>
-                            <Button
-                                Padding="-36"
-                                tlk:ShadowEffect.Color="Transparent"
-                                BackgroundColor="Transparent"
-                                Command="{Binding Parent.BindingContext.RemoveSearchedAccountCommand, Source={x:Reference root}}"
-                                CommandParameter="{Binding Id}"
-                                HeightRequest="36"
-                                HorizontalOptions="End"
-                                ImageSource="delete.png"
-                                VerticalOptions="Center"
-                                WidthRequest="36" />
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
 
             <BindableLayout.EmptyView>
                 <Label Style="{StaticResource ContentSecondary}" Text="The history is currently empty." />
+            </BindableLayout.EmptyView>
+        </StackLayout>
+
+        <Label
+            Margin="16,0,0,-8"
+            FontAttributes="Italic"
+            IsVisible="{Binding ShowSearchResults, Mode=OneWay}"
+            Text="Search Results"
+            TextColor="{DynamicResource tl01}" />
+        <StackLayout
+            Margin="12,0"
+            BindableLayout.ItemTemplate="{StaticResource InstaUserShortTemplate}"
+            BindableLayout.ItemsSource="{Binding SearchResults, Mode=OneWay}"
+            IsVisible="{Binding ShowSearchResults, Mode=OneWay}"
+            Spacing="4">
+
+            <BindableLayout.EmptyView>
+                <Label Style="{StaticResource ContentSecondary}" Text="It looks like there are no accounts with this username." />
             </BindableLayout.EmptyView>
         </StackLayout>
     </StackLayout>

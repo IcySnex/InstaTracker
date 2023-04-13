@@ -34,17 +34,23 @@ public partial class App : Application
 
         logger.Log("Initializing ServiceProvider");
         Provider = new ServiceCollection()
+            // Application
             .AddSingleton(logger)
             .AddSingleton(configuration)
+            // Database
             .AddSingleton<DatabaseConnection>()
             .AddSingleton<AccountDatabaseConnection>()
             .AddSingleton<SearchedAccountDatabaseConnection>()
+            // Services
             .AddSingleton<AppHandler>()
             .AddSingleton<JsonConverter>()
             .AddSingleton<Message>()
             .AddSingleton<SnackBar>()
+            // Instagram
             .AddSingleton(InstaApiBuilder.CreateBuilder().Build())
             .AddSingleton<AccountManager>()
+            .AddSingleton<SearchManager>()
+            // ViewModels
             .AddSingleton<HomeViewModel>()
             .AddSingleton<SearchViewModel>()
             .AddSingleton<AccountViewModel>()

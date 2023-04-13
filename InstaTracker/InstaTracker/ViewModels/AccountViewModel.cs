@@ -88,6 +88,19 @@ public partial class AccountViewModel : ObservableObject
         }
     }
 
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    async Task RemoveSavedAccountAsync(
+        int id)
+    {
+        await ExecuteNotifiedAsync(
+            database.RemoveAsync(id),
+            "Removing saved account...",
+            "Failed removing saved account",
+            "");
+
+        await LoadSavedAccountsAsync();
+    }
+
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
@@ -123,17 +136,4 @@ public partial class AccountViewModel : ObservableObject
             "Failed to log out!",
             "");
 
-
-    [RelayCommand(AllowConcurrentExecutions = true)]
-    async Task RemoveSavedAccountAsync(
-        int id)
-    {
-        await ExecuteNotifiedAsync(
-            database.RemoveAsync(id),
-            "Removing saved account...",
-            "Failed removing saved account",
-            "");
-
-        await LoadSavedAccountsAsync();
-    }
 }
