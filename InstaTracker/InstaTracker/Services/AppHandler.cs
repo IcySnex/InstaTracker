@@ -40,8 +40,8 @@ public class AppHandler
 
     public async void Initialize()
     {
-        await searchViewModel.InitializeAsync();
         await accountViewModel.InitializeAsync();
+        await searchViewModel.InitializeAsync();
     }
 
 

@@ -61,7 +61,7 @@
         <StackLayout
             Margin="12,0"
             BindableLayout.ItemTemplate="{StaticResource SearchedAccountDataTemplate}"
-            BindableLayout.ItemsSource="{Binding SearchHistory, Mode=OneWay}"
+            BindableLayout.ItemsSource="{Binding SearchHistory}"
             IsVisible="{Binding ShowSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
             Spacing="4">
 
@@ -78,7 +78,7 @@
             TextColor="{DynamicResource tl01}" />
         <StackLayout
             Margin="12,0"
-            BindableLayout.ItemTemplate="{StaticResource InstaUserShortTemplate}"
+            BindableLayout.ItemTemplate="{StaticResource InstaUserDataTemplate}"
             BindableLayout.ItemsSource="{Binding SearchResults, Mode=OneWay}"
             IsVisible="{Binding ShowSearchResults, Mode=OneWay}"
             Spacing="4">

@@ -38,7 +38,7 @@ public class SearchManager
             throw new("No account is currently logged in.");
         }
 
-        // Get username suggestions
+        // Get search results with username
         IResult<InstaDiscoverSearchResult> result = await instagram.DiscoverProcessor.SearchPeopleAsync(username, 10);
         if (!result.Succeeded)
         {
@@ -47,5 +47,27 @@ public class SearchManager
         }
 
         return result.Value.Users;
+    }
+
+
+    public async Task<InstaUser> GetAccount(
+        string username)
+    {
+        // Check if logged in
+        if (!instagram.IsUserAuthenticated)
+        {
+            logger.Log("Failed getting account", new("No account is currently logged in."));
+            throw new("No account is currently logged in.");
+        }
+
+        // Get account
+        IResult<InstaUser> result = await instagram.UserProcessor.GetUserAsync(username);
+        if (!result.Succeeded)
+        {
+            logger.Log("Failed getting account", result.Info.Exception);
+            throw result.Info.Exception;
+        }
+
+        return result.Value;
     }
 }
