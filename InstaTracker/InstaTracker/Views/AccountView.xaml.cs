@@ -17,7 +17,7 @@ public partial class AccountView : Components.Page
         // Fix for https://github.com/xamarin/Xamarin.Forms/issues/13607
         viewModel.AccountManager.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName != "LoggedUser" || viewModel.AccountManager.LoggedUser is not null)
+            if (e.PropertyName != "LoggedAccount" || viewModel.AccountManager.LoggedAccount is not null)
                 return;
 
             BindableLayout.SetItemsSource(SavedAccountsCollection, null);

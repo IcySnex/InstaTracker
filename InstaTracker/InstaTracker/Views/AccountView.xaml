@@ -16,7 +16,7 @@
             Margin="12"
             Padding="12"
             CornerRadius="8"
-            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNull}}">
+            IsVisible="{Binding AccountManager.LoggedAccount, Mode=OneWay, Converter={StaticResource IsNull}}">
             <Frame.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Offset="0" Color="{DynamicResource bd04}" />
@@ -62,7 +62,7 @@
             Margin="12"
             Padding="12"
             CornerRadius="8"
-            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNotNull}}">
+            IsVisible="{Binding AccountManager.LoggedAccount, Mode=OneWay, Converter={StaticResource IsNotNull}}">
             <Frame.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Offset="0" Color="{DynamicResource bd04}" />
@@ -74,7 +74,7 @@
                 <Image
                     HeightRequest="54"
                     HorizontalOptions="Start"
-                    Source="{Binding AccountManager.LoggedUser.ProfilePicture, Mode=OneWay, FallbackValue=nopicture.png, TargetNullValue=nopicture.png}"
+                    Source="{Binding AccountManager.LoggedAccount.ProfilePicture, Mode=OneWay, FallbackValue=nopicture.png, TargetNullValue=nopicture.png}"
                     WidthRequest="54">
                     <Image.Clip>
                         <EllipseGeometry
@@ -88,11 +88,11 @@
                     Margin="66,0,110,0"
                     LineBreakMode="TailTruncation"
                     Style="{StaticResource TitleSecondary}"
-                    Text="{Binding AccountManager.LoggedUser.UserName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
+                    Text="{Binding AccountManager.LoggedAccount.UserName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
                 <Label
                     Margin="66,28,110,0"
                     LineBreakMode="TailTruncation"
-                    Text="{Binding AccountManager.LoggedUser.FullName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
+                    Text="{Binding AccountManager.LoggedAccount.FullName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
 
                 <Button
                     Command="{Binding LogoutCommand}"
@@ -106,7 +106,7 @@
         <Label
             Margin="16,0,0,-8"
             FontAttributes="Italic"
-            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNull}}"
+            IsVisible="{Binding AccountManager.LoggedAccount, Mode=OneWay, Converter={StaticResource IsNull}}"
             Text="Saved Accounts"
             TextColor="{DynamicResource tl01}" />
         <StackLayout
@@ -114,7 +114,7 @@
             Margin="12,0"
             BindableLayout.ItemTemplate="{StaticResource SavedAccountDataTemplate}"
             BindableLayout.ItemsSource="{Binding SavedAccounts, Mode=OneWay}"
-            IsVisible="{Binding AccountManager.LoggedUser, Mode=OneWay, Converter={StaticResource IsNull}}"
+            IsVisible="{Binding AccountManager.LoggedAccount, Mode=OneWay, Converter={StaticResource IsNull}}"
             Spacing="4">
 
             <BindableLayout.EmptyView>

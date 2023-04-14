@@ -33,23 +33,23 @@ public partial class AccountManager : ObservableObject
 
 
     [ObservableProperty]
-    InstaUserShort? loggedUser = null;
+    InstaUserShort? loggedAccount = null;
 
-    public InstaUserShort GetLoggedUser()
+    public InstaUserShort GetLoggedAccount()
     {
         // Check if logged in
         if (!instagram.IsUserAuthenticated)
         {
-            logger.Log("Failed gettings user information", new("No user is currently logged in."));
-            throw new("No user is currently logged in.");
+            logger.Log("Failed getting logged account", new("No account is currently logged in."));
+            throw new("No account is currently logged in.");
         }
 
-        // Get user information
-        logger.Log("Getting currently logged in user");
+        // Get account information
+        logger.Log("Getting currently logged in account");
         UserSessionData result = instagram.GetLoggedUser();
         if (result is null)
         {
-            logger.Log("Failed get user information", new NullReferenceException());
+            logger.Log("Failed getting logged account", new NullReferenceException());
             throw new NullReferenceException();
         }
 
@@ -65,8 +65,8 @@ public partial class AccountManager : ObservableObject
         // Check if already logged in
         if (instagram.IsUserAuthenticated)
         {
-            logger.Log("Failed logging into Instagram API", new("An user is already logged in."));
-            throw new("An user is already logged in.");
+            logger.Log("Failed logging into Instagram API", new("An account is already logged in."));
+            throw new("An account is already logged in.");
         }
 
         // Login with username and password
@@ -83,7 +83,7 @@ public partial class AccountManager : ObservableObject
         }
 
         // Set logged user
-        LoggedUser = GetLoggedUser();
+        LoggedAccount = GetLoggedAccount();
 
         // Save login to database if saveLoginInformation is true
         if (!saveAccount)
@@ -91,9 +91,9 @@ public partial class AccountManager : ObservableObject
 
         logger.Log("Saving login state to database");
         int accountId = await database.AddAsync(new(
-            LoggedUser.UserName,
-            LoggedUser.FullName,
-            LoggedUser.ProfilePicture,
+            LoggedAccount.UserName,
+            LoggedAccount.FullName,
+            LoggedAccount.ProfilePicture,
             instagram.GetStateDataAsString(),
             await database.GetAsync(username) is Account account ? account.Id : null));
 
@@ -108,8 +108,8 @@ public partial class AccountManager : ObservableObject
         // Check if already logged in
         if (instagram.IsUserAuthenticated)
         {
-            logger.Log("Failed logging into Instagram API", new("An user is already logged in."));
-            throw new("An user is already logged in.");
+            logger.Log("Failed logging into Instagram API", new("An account is already logged in."));
+            throw new("An account is already logged in.");
         }
 
         // Login with state
@@ -117,7 +117,7 @@ public partial class AccountManager : ObservableObject
         instagram.LoadStateDataFromString(stateJson);
 
         // Update logged user
-        LoggedUser = GetLoggedUser();
+        LoggedAccount = GetLoggedAccount();
 
         // Save login to database if saveLoginInformation is true
         if (!saveAccount)
@@ -125,11 +125,11 @@ public partial class AccountManager : ObservableObject
 
         logger.Log("Saving login state to database");
         int accountId = await database.AddAsync(new(
-            LoggedUser.UserName,
-            LoggedUser.FullName,
-            LoggedUser.ProfilePicture,
+            LoggedAccount.UserName,
+            LoggedAccount.FullName,
+            LoggedAccount.ProfilePicture,
             instagram.GetStateDataAsString(),
-            await database.GetAsync(LoggedUser.UserName) is Account account ? account.Id : null));
+            await database.GetAsync(LoggedAccount.UserName) is Account account ? account.Id : null));
 
         if (config.AutoLoginId.HasValue)
             config.AutoLoginId = accountId;
@@ -141,8 +141,8 @@ public partial class AccountManager : ObservableObject
         // Check if logged in
         if (!instagram.IsUserAuthenticated)
         {
-            logger.Log("Failed logging out of Instagram API", new("No user is currently logged in."));
-            throw new("No user is currently logged in.");
+            logger.Log("Failed logging out of Instagram API", new("No account is currently logged in."));
+            throw new("No account is currently logged in.");
         }
 
         // Logout
@@ -154,7 +154,7 @@ public partial class AccountManager : ObservableObject
             throw result.Info.Exception;
         }
 
-        LoggedUser = null;
+        LoggedAccount = null;
         return;
     }
 }
