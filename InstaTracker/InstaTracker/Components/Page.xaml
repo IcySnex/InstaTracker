@@ -11,9 +11,14 @@
     <ContentPage.ControlTemplate>
         <ControlTemplate>
             <Grid>
-                <ScrollView>
-                    <ContentPresenter Margin="12,8" Content="{Binding Content, Source={x:Reference root}}" />
-                </ScrollView>
+                <RefreshView
+                    Command="{Binding RefreshCommand, Source={x:Reference root}}"
+                    IsEnabled="{Binding IsRefreshingEnabled, Mode=OneWay, Source={x:Reference root}}"
+                    IsRefreshing="{Binding IsRefreshing, Mode=OneWay, Source={x:Reference root}}">
+                    <ScrollView>
+                        <ContentPresenter Margin="12,8" Content="{Binding Content, Source={x:Reference root}}" />
+                    </ScrollView>
+                </RefreshView>
 
                 <Frame
                     x:Name="snackBar"

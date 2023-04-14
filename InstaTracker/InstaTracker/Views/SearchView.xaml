@@ -4,7 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:com="clr-namespace:InstaTracker.Components"
     xmlns:mds="clr-namespace:InstaTracker.Models"
-    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit">
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit"
+    IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+    IsRefreshingEnabled="{Binding ShowSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
+    RefreshCommand="{Binding RefreshSearchHistoryAccountsCommand}">
 
     <StackLayout Margin="0,0,0,48" Spacing="12">
         <Label Style="{StaticResource Header}" Text="Search" />
