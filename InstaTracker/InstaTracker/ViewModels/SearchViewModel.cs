@@ -40,7 +40,10 @@ public partial class SearchViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
-        await LoadSearchHistory(true);
+        await snackBar.RunAsync(
+            "Loading search history...",
+            LoadSearchHistory(true),
+            snackBar.ErrorCallback("Failed loading search history!"));
 
         logger.Log("Initialized SearchViewModel");
     }
@@ -51,27 +54,17 @@ public partial class SearchViewModel : ObservableObject
     async Task LoadSearchHistory(
         bool reloadAll = false)
     {
-        try
+        SearchHistory.Clear();
+        if (!reloadAll)
         {
-            snackBar.Show("Loading search history...", null, awaitPreviousSnackBar: true);
-
-            SearchHistory.Clear();
-            if (!reloadAll)
-            {
-                SearchHistory.AddRange(await database.GetAllAsync());
-                return;
-            }
-
-            foreach (SearchedAccount account in await database.GetAllAsync())
-            {
-                InstaUser user = await searchmanager.GetAccountAsync(account.Username);
-                SearchHistory.Add(new SearchedAccount(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext, account.Id));
-            }
-
+            SearchHistory.AddRange(await database.GetAllAsync());
+            return;
         }
-        catch (Exception ex)
+
+        foreach (SearchedAccount account in await database.GetAllAsync())
         {
-            snackBar.Show("Failed loading search history!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed loading search history!", ex.Message));
+            InstaUser user = await searchmanager.GetAccountAsync(account.Username);
+            SearchHistory.Add(new SearchedAccount(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext, account.Id));
         }
     }
 
@@ -88,16 +81,12 @@ public partial class SearchViewModel : ObservableObject
     public async Task RemoveAccountFromHistoryAsync(
         string username)
     {
-        try
-        {
-            await database.RemoveAsync(username);
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show("Failed removing account from history", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed removing account from history", ex.Message));
-        }
+        await database.RemoveAsync(username);
 
-        await LoadSearchHistory();
+        await snackBar.RunAsync(
+            "Loading search history...",
+            LoadSearchHistory(),
+            snackBar.ErrorCallback("Failed loading search history!"));
     }
 
 
@@ -117,32 +106,22 @@ public partial class SearchViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanSearchCommandExecute))]
     async Task SearchAsync()
     {
-        try
-        {
-            snackBar.Show("Searching for username...", null, awaitPreviousSnackBar: true);
-            SearchResults = await searchmanager.SearchAccountsAsync(SearchUsername);
-            ShowSearchResults = true;
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show("Failed to search for username!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to search for username!", ex.Message));
-        }
-
+        await snackBar.RunAsync(
+            "Searching for users...",
+            searchmanager.SearchAccountsAsync(SearchUsername),
+            snackBar.ErrorCallback("Failed searching for users!"),
+            (List<InstaUser> users) =>
+            {
+                SearchResults = users;
+                ShowSearchResults = true;
+            });
     }
 
     [RelayCommand]
     void ClearSearch()
     {
-        try
-        {
-            snackBar.Show("Clearing search results...", null, awaitPreviousSnackBar: true);
-            SearchResults = null;
-            ShowSearchResults = false;
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show("Failed to clear search results!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to clear search results!", ex.Message));
-        }
+        SearchResults = null;
+        ShowSearchResults = false;
     }
 
 
@@ -150,17 +129,15 @@ public partial class SearchViewModel : ObservableObject
     async Task AddAccountAsync(
         InstaUser user)
     {
-        try
-        {
-            snackBar.Show("Adding account...", null, awaitPreviousSnackBar: true);
-            await database.AddAsync(new(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext));
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show("Failed to add account!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to add account!", ex.Message));
-        }
+        await snackBar.RunAsync(
+            "Adding account...",
+            database.AddAsync(new(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext)),
+            snackBar.ErrorCallback("Failed adding account!"));
 
-        await LoadSearchHistory();
+        await snackBar.RunAsync(
+            "Loading search history...",
+            LoadSearchHistory(),
+            snackBar.ErrorCallback("Failed loading search history!"));
     }
 
 
@@ -168,18 +145,9 @@ public partial class SearchViewModel : ObservableObject
     async Task OpenAccountAsync(
         SearchedAccount account)
     {
-        try
-        {
-            snackBar.Show("Opening account...", null, awaitPreviousSnackBar: true);
+        InfoViewModel viewModel = App.Provider.GetRequiredService<InfoViewModel>();
+        viewModel.Account = account;
 
-            InfoViewModel viewModel = App.Provider.GetRequiredService<InfoViewModel>();
-            viewModel.Account = account;
-
-            await navigation.NavigateAsync(new InfoPage(viewModel));
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show("Failed to open account!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to open account!", ex.Message));
-        }
+        await navigation.NavigateAsync(new InfoPage(viewModel));
     }
 }

@@ -13,11 +13,13 @@ public partial class Page : ContentPage
     }
 
 
+    public bool IsSnackBarVisible { get; set; }
+
     public Frame SnackBar { get; private set; } = default!;
     public Label SnackBarLabel { get; private set; } = default!;
     public Button SnackBarButton { get; private set; } = default!;
 
-    public Action? OnSnackBarButtonClicked { get; set; }
+    public Action<Page>? OnSnackBarButtonClicked { get; set; }
 
 
     protected override void OnApplyTemplate()
@@ -27,10 +29,9 @@ public partial class Page : ContentPage
         SnackBar = (Frame)GetTemplateChild("snackBar");
         SnackBarLabel = (Label)GetTemplateChild("snackBarLabel");
         SnackBarButton = (Button)GetTemplateChild("snackBarButton");
-
     }
 
 
     private void OnSnackbarButtonClicked(object sender, EventArgs e) =>
-        OnSnackBarButtonClicked?.Invoke();
+        OnSnackBarButtonClicked?.Invoke(this);
 }

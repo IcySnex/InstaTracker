@@ -41,33 +41,17 @@ public partial class AccountViewModel : ObservableObject
     public async Task InitializeAsync()
     {
         if (Config.AutoLoginId.HasValue && await database.GetAsync(Config.AutoLoginId.Value) is Account savedLogin)
-            await ExecuteNotifiedAsync(
-                AccountManager.LoginAsync(savedLogin.StateJson, false),
+            await snackBar.RunAsync(
                 "Logging in...",
-                "Failed to login!",
-                "The saved login information is not valid. Please make sure your selected account's username and password is correct and if two-factor authorization is enabled, please disable it.\n");
+                AccountManager.LoginAsync(savedLogin.StateJson, false),
+                snackBar.ErrorCallback("Failed logging in!"));
 
-        await LoadSavedAccountsAsync();
+        await snackBar.RunAsync(
+            "Loading saved accounts...",
+            LoadSavedAccountsAsync(),
+            snackBar.ErrorCallback("Failed loading saved accounts!"));
 
         logger.Log("Initialized AccountViewModel");
-    }
-
-
-    async Task ExecuteNotifiedAsync(
-        Task task,
-        string startingMessage,
-        string failedTitle,
-        string failedMessage)
-    {
-        try
-        {
-            snackBar.Show(startingMessage, null, awaitPreviousSnackBar: true);
-            await task;
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show(failedTitle, "More", 10000, onButtonClicked: async () => await message.ShowAsync(failedTitle, $"{failedMessage}({ex.Message})"));
-        }
     }
 
 
@@ -76,29 +60,24 @@ public partial class AccountViewModel : ObservableObject
 
     async Task LoadSavedAccountsAsync()
     {
-        try
-        {
-            snackBar.Show("Loading saved accounts...", null, awaitPreviousSnackBar: true);
-            SavedAccounts = await database.GetAllAsync();
-            settingsViewModel.ReloadAccountSettings(SavedAccounts);
-        }
-        catch (Exception ex)
-        {
-            snackBar.Show("Failed loading saved accounts!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed loading saved accounts!", $"({ex.Message})"));
-        }
+        SavedAccounts = await database.GetAllAsync();
+        settingsViewModel.ReloadAccountSettings(SavedAccounts);
     }
 
     [RelayCommand(AllowConcurrentExecutions = true)]
     async Task RemoveSavedAccountAsync(
         int id)
     {
-        await ExecuteNotifiedAsync(
-            database.RemoveAsync(id),
+        await snackBar.RunAsync(
             "Removing saved account...",
-            "Failed removing saved account",
-            "");
+            database.RemoveAsync(id),
+            snackBar.ErrorCallback("Failed removing account!"));
 
-        await LoadSavedAccountsAsync();
+
+        await snackBar.RunAsync(
+            "Loading saved accounts...",
+            LoadSavedAccountsAsync(),
+            snackBar.ErrorCallback("Failed loading saved accounts!"));
     }
 
 
@@ -117,23 +96,25 @@ public partial class AccountViewModel : ObservableObject
     async Task LoginAsync(
         Account? account = null)
     {
-        await ExecuteNotifiedAsync(
-            account is null ? AccountManager.LoginAsync(Username, Password, Config.SaveAccount) : AccountManager.LoginAsync(account.StateJson, false),
+        await snackBar.RunAsync(
             "Logging in...",
-            "Failed to login!",
-            "Please make sure you entered your correct username and password and if two-factor authorization is enabled, please disable it.\n\n");
+            account is null ? AccountManager.LoginAsync(Username, Password, Config.SaveAccount) : AccountManager.LoginAsync(account.StateJson, false),
+            snackBar.ErrorCallback("Failed logging in!", "Make sure you entered your correct username and password and disable 2FA if enabled."));
 
         if (Config.SaveAccount && account is null)
-            await LoadSavedAccountsAsync();
+            await snackBar.RunAsync(
+                "Loading saved accounts...",
+                LoadSavedAccountsAsync(),
+                snackBar.ErrorCallback("Failed loading saved accounts!"));
     }
 
 
     [RelayCommand]
-    async Task LogoutAsync() =>
-        await ExecuteNotifiedAsync(
-            AccountManager.LogoutAsync(),
+    async Task LogoutAsync()
+    {
+        await snackBar.RunAsync(
             "Logging out...",
-            "Failed to log out!",
-            "");
-
+            AccountManager.LogoutAsync(),
+            snackBar.ErrorCallback("Failed logging out!"));
+    }
 }

@@ -71,7 +71,8 @@ public static class Extentions
         return ColorAnimation(input, "BorderColorAnimation", transform, c => input.BorderColor = c, length, easing);
     }
 
-    static Task<bool> ColorAnimation(VisualElement element,
+    static Task<bool> ColorAnimation(
+        VisualElement element,
         string name,
         Func<double, Color> transform,
         Action<Color> callback,

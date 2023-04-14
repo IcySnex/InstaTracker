@@ -10,45 +10,132 @@ namespace InstaTracker.Services;
 public class SnackBar
 {
     readonly ILogger logger;
+    readonly Message message;
 
     public SnackBar(
-        ILogger logger)
+        ILogger logger,
+        Message message)
     {
         this.logger = logger;
+        this.message = message;
 
         logger.Log("Registered SnackBar");
     }
 
 
-    bool isActive = false;
-    Components.Page? currentPage = null;
-    TaskCompletionSource<bool> snackBarAwaiter = new();
-    CancellationTokenSource cancellationTokenSource = new();
+    public Action<Exception> ErrorCallback(
+        string title,
+        string? errorMessage = null) =>
+        async ex => await DisplayAsync(title, "More", true, async () => await message.ShowAsync(title, errorMessage is null ? ex.Message : $"{errorMessage}\n\nError: {ex.Message}"));
 
 
-    public async Task ShowAsync(
+    public async Task RunAsync<T>(
         string message,
-        string? buttonText = "Okay",
-        int millisecondsDelay = 2000,
-        bool closeOnButtonClicked = true,
-        Action? onButtonClicked = null,
-        Action? onClosing = null,
-        bool awaitPreviousSnackBar = false)
+        Task<T> task,
+        Action<Exception>? onError = null,
+        Action<T>? onFinished = null,
+        int hideDelay = 1000)
     {
-        // Wait for active snackbar
-        if (isActive)
-        {
-            if (awaitPreviousSnackBar)
-                await snackBarAwaiter.Task;
+        // Show snackbar
+        Components.Page? page = SetupSnackbar(message);
+        if (page is null)
+            return;
 
-            cancellationTokenSource.Cancel();
-            if (currentPage is not null)
-                await HideAsync(currentPage);
-            onClosing?.Invoke();
+        await ShowAsync(page);
+
+        // Run task
+        try
+        {
+            T result = await task;
+            onFinished?.Invoke(result);
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex);
         }
 
+        // Hide snackbar
+        if (hideDelay > 0 && page.IsSnackBarVisible)
+            await Task.Delay(hideDelay);
 
-        // Check if components page
+        if (page.SnackBarLabel.Text == message)
+            await HideAsync(page);
+    }
+
+    public async Task RunAsync(
+        string message,
+        Task task,
+        Action<Exception>? onError = null,
+        Action? onFinished = null,
+        int hideDelay = 1000)
+    {
+        // Show snackbar
+        Components.Page? page = SetupSnackbar(message);
+        if (page is null)
+            return;
+
+        await ShowAsync(page);
+
+        // Run task
+        try
+        {
+            await task;
+            onFinished?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex);
+        }
+
+        // Hide snackbar
+        if (hideDelay > 0 && page.IsSnackBarVisible)
+            await Task.Delay(hideDelay);
+
+        if (page.SnackBarLabel.Text == message)
+            await HideAsync(page);
+    }
+
+
+    public async Task DisplayAsync(
+        string message,
+        string? buttonText = null,
+        bool closeOnButtonClicked = true,
+        Action? onButtonClicked = null,
+        int delay = 2000)
+    {
+        CancellationTokenSource cts = new();
+
+        // Show snackbar
+        Components.Page? page = SetupSnackbar(message, buttonText, comPage =>
+        {
+            if (closeOnButtonClicked)
+                cts.Cancel();
+
+            onButtonClicked?.Invoke();
+        });
+        if (page is null)
+            return;
+
+        await ShowAsync(page);
+
+        // Wait for delay
+        try
+        {
+            await Task.Delay(delay, cts.Token);
+        }
+        catch (TaskCanceledException) { }
+
+        // Hide snackbar
+        await HideAsync(page);
+    }
+
+
+    Components.Page? SetupSnackbar(
+        string message,
+        string? buttonText = null,
+        Action<Components.Page>? onButtonClicked = null)
+    {
+        // Getting components page
         Components.Page? page = null;
         TabbedPage mainView = (TabbedPage)Application.Current.MainPage;
 
@@ -57,69 +144,44 @@ public class SnackBar
         if (mainView.CurrentPage is NavigationPage navigationPage)
             page = (Components.Page)navigationPage.CurrentPage;
 
+        logger.Log("Got components page");
         if (page is null)
         {
-            logger.Log("Tried to show snackbar on default page");
-            return;
+            logger.Log("Tried running snackbar on default page");
+            return null;
         }
 
-        // Setup snackbar
         page.SnackBarLabel.Text = message;
         page.SnackBarButton.IsVisible = buttonText is not null;
         page.SnackBarButton.Text = buttonText;
-        page.OnSnackBarButtonClicked = async () =>
-        {
-            if (closeOnButtonClicked)
-            {
-                cancellationTokenSource.Cancel();
-                await HideAsync(page);
-                onClosing?.Invoke();
-            }
+        page.OnSnackBarButtonClicked = onButtonClicked;
 
-            onButtonClicked?.Invoke();
-        };
-
-        // Show snackbar
-        isActive = true;
-        currentPage = page;
-        await page.SnackBar.TranslateTo(0, 0, 100, Easing.Linear);
-        logger.Log("Showed snackbar");
-
-        // Wait for auto hide snackbar
-        try
-        {
-            await Task.Delay(millisecondsDelay, cancellationTokenSource.Token);
-        }
-        catch { }
-
-        // Hide snackbar
-        if (!cancellationTokenSource.IsCancellationRequested)
-        {
-            await HideAsync(page);
-            onClosing?.Invoke();
-        }
+        logger.Log("Set up snackbar on page");
+        return page;
     }
 
-    public async void Show(
-        string message,
-        string? buttonText = "Okay",
-        int millisecondsDelay = 2000,
-        bool closeOnButtonClicked = true,
-        Action? onButtonClicked = null,
-        Action? onClosing = null,
-        bool awaitPreviousSnackBar = false) =>
-        await ShowAsync(message, buttonText, millisecondsDelay, closeOnButtonClicked, onButtonClicked, onClosing, awaitPreviousSnackBar);
 
-
-
-    public async Task HideAsync(
+    async Task ShowAsync(
         Components.Page page)
     {
-        isActive = false;
+        if (page.IsSnackBarVisible)
+            await HideAsync(page);
+
+        page.IsSnackBarVisible = true;
+        await page.SnackBar.TranslateTo(0, 0, 100, Easing.Linear);
+
+        logger.Log("Showed snackbar on page");
+    }
+
+    async Task HideAsync(
+        Components.Page page)
+    {
+        if (!page.IsSnackBarVisible)
+            return;
+
         await page.SnackBar.TranslateTo(0, 75, 100, Easing.Linear);
-        snackBarAwaiter.TrySetResult(true);
-        snackBarAwaiter = new();
-        cancellationTokenSource = new();
-        logger.Log("Hidden current snackbar");
+        page.IsSnackBarVisible = false;
+
+        logger.Log("Hidden snackbar on page");
     }
 }

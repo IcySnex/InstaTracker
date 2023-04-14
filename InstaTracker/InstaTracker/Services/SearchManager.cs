@@ -1,5 +1,4 @@
 ﻿using InstagramApiSharp.API;
-using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
 using InstaTracker.Helpers;

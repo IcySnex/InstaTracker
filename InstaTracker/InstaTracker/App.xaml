@@ -332,6 +332,7 @@
 
                         <Button
                             Padding="-36"
+                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl00}"
                             tlk:ShadowEffect.Color="Transparent"
                             BackgroundColor="Transparent"
                             Command="{Binding Parent.BindingContext.RemoveSavedAccountCommand, Source={x:Reference root}}"
