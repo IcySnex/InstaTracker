@@ -44,17 +44,20 @@ public partial class App : Application
             // Services
             .AddSingleton<AppHandler>()
             .AddSingleton<JsonConverter>()
+            .AddSingleton<Navigation>()
             .AddSingleton<Message>()
             .AddSingleton<SnackBar>()
             // Instagram
             .AddSingleton(InstaApiBuilder.CreateBuilder().Build())
             .AddSingleton<AccountManager>()
             .AddSingleton<SearchManager>()
+            .AddSingleton<InfoManager>()
             // ViewModels
             .AddSingleton<HomeViewModel>()
             .AddSingleton<SearchViewModel>()
             .AddSingleton<AccountViewModel>()
             .AddSingleton<SettingsViewModel>()
+            .AddTransient<InfoViewModel>()
             .BuildServiceProvider();
 
         InitializeComponent();

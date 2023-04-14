@@ -1,0 +1,90 @@
+﻿<com:Page
+    x:Class="InstaTracker.Views.InfoPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components"
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit">
+
+    <StackLayout Margin="0,0,0,48" Spacing="12">
+        <Grid>
+            <Button
+                Padding="-36"
+                tlk:IconTintColorEffect.TintColor="{DynamicResource tl02}"
+                tlk:ShadowEffect.Color="Transparent"
+                BackgroundColor="Transparent"
+                Command="{Binding GoBackCommand}"
+                HorizontalOptions="Start"
+                ImageSource="back.png"
+                WidthRequest="36" />
+            <Label
+                Margin="40,0,0,0"
+                Style="{StaticResource Header}"
+                Text="Info" />
+        </Grid>
+
+        <Frame Padding="12" CornerRadius="8">
+            <Frame.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="{DynamicResource bd04}" />
+                    <GradientStop Offset="1" Color="{DynamicResource bd01}" />
+                </LinearGradientBrush>
+            </Frame.Background>
+
+            <Grid>
+                <Image
+                    tlk:TouchEffect.AnimationDuration="50"
+                    tlk:TouchEffect.Command="{Binding OpenProfilePictureCommand}"
+                    tlk:TouchEffect.NormalOpacity="1"
+                    tlk:TouchEffect.PressedOpacity="0.4"
+                    tlk:TouchEffect.PressedScale="0.99"
+                    HeightRequest="54"
+                    HorizontalOptions="Start"
+                    Source="{Binding Account.ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
+                    WidthRequest="54">
+                    <Image.Clip>
+                        <EllipseGeometry
+                            Center="27,27"
+                            RadiusX="27"
+                            RadiusY="27" />
+                    </Image.Clip>
+                </Image>
+
+                <Label
+                    Margin="66,0,110,0"
+                    LineBreakMode="TailTruncation"
+                    Style="{StaticResource TitleSecondary}"
+                    Text="{Binding Account.Username, Mode=OneWay, TargetNullValue=N/A}" />
+                <Image
+                    Margin="0,0,45,0"
+                    tlk:IconTintColorEffect.TintColor="{DynamicResource tl03}"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding Account.IsFollowing, Mode=OneWay}"
+                    Source="following.png"
+                    VerticalOptions="Center"
+                    WidthRequest="20" />
+                <Label Margin="66,28,70,0" LineBreakMode="TailTruncation">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Account.IsPrivate, Mode=OneWay, Converter={StaticResource BoolToPrivatePublic}}" />
+                            <Span Style="{StaticResource Subpoint}" Text="{Binding Account.SearchSocialContext, Mode=OneWay, Converter={StaticResource IfNotNullParameter}, ConverterParameter=' | ‎'}" />
+                            <Span Style="{StaticResource Subpoint}" Text="{Binding Account.SearchSocialContext, Mode=OneWay}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+
+                <Button
+                    Padding="-36"
+                    tlk:IconTintColorEffect.TintColor="{DynamicResource td01}"
+                    Command="{Binding RemoveCommand}"
+                    CommandParameter="{Binding Account.Id}"
+                    HeightRequest="36"
+                    HorizontalOptions="End"
+                    ImageSource="delete.png"
+                    Style="{StaticResource Accent}"
+                    VerticalOptions="Center"
+                    WidthRequest="36" />
+            </Grid>
+        </Frame>
+    </StackLayout>
+</com:Page>

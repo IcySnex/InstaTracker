@@ -359,6 +359,7 @@
                         <Grid
                             Margin="0,0,35,0"
                             tlk:TouchEffect.AnimationDuration="50"
+                            tlk:TouchEffect.Command="{Binding Parent.BindingContext.OpenAccountCommand, Source={x:Reference root}}"
                             tlk:TouchEffect.CommandParameter="{Binding}"
                             tlk:TouchEffect.NormalOpacity="1"
                             tlk:TouchEffect.PressedOpacity="0.4"
@@ -404,10 +405,11 @@
 
                         <Button
                             Padding="-36"
+                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl00}"
                             tlk:ShadowEffect.Color="Transparent"
                             BackgroundColor="Transparent"
-                            Command="{Binding Parent.BindingContext.RemoveSearchedAccountFromHistoryCommand, Source={x:Reference root}}"
-                            CommandParameter="{Binding Id}"
+                            Command="{Binding Parent.BindingContext.RemoveAccountFromHistoryWarningCommand, Source={x:Reference root}}"
+                            CommandParameter="{Binding Username}"
                             HeightRequest="36"
                             HorizontalOptions="End"
                             ImageSource="delete.png"
@@ -429,7 +431,7 @@
 
                     <Grid
                         tlk:TouchEffect.AnimationDuration="50"
-                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.OpenAccountCommand, Source={x:Reference root}}"
+                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.AddAccountCommand, Source={x:Reference root}}"
                         tlk:TouchEffect.CommandParameter="{Binding}"
                         tlk:TouchEffect.NormalOpacity="1"
                         tlk:TouchEffect.PressedOpacity="0.4"

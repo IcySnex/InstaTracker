@@ -49,8 +49,15 @@ public class SnackBar
 
 
         // Check if components page
+        Components.Page? page = null;
         TabbedPage mainView = (TabbedPage)Application.Current.MainPage;
-        if (((NavigationPage)mainView.CurrentPage).CurrentPage is not Components.Page page)
+
+        if (mainView.CurrentPage is Components.Page comPage)
+            page = comPage;
+        if (mainView.CurrentPage is NavigationPage navigationPage)
+            page = (Components.Page)navigationPage.CurrentPage;
+
+        if (page is null)
         {
             logger.Log("Tried to show snackbar on default page");
             return;

@@ -1,0 +1,26 @@
+﻿<com:Page
+    x:Class="InstaTracker.Views.ProfilePictureView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components"
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit">
+
+    <Grid>
+        <Button
+            x:Name="GoBackButton"
+            Padding="-36"
+            tlk:IconTintColorEffect.TintColor="{DynamicResource tl02}"
+            tlk:ShadowEffect.Color="Transparent"
+            BackgroundColor="Transparent"
+            HorizontalOptions="Start"
+            ImageSource="back.png"
+            VerticalOptions="Start"
+            WidthRequest="36" />
+        <Label
+            Margin="40,0,0,0"
+            Style="{StaticResource Header}"
+            Text="Profile Picture" />
+
+        <Image x:Name="PictureView" Margin="0,36,0,0" />
+    </Grid>
+</com:Page>

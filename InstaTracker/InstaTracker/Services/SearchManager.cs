@@ -1,7 +1,7 @@
 ﻿using InstagramApiSharp.API;
+using InstagramApiSharp.API.Processors;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
-using InstagramApiSharp.Enums;
 using InstaTracker.Helpers;
 using Serilog;
 using System.Collections.Generic;
@@ -12,16 +12,13 @@ namespace InstaTracker.Services;
 public class SearchManager
 {
     readonly ILogger logger;
-    readonly SearchedAccountDatabaseConnection database;
     readonly IInstaApi instagram;
 
     public SearchManager(
         ILogger logger,
-        SearchedAccountDatabaseConnection database,
         IInstaApi instagram)
     {
         this.logger = logger;
-        this.database = database;
         this.instagram = instagram;
 
         logger.Log("Registered SearchManager");
@@ -50,7 +47,7 @@ public class SearchManager
     }
 
 
-    public async Task<InstaUser> GetAccount(
+    public async Task<InstaUser> GetAccountAsync(
         string username)
     {
         // Check if logged in

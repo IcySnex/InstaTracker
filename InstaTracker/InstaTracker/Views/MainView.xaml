@@ -15,27 +15,18 @@
     UnselectedTabColor="{DynamicResource tl02}"
     Visual="Material">
 
-    <NavigationPage Title="Home" IconImageSource="home.png">
-        <x:Arguments>
-            <local:HomeView />
-        </x:Arguments>
-    </NavigationPage>
+    <local:HomeView Title="Home" IconImageSource="home.png" />
 
-    <NavigationPage Title="Search" IconImageSource="search.png">
+    <NavigationPage
+        Title="Search"
+        BackgroundColor="{DynamicResource bd00}"
+        IconImageSource="search.png">
         <x:Arguments>
             <local:SearchView />
         </x:Arguments>
     </NavigationPage>
 
-    <NavigationPage Title="Account" IconImageSource="account.png">
-        <x:Arguments>
-            <local:AccountView />
-        </x:Arguments>
-    </NavigationPage>
+    <local:AccountView Title="Account" IconImageSource="account.png" />
 
-    <NavigationPage Title="Settings" IconImageSource="settings.png">
-        <x:Arguments>
-            <local:SettingsView />
-        </x:Arguments>
-    </NavigationPage>
+    <local:SettingsView Title="Settings" IconImageSource="settings.png" />
 </TabbedPage>

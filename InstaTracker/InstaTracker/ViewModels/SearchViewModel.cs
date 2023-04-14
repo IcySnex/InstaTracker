@@ -4,11 +4,11 @@ using InstagramApiSharp.Classes.Models;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
+using InstaTracker.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace InstaTracker.ViewModels;
@@ -17,6 +17,7 @@ public partial class SearchViewModel : ObservableObject
 {
     readonly ILogger logger;
     readonly SearchedAccountDatabaseConnection database;
+    readonly Navigation navigation;
     readonly Message message;
     readonly SnackBar snackBar;
     readonly SearchManager searchmanager;
@@ -24,12 +25,14 @@ public partial class SearchViewModel : ObservableObject
     public SearchViewModel(
         ILogger logger,
         SearchedAccountDatabaseConnection database,
+        Navigation navigation,
         Message message,
         SnackBar snackBar,
         SearchManager searchmanager)
     {
         this.logger = logger;
         this.database = database;
+        this.navigation = navigation;
         this.message = message;
         this.snackBar = snackBar;
         this.searchmanager = searchmanager;
@@ -61,7 +64,7 @@ public partial class SearchViewModel : ObservableObject
 
             foreach (SearchedAccount account in await database.GetAllAsync())
             {
-                InstaUser user = await searchmanager.GetAccount(account.Username);
+                InstaUser user = await searchmanager.GetAccountAsync(account.Username);
                 SearchHistory.Add(new SearchedAccount(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext, account.Id));
             }
 
@@ -73,13 +76,21 @@ public partial class SearchViewModel : ObservableObject
     }
 
     [RelayCommand(AllowConcurrentExecutions = true)]
-    async Task RemoveSearchedAccountFromHistoryAsync(
-        int id)
+    async Task RemoveAccountFromHistoryWarningAsync(
+        string username)
+    {
+        if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this account will clear all follower, following and fans statistics. You can't undo this action."))
+            return;
+
+        await RemoveAccountFromHistoryAsync(username);
+    }
+
+    public async Task RemoveAccountFromHistoryAsync(
+        string username)
     {
         try
         {
-            snackBar.Show("Removing account from history...", null, awaitPreviousSnackBar: true);
-            await database.RemoveAsync(id);
+            await database.RemoveAsync(username);
         }
         catch (Exception ex)
         {
@@ -136,19 +147,39 @@ public partial class SearchViewModel : ObservableObject
 
 
     [RelayCommand]
-    async Task OpenAccountAsync(
+    async Task AddAccountAsync(
         InstaUser user)
     {
         try
         {
-            snackBar.Show("Opening account...", null, awaitPreviousSnackBar: true);
+            snackBar.Show("Adding account...", null, awaitPreviousSnackBar: true);
             await database.AddAsync(new(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext));
+        }
+        catch (Exception ex)
+        {
+            snackBar.Show("Failed to add account!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to add account!", ex.Message));
+        }
+
+        await LoadSearchHistory();
+    }
+
+
+    [RelayCommand]
+    async Task OpenAccountAsync(
+        SearchedAccount account)
+    {
+        try
+        {
+            snackBar.Show("Opening account...", null, awaitPreviousSnackBar: true);
+
+            InfoViewModel viewModel = App.Provider.GetRequiredService<InfoViewModel>();
+            viewModel.Account = account;
+
+            await navigation.NavigateAsync(new InfoPage(viewModel));
         }
         catch (Exception ex)
         {
             snackBar.Show("Failed to open account!", "More", 10000, onButtonClicked: async () => await message.ShowAsync("Failed to open account!", ex.Message));
         }
-
-        await LoadSearchHistory();
     }
 }
