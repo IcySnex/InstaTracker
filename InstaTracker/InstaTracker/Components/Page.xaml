@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:tlk="http://xamarin.com/schemas/2020/toolkit"
     x:Name="root"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource bd00}"
@@ -40,15 +41,21 @@
                             LineBreakMode="TailTruncation"
                             Text="This is a SnackBar!"
                             TextColor="{DynamicResource tl01}" />
-                        <Button
-                            x:Name="snackBarButton"
+                        <Frame
                             Grid.Column="1"
                             Margin="-16,-12"
-                            BackgroundColor="{DynamicResource bd04}"
-                            Clicked="OnSnackbarButtonClicked"
+                            Padding="0"
+                            BackgroundColor="Transparent"
                             CornerRadius="0"
-                            Text="Okay"
-                            TextColor="{DynamicResource a07}" />
+                            HasShadow="False">
+                            <Button
+                                x:Name="snackBarButton"
+                                BackgroundColor="{DynamicResource bd04}"
+                                Clicked="OnSnackbarButtonClicked"
+                                CornerRadius="0"
+                                Text="Okay"
+                                TextColor="{DynamicResource a07}" />
+                        </Frame>
                     </Grid>
                 </Frame>
             </Grid>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Windows.Input;
+using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Forms.Xaml;
 
 namespace InstaTracker.Views;
@@ -8,11 +9,11 @@ public partial class ProfilePictureView : Components.Page
 {
     public ProfilePictureView(
         string imageUrl,
-        EventHandler onGoBackClicked)
+        ICommand goBackCommand)
     {
         InitializeComponent();
 
-        GoBackButton.Clicked += onGoBackClicked;
-        PictureView.Source = imageUrl;
+        TouchEffect.SetCommand(GoBackImage, goBackCommand);
+        ImageView.Source = imageUrl;
     }
 }

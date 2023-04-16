@@ -34,6 +34,7 @@
                     IsPassword="True"
                     Keyboard="Plain"
                     PlaceholderText="Password"
+                    ReturnCommand="{Binding LoginCommand}"
                     ReturnType="Done"
                     Text="{Binding Password, Mode=TwoWay}" />
 
@@ -85,7 +86,7 @@
                 </Image>
 
                 <Label
-                    Margin="66,0,110,0"
+                    Margin="66,-2,110,0"
                     LineBreakMode="TailTruncation"
                     Style="{StaticResource TitleSecondary}"
                     Text="{Binding AccountManager.LoggedAccount.UserName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />

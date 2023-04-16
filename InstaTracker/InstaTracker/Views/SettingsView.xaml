@@ -35,8 +35,7 @@
             AutomationId="Automatically log in with this account when starting the app"
             ClassId="Auto login account"
             ControlTemplate="{StaticResource SettingsCard}"
-            IsEnabled="{Binding AutoLogin, Mode=OneWay}"
-            Opacity="{Binding AutoLogin, Mode=OneWay, Converter={StaticResource OpacitySwitcher}, ConverterParameter=0.5}">
+            IsVisible="{Binding AutoLogin, Mode=OneWay}">
             <Picker
                 Title="Username"
                 ItemDisplayBinding="{Binding Username}"

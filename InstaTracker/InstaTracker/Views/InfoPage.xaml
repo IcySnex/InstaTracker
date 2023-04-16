@@ -7,14 +7,15 @@
 
     <StackLayout Margin="0,0,0,48" Spacing="12">
         <Grid>
-            <Button
-                Padding="-36"
+            <Image
                 tlk:IconTintColorEffect.TintColor="{DynamicResource tl02}"
-                tlk:ShadowEffect.Color="Transparent"
-                BackgroundColor="Transparent"
-                Command="{Binding GoBackCommand}"
+                tlk:TouchEffect.AnimationDuration="100"
+                tlk:TouchEffect.Command="{Binding GoBackCommand}"
+                tlk:TouchEffect.NormalOpacity="1"
+                tlk:TouchEffect.PressedOpacity="0.4"
+                tlk:TouchEffect.PressedScale="0.98"
                 HorizontalOptions="Start"
-                ImageSource="back.png"
+                Source="back.png"
                 WidthRequest="36" />
             <Label
                 Margin="40,0,0,0"
@@ -31,38 +32,40 @@
             </Frame.Background>
 
             <Grid>
-                <Image
-                    tlk:TouchEffect.AnimationDuration="50"
+                <Grid
+                    tlk:TouchEffect.AnimationDuration="100"
                     tlk:TouchEffect.Command="{Binding OpenProfilePictureCommand}"
                     tlk:TouchEffect.NormalOpacity="1"
                     tlk:TouchEffect.PressedOpacity="0.4"
-                    tlk:TouchEffect.PressedScale="0.99"
-                    HeightRequest="54"
-                    HorizontalOptions="Start"
-                    Source="{Binding Account.ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
-                    WidthRequest="54">
-                    <Image.Clip>
-                        <EllipseGeometry
-                            Center="27,27"
-                            RadiusX="27"
-                            RadiusY="27" />
-                    </Image.Clip>
-                </Image>
+                    tlk:TouchEffect.PressedScale="0.98"
+                    HorizontalOptions="Start">
+                    <Image
+                        HeightRequest="54"
+                        Source="{Binding Account.ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
+                        WidthRequest="54">
+                        <Image.Clip>
+                            <EllipseGeometry
+                                Center="27,27"
+                                RadiusX="27"
+                                RadiusY="27" />
+                        </Image.Clip>
+                    </Image>
+                    <Image
+                        Margin="40,0,0,0"
+                        tlk:IconTintColorEffect.TintColor="{DynamicResource tl01}"
+                        HorizontalOptions="Start"
+                        IsVisible="{Binding Account.IsFollowing, Mode=OneWay}"
+                        Source="following.png"
+                        VerticalOptions="Start"
+                        WidthRequest="20" />
+                </Grid>
 
                 <Label
-                    Margin="66,0,110,0"
+                    Margin="66,-2,100,0"
                     LineBreakMode="TailTruncation"
                     Style="{StaticResource TitleSecondary}"
                     Text="{Binding Account.Username, Mode=OneWay, TargetNullValue=N/A}" />
-                <Image
-                    Margin="0,0,45,0"
-                    tlk:IconTintColorEffect.TintColor="{DynamicResource tl03}"
-                    HorizontalOptions="End"
-                    IsVisible="{Binding Account.IsFollowing, Mode=OneWay}"
-                    Source="following.png"
-                    VerticalOptions="Center"
-                    WidthRequest="20" />
-                <Label Margin="66,28,70,0" LineBreakMode="TailTruncation">
+                <Label Margin="66,28,100,0" LineBreakMode="TailTruncation">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="{Binding Account.IsPrivate, Mode=OneWay, Converter={StaticResource BoolToPrivatePublic}}" />
@@ -72,18 +75,13 @@
                     </Label.FormattedText>
                 </Label>
 
-
                 <Button
-                    Padding="-36"
-                    tlk:IconTintColorEffect.TintColor="{DynamicResource td01}"
                     Command="{Binding RemoveCommand}"
                     CommandParameter="{Binding Account.Id}"
-                    HeightRequest="36"
                     HorizontalOptions="End"
-                    ImageSource="delete.png"
                     Style="{StaticResource Accent}"
-                    VerticalOptions="Center"
-                    WidthRequest="36" />
+                    Text="Remove"
+                    VerticalOptions="Center" />
             </Grid>
         </Frame>
     </StackLayout>

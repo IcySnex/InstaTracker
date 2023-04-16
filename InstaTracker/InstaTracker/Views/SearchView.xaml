@@ -27,11 +27,12 @@
                 </LinearGradientBrush>
             </Frame.Background>
 
-            <StackLayout Spacing="{OnPlatform Android=-7, iOS=-1}">
+            <StackLayout Spacing="{OnPlatform Android=-7, iOS=7}">
                 <com:Entry
                     Keyboard="Plain"
                     LeadingIcon="search.png"
                     PlaceholderText="Username"
+                    ReturnCommand="{Binding SearchCommand}"
                     ReturnType="Next"
                     Text="{Binding SearchUsername, Mode=TwoWay}"
                     VerticalOptions="Start" />
@@ -42,11 +43,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Button
+                        Margin="0,0,-6,0"
                         Command="{Binding SearchCommand}"
                         Style="{StaticResource Accent}"
                         Text="Search" />
                     <Button
                         Grid.Column="1"
+                        Margin="6,0,0,0"
                         Command="{Binding ClearSearchCommand}"
                         IsVisible="{Binding ShowSearchResults, Mode=OneWay}"
                         Style="{StaticResource Light}"

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.CommunityToolkit.Effects;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -18,7 +19,7 @@ public partial class Entry : Grid
                 return;
 
             MainThread.BeginInvokeOnMainThread(async () =>
-                await view.placeholderContainer.TranslateTo(0, -28, 150, Easing.Linear));
+                await view.placeholderContainer.TranslateTo(0, Device.RuntimePlatform == Device.Android ? -28 : -23, 150, Easing.Linear));
             view.placeholderText.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label));
         });
 
@@ -201,6 +202,16 @@ public partial class Entry : Grid
     }
 
 
+    public static readonly BindableProperty ReturnCommandProperty = BindableProperty.Create(
+        nameof(ReturnCommand), typeof(ICommand), typeof(Entry), default(ICommand), BindingMode.OneWay);
+
+    public ICommand ReturnCommand
+    {
+        get => (ICommand)GetValue(ReturnCommandProperty);
+        set => SetValue(ReturnCommandProperty, value);
+    }
+
+
     ImageSource tempIcon = default!;
 
     public Keyboard Keyboard
@@ -214,7 +225,6 @@ public partial class Entry : Grid
         set => customEntry.ReturnType = value;
         get => customEntry.ReturnType;
     }
-
 
 
     public Entry()
@@ -237,7 +247,7 @@ public partial class Entry : Grid
         if (string.IsNullOrEmpty(PlaceholderText))
             return;
 
-        await placeholderContainer.TranslateTo(0, -28, 150, Easing.Linear);
+        await placeholderContainer.TranslateTo(0, Device.RuntimePlatform == Device.Android ? -28 : -23, 150, Easing.Linear);
         placeholderText.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label));
     }
 

@@ -56,12 +56,11 @@ public partial class InfoViewModel : ObservableObject
     [RelayCommand]
     async Task OpenProfilePictureAsync()
     {
-        string profilePicture = await infoManager.GetHdProfilePictureAsync(Account.Username);
-
         await snackBar.RunAsync(
             "Opening profile picture...",
-            navigation.NavigateAsync(new ProfilePictureView(profilePicture, async (s, e) => await GoBackAsync())),
-            snackBar.ErrorCallback("Failed opening profile picture!"));
+            infoManager.GetHdProfilePictureAsync(Account.Username),
+            snackBar.ErrorCallback("Failed opening profile picture!"),
+            async profilePicture => await navigation.NavigateAsync(new ProfilePictureView(profilePicture, GoBackCommand)));
     }
 
 }

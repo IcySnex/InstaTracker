@@ -6,14 +6,15 @@
     xmlns:tlk="http://xamarin.com/schemas/2020/toolkit">
 
     <Grid>
-        <Button
-            x:Name="GoBackButton"
-            Padding="-36"
+        <Image
+            x:Name="GoBackImage"
             tlk:IconTintColorEffect.TintColor="{DynamicResource tl02}"
-            tlk:ShadowEffect.Color="Transparent"
-            BackgroundColor="Transparent"
+            tlk:TouchEffect.AnimationDuration="100"
+            tlk:TouchEffect.NormalOpacity="1"
+            tlk:TouchEffect.PressedOpacity="0.4"
+            tlk:TouchEffect.PressedScale="0.98"
             HorizontalOptions="Start"
-            ImageSource="back.png"
+            Source="back.png"
             VerticalOptions="Start"
             WidthRequest="36" />
         <Label
@@ -21,6 +22,6 @@
             Style="{StaticResource Header}"
             Text="Profile Picture" />
 
-        <Image x:Name="PictureView" Margin="0,36,0,0" />
+        <Image x:Name="ImageView" Margin="0,36,0,0" />
     </Grid>
 </com:Page>

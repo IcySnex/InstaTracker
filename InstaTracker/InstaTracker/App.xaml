@@ -11,7 +11,6 @@
 
             <!--#region CONVERTERS-->
 
-            <conv:OpacitySwitcher x:Key="OpacitySwitcher" />
             <conv:IntIsNot x:Key="IntIsNot" />
             <conv:IsNotNull x:Key="IsNotNull" />
             <conv:IsNull x:Key="IsNull" />
@@ -289,59 +288,57 @@
                     CornerRadius="8"
                     HasShadow="False">
 
-                    <Grid>
-                        <Grid
-                            Margin="0,0,35,0"
-                            tlk:TouchEffect.AnimationDuration="50"
-                            tlk:TouchEffect.Command="{Binding Parent.BindingContext.LoginCommand, Source={x:Reference root}}"
-                            tlk:TouchEffect.CommandParameter="{Binding}"
+                    <Grid
+                        tlk:TouchEffect.AnimationDuration="100"
+                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.LoginCommand, Source={x:Reference root}}"
+                        tlk:TouchEffect.CommandParameter="{Binding}"
+                        tlk:TouchEffect.NormalOpacity="1"
+                        tlk:TouchEffect.PressedOpacity="0.4"
+                        tlk:TouchEffect.PressedScale="0.98">
+                        <Image
+                            HeightRequest="44"
+                            HorizontalOptions="Start"
+                            Source="{Binding ProfilePicture, TargetNullValue=nopicture.png}"
+                            WidthRequest="44">
+                            <Image.Clip>
+                                <EllipseGeometry
+                                    Center="{OnPlatform Android='22,25',
+                                                        iOS='22,24'}"
+                                    RadiusX="22"
+                                    RadiusY="22" />
+                            </Image.Clip>
+                        </Image>
+
+                        <Label
+                            Margin="56,-2,40,0"
+                            LineBreakMode="TailTruncation"
+                            Opacity="1"
+                            Style="{StaticResource TitleSecondary}"
+                            Text="{Binding Username, TargetNullValue=N/A}"
+                            TextColor="{DynamicResource tl00}" />
+                        <Label Margin="56,28,40,0" LineBreakMode="TailTruncation">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding FullName, TargetNullValue=N/A}" />
+                                    <Span Style="{StaticResource Subpoint}" Text=" - " />
+                                    <Span Style="{StaticResource Subpoint}" Text="{Binding Id, TargetNullValue=N/A}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Image
+                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl00}"
+                            tlk:TouchEffect.AnimationDuration="100"
+                            tlk:TouchEffect.Command="{Binding Parent.BindingContext.RemoveSavedAccountCommand, Source={x:Reference root}}"
+                            tlk:TouchEffect.CommandParameter="{Binding Id}"
                             tlk:TouchEffect.NormalOpacity="1"
                             tlk:TouchEffect.PressedOpacity="0.4"
-                            tlk:TouchEffect.PressedScale="0.99">
-                            <Image
-                                HeightRequest="44"
-                                HorizontalOptions="Start"
-                                Source="{Binding ProfilePicture, TargetNullValue=nopicture.png}"
-                                WidthRequest="44">
-                                <Image.Clip>
-                                    <EllipseGeometry
-                                        Center="{OnPlatform Android='22,25',
-                                                            iOS='22,22'}"
-                                        RadiusX="22"
-                                        RadiusY="22" />
-                                </Image.Clip>
-                            </Image>
-
-                            <Label
-                                Margin="56,0,0,0"
-                                LineBreakMode="TailTruncation"
-                                Opacity="1"
-                                Style="{StaticResource TitleSecondary}"
-                                Text="{Binding Username, TargetNullValue=N/A}"
-                                TextColor="{DynamicResource tl00}" />
-                            <Label Margin="56,28,0,0" LineBreakMode="TailTruncation">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding FullName, TargetNullValue=N/A}" />
-                                        <Span Style="{StaticResource Subpoint}" Text=" - " />
-                                        <Span Style="{StaticResource Subpoint}" Text="{Binding Id, TargetNullValue=N/A}" />
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </Grid>
-
-                        <Button
-                            Padding="-36"
-                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl00}"
-                            tlk:ShadowEffect.Color="Transparent"
-                            BackgroundColor="Transparent"
-                            Command="{Binding Parent.BindingContext.RemoveSavedAccountCommand, Source={x:Reference root}}"
-                            CommandParameter="{Binding Id}"
-                            HeightRequest="36"
+                            tlk:TouchEffect.PressedScale="0.98"
+                            HeightRequest="26"
                             HorizontalOptions="End"
-                            ImageSource="delete.png"
+                            Source="delete.png"
                             VerticalOptions="Center"
-                            WidthRequest="36" />
+                            WidthRequest="26" />
                     </Grid>
                 </Frame>
             </DataTemplate>
@@ -356,66 +353,65 @@
                     CornerRadius="8"
                     HasShadow="False">
 
-                    <Grid>
-                        <Grid
-                            Margin="0,0,35,0"
-                            tlk:TouchEffect.AnimationDuration="50"
-                            tlk:TouchEffect.Command="{Binding Parent.BindingContext.OpenAccountCommand, Source={x:Reference root}}"
-                            tlk:TouchEffect.CommandParameter="{Binding}"
+                    <Grid
+                        tlk:TouchEffect.AnimationDuration="100"
+                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.OpenAccountCommand, Source={x:Reference root}}"
+                        tlk:TouchEffect.CommandParameter="{Binding}"
+                        tlk:TouchEffect.NormalOpacity="1"
+                        tlk:TouchEffect.PressedOpacity="0.4"
+                        tlk:TouchEffect.PressedScale="0.98">
+                        <Image
+                            HeightRequest="44"
+                            HorizontalOptions="Start"
+                            Source="{Binding ProfilePicture, TargetNullValue=nopicture.png}"
+                            WidthRequest="44">
+                            <Image.Clip>
+                                <EllipseGeometry
+                                    Center="{OnPlatform Android='22,25',
+                                                        iOS='22,24'}"
+                                    RadiusX="22"
+                                    RadiusY="22" />
+                            </Image.Clip>
+                        </Image>
+                        <Image
+                            Margin="30,0,0,0"
+                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl01}"
+                            HorizontalOptions="Start"
+                            IsVisible="{Binding IsFollowing}"
+                            Source="following.png"
+                            VerticalOptions="Start"
+                            WidthRequest="20" />
+
+                        <Label
+                            Margin="56,-2,30,0"
+                            LineBreakMode="TailTruncation"
+                            Opacity="1"
+                            Style="{StaticResource TitleSecondary}"
+                            Text="{Binding Username, TargetNullValue=N/A}"
+                            TextColor="{DynamicResource tl00}" />
+                        <Label Margin="56,28,30,0" LineBreakMode="TailTruncation">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding IsPrivate, Converter={StaticResource BoolToPrivatePublic}}" />
+                                    <Span Style="{StaticResource Subpoint}" Text="{Binding SearchSocialContext, Converter={StaticResource IfNotNullParameter}, ConverterParameter=' | ‎'}" />
+                                    <Span Style="{StaticResource Subpoint}" Text="{Binding SearchSocialContext}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Image
+                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl00}"
+                            tlk:TouchEffect.AnimationDuration="100"
+                            tlk:TouchEffect.Command="{Binding Parent.BindingContext.RemoveAccountFromHistoryWarningCommand, Source={x:Reference root}}"
+                            tlk:TouchEffect.CommandParameter="{Binding Username}"
                             tlk:TouchEffect.NormalOpacity="1"
                             tlk:TouchEffect.PressedOpacity="0.4"
-                            tlk:TouchEffect.PressedScale="0.99">
-                            <Image
-                                HeightRequest="44"
-                                HorizontalOptions="Start"
-                                Source="{Binding ProfilePicture, TargetNullValue=nopicture.png}"
-                                WidthRequest="44">
-                                <Image.Clip>
-                                    <EllipseGeometry
-                                        Center="{OnPlatform Android='22,25',
-                                                            iOS='22,22'}"
-                                        RadiusX="22"
-                                        RadiusY="22" />
-                                </Image.Clip>
-                            </Image>
-
-                            <Label
-                                Margin="56,0,30,0"
-                                LineBreakMode="TailTruncation"
-                                Opacity="1"
-                                Style="{StaticResource TitleSecondary}"
-                                Text="{Binding Username, TargetNullValue=N/A}"
-                                TextColor="{DynamicResource tl00}" />
-                            <Image
-                                tlk:IconTintColorEffect.TintColor="{DynamicResource tl03}"
-                                HorizontalOptions="End"
-                                IsVisible="{Binding IsFollowing}"
-                                Source="following.png"
-                                VerticalOptions="Center"
-                                WidthRequest="20" />
-                            <Label Margin="56,28,30,0" LineBreakMode="TailTruncation">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding IsPrivate, Converter={StaticResource BoolToPrivatePublic}}" />
-                                        <Span Style="{StaticResource Subpoint}" Text="{Binding SearchSocialContext, Converter={StaticResource IfNotNullParameter}, ConverterParameter=' | ‎'}" />
-                                        <Span Style="{StaticResource Subpoint}" Text="{Binding SearchSocialContext}" />
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </Grid>
-
-                        <Button
-                            Padding="-36"
-                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl00}"
-                            tlk:ShadowEffect.Color="Transparent"
-                            BackgroundColor="Transparent"
-                            Command="{Binding Parent.BindingContext.RemoveAccountFromHistoryWarningCommand, Source={x:Reference root}}"
-                            CommandParameter="{Binding Username}"
-                            HeightRequest="36"
+                            tlk:TouchEffect.PressedScale="0.98"
+                            HeightRequest="26"
                             HorizontalOptions="End"
-                            ImageSource="delete.png"
+                            Source="delete.png"
                             VerticalOptions="Center"
-                            WidthRequest="36" />
+                            WidthRequest="26" />
                     </Grid>
                 </Frame>
             </DataTemplate>
@@ -431,12 +427,12 @@
                     HasShadow="False">
 
                     <Grid
-                        tlk:TouchEffect.AnimationDuration="50"
+                        tlk:TouchEffect.AnimationDuration="100"
                         tlk:TouchEffect.Command="{Binding Parent.BindingContext.AddAccountCommand, Source={x:Reference root}}"
                         tlk:TouchEffect.CommandParameter="{Binding}"
                         tlk:TouchEffect.NormalOpacity="1"
                         tlk:TouchEffect.PressedOpacity="0.4"
-                        tlk:TouchEffect.PressedScale="0.99">
+                        tlk:TouchEffect.PressedScale="0.98">
                         <Image
                             HeightRequest="44"
                             HorizontalOptions="Start"
@@ -445,27 +441,28 @@
                             <Image.Clip>
                                 <EllipseGeometry
                                     Center="{OnPlatform Android='22,25',
-                                                        iOS='22,22'}"
+                                                        iOS='22,24'}"
                                     RadiusX="22"
                                     RadiusY="22" />
                             </Image.Clip>
                         </Image>
+                        <Image
+                            Margin="30,0,0,0"
+                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl01}"
+                            HorizontalOptions="Start"
+                            IsVisible="{Binding FriendshipStatus.Following}"
+                            Source="following.png"
+                            VerticalOptions="Start"
+                            WidthRequest="20" />
 
                         <Label
-                            Margin="56,0,30,0"
+                            Margin="56,-2,0,0"
                             LineBreakMode="TailTruncation"
                             Opacity="1"
                             Style="{StaticResource TitleSecondary}"
                             Text="{Binding UserName, TargetNullValue=N/A}"
                             TextColor="{DynamicResource tl00}" />
-                        <Image
-                            tlk:IconTintColorEffect.TintColor="{DynamicResource tl03}"
-                            HorizontalOptions="End"
-                            IsVisible="{Binding FriendshipStatus.Following}"
-                            Source="following.png"
-                            VerticalOptions="Center"
-                            WidthRequest="20" />
-                        <Label Margin="56,28,30,0" LineBreakMode="TailTruncation">
+                        <Label Margin="56,28,0,0" LineBreakMode="TailTruncation">
                             <Label.FormattedText>
                                 <FormattedString>
                                     <Span Text="{Binding IsPrivate, Converter={StaticResource BoolToPrivatePublic}}" />
