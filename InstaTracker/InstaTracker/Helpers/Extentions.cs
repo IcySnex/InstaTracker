@@ -6,6 +6,10 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
+using InstagramApiSharp.Classes;
+using static SQLite.SQLite3;
+using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.API;
 
 namespace InstaTracker.Helpers;
     
@@ -83,5 +87,45 @@ public static class Extentions
 
         element.Animate(name, transform, callback, 16, length, easing, (v, c) => tcs.SetResult(c));
         return tcs.Task;
+    }
+
+
+    public static void ThrowIfUnauthhenticated(this IInstaApi input,
+        string message,
+        ILogger logger)
+    {
+        if (input.IsUserAuthenticated)
+            return;
+
+        Exception innerException = new("No account is currently logged in.");
+        logger.Log(message, innerException);
+
+        throw new(message, innerException);
+    }
+
+    public static void ThrowIfAuthhenticated(this IInstaApi input,
+        string message,
+        ILogger logger)
+    {
+        if (!input.IsUserAuthenticated)
+            return;
+
+        Exception innerException = new("An account is already logged in.");
+        logger.Log(message, innerException);
+
+        throw new(message, innerException);
+    }
+
+    public static void ThrowIfFailed<T>(this IResult<T> input,
+        string message,
+        ILogger logger)
+    {
+        if (input.Succeeded)
+            return;
+
+        Exception innerException = new(input.Info.Message);
+        logger.Log(message, innerException);
+
+        throw new(message, innerException);
     }
 }

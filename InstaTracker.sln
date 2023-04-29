@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaTracker.Android", "Ins
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaTracker.iOS", "InstaTracker\InstaTracker.iOS\InstaTracker.iOS.csproj", "{E01361CC-99D1-45D1-BD30-AA16E582464D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaTracker", "InstaTracker\InstaTracker\InstaTracker.csproj", "{CA366936-72C7-4EFB-80A1-7EA180A8D8C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstaTracker", "InstaTracker\InstaTracker\InstaTracker.csproj", "{CA366936-72C7-4EFB-80A1-7EA180A8D8C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

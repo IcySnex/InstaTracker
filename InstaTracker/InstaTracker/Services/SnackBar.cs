@@ -24,12 +24,11 @@ public class SnackBar
 
 
     public Action<Exception> ErrorCallback(
-        string title,
         string? errorMessage = null) =>
-        async ex => await DisplayAsync(title, "More", true, async () => await message.ShowAsync(title, errorMessage is null ? ex.Message : $"{errorMessage}\n\nError: {ex.Message}"));
+        async ex => await DisplayAsync(ex.Message, "More", true, async () => await message.ShowAsync(ex.Message, errorMessage is null ? ex.InnerException.Message : $"{errorMessage}\n\nError: {ex.InnerException.Message}"));
 
 
-    public async Task RunAsync<T>(
+    public async Task<bool> RunAsync<T>(
         string message,
         Task<T> task,
         Action<Exception>? onError = null,
@@ -39,7 +38,7 @@ public class SnackBar
         // Show snackbar
         Components.Page? page = SetupSnackbar(message);
         if (page is null)
-            return;
+            return false;
 
         await ShowAsync(page);
 
@@ -47,32 +46,36 @@ public class SnackBar
         try
         {
             T result = await task;
+
             onFinished?.Invoke(result);
+            return true;
         }
         catch (Exception ex)
         {
             onError?.Invoke(ex);
+            return false;
         }
+        finally
+        {
+            // Hide snackbar
+            if (hideDelay > 0 && page.IsSnackBarVisible)
+                await Task.Delay(hideDelay);
 
-        // Hide snackbar
-        if (hideDelay > 0 && page.IsSnackBarVisible)
-            await Task.Delay(hideDelay);
-
-        if (page.SnackBarLabel.Text == message)
-            await HideAsync(page);
+            if (page.SnackBarLabel.Text == message)
+                await HideAsync(page);
+        }
     }
 
-    public async Task RunAsync(
+    public async Task<bool> RunAsync(
         string message,
         Task task,
         Action<Exception>? onError = null,
-        Action? onFinished = null,
         int hideDelay = 1000)
     {
         // Show snackbar
         Components.Page? page = SetupSnackbar(message);
         if (page is null)
-            return;
+            return false;
 
         await ShowAsync(page);
 
@@ -80,19 +83,23 @@ public class SnackBar
         try
         {
             await task;
-            onFinished?.Invoke();
+
+            return true;
         }
         catch (Exception ex)
         {
             onError?.Invoke(ex);
+            return false;
         }
+        finally
+        {
+            // Hide snackbar
+            if (hideDelay > 0 && page.IsSnackBarVisible)
+                await Task.Delay(hideDelay);
 
-        // Hide snackbar
-        if (hideDelay > 0 && page.IsSnackBarVisible)
-            await Task.Delay(hideDelay);
-
-        if (page.SnackBarLabel.Text == message)
-            await HideAsync(page);
+            if (page.SnackBarLabel.Text == message)
+                await HideAsync(page);
+        }
     }
 
 

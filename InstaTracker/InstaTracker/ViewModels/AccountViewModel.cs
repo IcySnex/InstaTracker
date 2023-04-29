@@ -16,6 +16,7 @@ public partial class AccountViewModel : ObservableObject
     readonly Message message;
     readonly SnackBar snackBar;
     readonly SettingsViewModel settingsViewModel;
+    readonly SearchViewModel searchViewModel;
 
     public Config Config { get; }
     public AccountManager AccountManager { get; }
@@ -27,7 +28,8 @@ public partial class AccountViewModel : ObservableObject
         Message message,
         SnackBar snackBar,
         AccountManager accountManager,
-        SettingsViewModel settingsViewModel)
+        SettingsViewModel settingsViewModel,
+        SearchViewModel searchViewModel)
     {
         this.logger = logger;
         this.Config = config;
@@ -36,6 +38,7 @@ public partial class AccountViewModel : ObservableObject
         this.snackBar = snackBar;
         this.AccountManager = accountManager;
         this.settingsViewModel = settingsViewModel;
+        this.searchViewModel = searchViewModel;
     }
 
     public async Task InitializeAsync()
@@ -43,13 +46,15 @@ public partial class AccountViewModel : ObservableObject
         if (Config.AutoLoginId.HasValue && await database.GetAsync(Config.AutoLoginId.Value) is Account savedLogin)
             await snackBar.RunAsync(
                 "Logging in...",
-                AccountManager.LoginAsync(savedLogin.StateJson, false),
-                snackBar.ErrorCallback("Failed logging in!"));
+                Config.LoginWithState ?
+                    AccountManager.LoginAsync(savedLogin.StateJson, false) :
+                    AccountManager.LoginAsync(savedLogin.Username, savedLogin.Password!, false),
+                snackBar.ErrorCallback());
 
         await snackBar.RunAsync(
             "Loading saved accounts...",
             LoadSavedAccountsAsync(),
-            snackBar.ErrorCallback("Failed loading saved accounts!"));
+            snackBar.ErrorCallback());
 
         logger.Log("Initialized AccountViewModel");
     }
@@ -68,16 +73,16 @@ public partial class AccountViewModel : ObservableObject
     async Task RemoveSavedAccountAsync(
         int id)
     {
-        await snackBar.RunAsync(
+        if (!await snackBar.RunAsync(
             "Removing saved account...",
             database.RemoveAsync(id),
-            snackBar.ErrorCallback("Failed removing account!"));
-
+            snackBar.ErrorCallback()))
+            return;
 
         await snackBar.RunAsync(
             "Loading saved accounts...",
             LoadSavedAccountsAsync(),
-            snackBar.ErrorCallback("Failed loading saved accounts!"));
+            snackBar.ErrorCallback());
     }
 
 
@@ -96,16 +101,35 @@ public partial class AccountViewModel : ObservableObject
     async Task LoginAsync(
         Account? account = null)
     {
-        await snackBar.RunAsync(
-            "Logging in...",
-            account is null ? AccountManager.LoginAsync(Username, Password, Config.SaveAccount) : AccountManager.LoginAsync(account.StateJson, false),
-            snackBar.ErrorCallback("Failed logging in!", "Make sure you entered your correct username and password and disable 2FA if enabled."));
+        if (!await snackBar.RunAsync(
+                "Logging in...",
+                account is null ?
+                    AccountManager.LoginAsync(Username, Password, Config.SaveAccount) :
+                    Config.LoginWithState ?
+                        AccountManager.LoginAsync(account.StateJson, false) :
+                        AccountManager.LoginAsync(account.Username, account.Password!, false),
+                snackBar.ErrorCallback("Make sure you entered your correct username and password and disable 2FA if enabled.")))
+            return;
 
         if (Config.SaveAccount && account is null)
             await snackBar.RunAsync(
                 "Loading saved accounts...",
                 LoadSavedAccountsAsync(),
-                snackBar.ErrorCallback("Failed loading saved accounts!"));
+                snackBar.ErrorCallback());
+
+        searchViewModel.IsRefreshing = true;
+        await snackBar.RunAsync(
+            "Loading search history...",
+            searchViewModel.LoadSearchHistory(true),
+            snackBar.ErrorCallback(),
+            refreshed =>
+            {
+                if (refreshed)
+                    return;
+
+                snackBar.ErrorCallback("Could not reload account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed refreshing search history!", new("No account is currently logged in.")));
+            });
+        searchViewModel.IsRefreshing = false;
     }
 
 
@@ -115,6 +139,6 @@ public partial class AccountViewModel : ObservableObject
         await snackBar.RunAsync(
             "Logging out...",
             AccountManager.LogoutAsync(),
-            snackBar.ErrorCallback("Failed logging out!"));
+            snackBar.ErrorCallback());
     }
 }

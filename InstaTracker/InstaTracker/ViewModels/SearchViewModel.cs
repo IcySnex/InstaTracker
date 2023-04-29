@@ -43,19 +43,17 @@ public partial class SearchViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
+        IsRefreshing = true;
         await snackBar.RunAsync(
             "Loading search history...",
             LoadSearchHistory(true),
-            snackBar.ErrorCallback("Failed loading search history!"),
-            async refreshed =>
+            snackBar.ErrorCallback(),
+            refreshed =>
             {
                 if (!refreshed)
-                    await snackBar.DisplayAsync(
-                        "Failed refreshing search history!",
-                        "More",
-                        true,
-                        async () => await message.ShowAsync("Failed refreshing search history!", "Could not reload account information from Instagram, instead search history from local database was restored."));
+                    snackBar.ErrorCallback("Could not reload account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed refreshing search history!", new("No account is currently logged in.")));
             });
+        IsRefreshing = false;
 
         logger.Log("Initialized SearchViewModel");
     }
@@ -63,16 +61,13 @@ public partial class SearchViewModel : ObservableObject
 
     public SObservableCollection<SearchedAccount> SearchHistory { get; } = new();
 
-    async Task<bool> LoadSearchHistory(
+    public async Task<bool> LoadSearchHistory(
         bool reloadAll = false)
     {
-        IsRefreshing = true;
         SearchHistory.Clear();
         if (!reloadAll || accountManager.LoggedAccount is null)
         {
             SearchHistory.AddRange(await database.GetAllAsync());
-
-            IsRefreshing = false;
             return false;
         }
 
@@ -82,7 +77,6 @@ public partial class SearchViewModel : ObservableObject
             SearchHistory.Add(new SearchedAccount(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext, account.Id));
         }
 
-        IsRefreshing = false;
         return true;
     }
 
@@ -101,17 +95,19 @@ public partial class SearchViewModel : ObservableObject
     {
         await database.RemoveAsync(username);
 
+        IsRefreshing = true;
         await snackBar.RunAsync(
             "Loading search history...",
             LoadSearchHistory(),
-            snackBar.ErrorCallback("Failed loading search history!"));
+            snackBar.ErrorCallback());
+        IsRefreshing = false;
     }
 
 
     [ObservableProperty]
     bool isRefreshing = false;
 
-    [RelayCommand(AllowConcurrentExecutions = true)]
+    [RelayCommand]
     async Task RefreshSearchHistoryAccountsAsync()
     {
         if (IsRefreshing)
@@ -119,18 +115,15 @@ public partial class SearchViewModel : ObservableObject
 
         try
         {
+            IsRefreshing = true;
             if (!await LoadSearchHistory(true))
-                throw new Exception("Could not reload account information from Instagram, instead search history from local database was restored.");
+                snackBar.ErrorCallback("Could not reload account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed refreshing search history!", new("No account is currently logged in.")));
         }
         catch (Exception ex)
         {
-            IsRefreshing = false;
-            await snackBar.DisplayAsync(
-                "Failed refreshing search history!",
-                "More",
-                true,
-                async () => await message.ShowAsync("Failed refreshing search history!", ex.Message));
+            snackBar.ErrorCallback().Invoke(ex);
         }
+        IsRefreshing = false;
     }
 
 
@@ -153,7 +146,7 @@ public partial class SearchViewModel : ObservableObject
         await snackBar.RunAsync(
             "Searching for users...",
             searchmanager.SearchAccountsAsync(SearchUsername),
-            snackBar.ErrorCallback("Failed searching for users!"),
+            snackBar.ErrorCallback(),
             (List<InstaUser> users) =>
             {
                 SearchResults = users;
@@ -173,24 +166,32 @@ public partial class SearchViewModel : ObservableObject
     async Task AddAccountAsync(
         InstaUser user)
     {
-        await snackBar.RunAsync(
-            "Adding account...",
-            database.AddAsync(new(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext)),
-            snackBar.ErrorCallback("Failed adding account!"));
+        if (!await snackBar.RunAsync(
+                "Adding account...",
+                database.AddAsync(new(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext)),
+                snackBar.ErrorCallback()))
+            return;
 
+        IsRefreshing = true;
         await snackBar.RunAsync(
             "Loading search history...",
             LoadSearchHistory(),
-            snackBar.ErrorCallback("Failed loading search history!"));
+            snackBar.ErrorCallback());
+        IsRefreshing = false;
     }
 
 
     [RelayCommand]
-    async Task OpenAccountAsync(
-        SearchedAccount account)
+    async Task LoadAccountAsync(
+        string username)
     {
         InfoViewModel viewModel = App.Provider.GetRequiredService<InfoViewModel>();
-        viewModel.Account = account;
+
+        if (!await snackBar.RunAsync(
+                "Loading account...",
+                viewModel.InitializeAsync(username),
+                snackBar.ErrorCallback()))
+            return;
 
         await navigation.NavigateAsync(new InfoPage(viewModel));
     }

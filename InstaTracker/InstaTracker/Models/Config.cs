@@ -7,7 +7,9 @@ public partial class Config : ObservableObject
     [ObservableProperty]
     public bool saveAccount = false;
 
-
     [ObservableProperty]
     public int? autoLoginId = null;
+
+    [ObservableProperty]
+    bool loginWithState = true;
 }

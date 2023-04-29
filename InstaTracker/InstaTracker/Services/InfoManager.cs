@@ -4,6 +4,7 @@ using InstagramApiSharp.Classes;
 using InstaTracker.Helpers;
 using Serilog;
 using System.Threading.Tasks;
+using InstagramApiSharp;
 
 namespace InstaTracker.Services;
 
@@ -23,24 +24,57 @@ public class InfoManager
     }
 
 
-    public async Task<string> GetHdProfilePictureAsync(
+    public async Task<InstaUserInfo> GetAccountInfoAsync(
         string username)
     {
-        // Check if logged in
-        if (!instagram.IsUserAuthenticated)
-        {
-            logger.Log("Failed getting hd profile picture", new("No account is currently logged in."));
-            throw new("No account is currently logged in.");
-        }
+        instagram.ThrowIfUnauthhenticated("Failed getting account info!", logger);
 
-        // Get account
+        logger.Log("Getting account info");
         IResult<InstaUserInfo> result = await instagram.UserProcessor.GetUserInfoByUsernameAsync(username);
-        if (!result.Succeeded)
-        {
-            logger.Log("Failed getting hd profile picture", result.Info.Exception);
-            throw result.Info.Exception;
-        }
+        result.ThrowIfFailed("Failed getting account info!", logger);
 
-        return result.Value.HdProfilePicUrlInfo.Uri;
+        return result.Value;
+    }
+
+    public async Task<InstaStoryFriendshipStatus> GetFirendshipStatusAsync(
+        long id)
+    {
+        instagram.ThrowIfUnauthhenticated("Failed getting friendship status!", logger);
+
+        logger.Log("Getting friendship status");
+        IResult<InstaStoryFriendshipStatus> result = await instagram.UserProcessor.GetFriendshipStatusAsync(id);
+        result.ThrowIfFailed("Failed getting friendship status!", logger);
+
+        return result.Value;
+    }
+
+
+    public async Task<InstaUserShortList> GetFollowersAsync(
+        long id,
+        string query = "",
+        bool mutualsFirst = false)
+    {
+        instagram.ThrowIfUnauthhenticated("Failed getting followers!", logger);
+
+        logger.Log("Getting followers");
+        IResult<InstaUserShortList> result = await instagram.UserProcessor.GetUserFollowersByIdAsync(id, PaginationParameters.Empty, query, mutualsFirst);
+        result.ThrowIfFailed("Failed getting followers!", logger);
+
+        return result.Value;
+    }
+
+
+    public async Task<InstaUserShortList> GetFollowingAsync(
+        long id,
+        string query = "",
+        bool mutualsFirst = false)
+    {
+        instagram.ThrowIfUnauthhenticated("Failed getting following!", logger);
+
+        logger.Log("Getting following");
+        IResult<InstaUserShortList> result = await instagram.UserProcessor.GetUserFollowingByIdAsync(id, PaginationParameters.Empty, query);
+        result.ThrowIfFailed("Failed getting following!", logger);
+
+        return result.Value;
     }
 }

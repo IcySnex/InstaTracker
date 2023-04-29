@@ -43,5 +43,12 @@
                 SelectedItem="{Binding AutoLoginAccount, Mode=TwoWay}"
                 WidthRequest="150" />
         </ContentView>
+
+        <ContentView
+            AutomationId="If disabled a new login request will be created for each login"
+            ClassId="Login with state"
+            ControlTemplate="{StaticResource SettingsCard}">
+            <Switch IsToggled="{Binding Config.LoginWithState, Mode=TwoWay}" />
+        </ContentView>
     </StackLayout>
 </com:Page>

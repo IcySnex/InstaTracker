@@ -41,7 +41,7 @@
                     HorizontalOptions="Start">
                     <Image
                         HeightRequest="54"
-                        Source="{Binding Account.ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
+                        Source="{Binding AccountInfo.ProfilePicUrl, Mode=OneWay, TargetNullValue=nopicture.png}"
                         WidthRequest="54">
                         <Image.Clip>
                             <EllipseGeometry
@@ -54,7 +54,7 @@
                         Margin="40,0,0,0"
                         tlk:IconTintColorEffect.TintColor="{DynamicResource tl01}"
                         HorizontalOptions="Start"
-                        IsVisible="{Binding Account.IsFollowing, Mode=OneWay}"
+                        IsVisible="{Binding FriendshipStatus.Following, Mode=OneWay}"
                         Source="following.png"
                         VerticalOptions="Start"
                         WidthRequest="20" />
@@ -64,13 +64,13 @@
                     Margin="66,-2,100,0"
                     LineBreakMode="TailTruncation"
                     Style="{StaticResource TitleSecondary}"
-                    Text="{Binding Account.Username, Mode=OneWay, TargetNullValue=N/A}" />
+                    Text="{Binding AccountInfo.Username, Mode=OneWay, TargetNullValue=N/A}" />
                 <Label Margin="66,28,100,0" LineBreakMode="TailTruncation">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="{Binding Account.IsPrivate, Mode=OneWay, Converter={StaticResource BoolToPrivatePublic}}" />
-                            <Span Style="{StaticResource Subpoint}" Text="{Binding Account.SearchSocialContext, Mode=OneWay, Converter={StaticResource IfNotNullParameter}, ConverterParameter=' | ‎'}" />
-                            <Span Style="{StaticResource Subpoint}" Text="{Binding Account.SearchSocialContext, Mode=OneWay}" />
+                            <Span Text="{Binding AccountInfo.IsPrivate, Mode=OneWay, Converter={StaticResource BoolToPrivatePublic}}" />
+                            <Span Style="{StaticResource Subpoint}" Text="{Binding AccountInfo.ProfileContext, Mode=OneWay, Converter={StaticResource IfNotNullOrEmptyParameter}, ConverterParameter=' | ‎'}" />
+                            <Span Style="{StaticResource Subpoint}" Text="{Binding AccountInfo.ProfileContext, Mode=OneWay}" />
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
@@ -84,5 +84,49 @@
                     VerticalOptions="Center" />
             </Grid>
         </Frame>
+
+        <Grid Margin="0,-5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Frame Padding="0" BackgroundColor="{DynamicResource bd01}">
+                <ScrollView Padding="12" Orientation="Horizontal">
+                    <StackLayout Spacing="-6">
+                        <Label
+                            LineBreakMode="NoWrap"
+                            Style="{StaticResource Title}"
+                            Text="{Binding FollowersCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                        <Label Style="{StaticResource ContentSecondary}" Text="Followers" />
+                    </StackLayout>
+                </ScrollView>
+            </Frame>
+
+            <Frame
+                Grid.Column="1"
+                Padding="0"
+                BackgroundColor="{DynamicResource bd01}">
+                <ScrollView Padding="12" Orientation="Horizontal">
+                    <StackLayout Spacing="-6">
+                        <Label Style="{StaticResource Title}" Text="{Binding FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                        <Label Style="{StaticResource ContentSecondary}" Text="Following" />
+                    </StackLayout>
+                </ScrollView>
+            </Frame>
+
+            <Frame
+                Grid.Column="2"
+                Padding="0"
+                BackgroundColor="{DynamicResource bd01}">
+                <ScrollView Padding="12" Orientation="Horizontal">
+                    <StackLayout Spacing="-6">
+                        <Label Style="{StaticResource Title}" Text="{Binding FansCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                        <Label Style="{StaticResource ContentSecondary}" Text="Fans" />
+                    </StackLayout>
+                </ScrollView>
+            </Frame>
+        </Grid>
     </StackLayout>
 </com:Page>

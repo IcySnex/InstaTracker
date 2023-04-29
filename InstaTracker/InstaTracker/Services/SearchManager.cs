@@ -27,20 +27,11 @@ public class SearchManager
     public async Task<List<InstaUser>> SearchAccountsAsync(
         string username)
     {
-        // Check if logged in
-        if (!instagram.IsUserAuthenticated)
-        {
-            logger.Log("Failed searching for account", new("No account is currently logged in."));
-            throw new("No account is currently logged in.");
-        }
+        instagram.ThrowIfUnauthhenticated("Failed searching for accounts!", logger);
 
-        // Get search results with username
+        logger.Log("Searching for accounts");
         IResult<InstaDiscoverSearchResult> result = await instagram.DiscoverProcessor.SearchPeopleAsync(username, 10);
-        if (!result.Succeeded)
-        {
-            logger.Log("Failed searching for accounts", result.Info.Exception);
-            throw result.Info.Exception;
-        }
+        result.ThrowIfFailed("Failed searching for accounts!", logger);
 
         return result.Value.Users;
     }
@@ -49,20 +40,11 @@ public class SearchManager
     public async Task<InstaUser> GetAccountAsync(
         string username)
     {
-        // Check if logged in
-        if (!instagram.IsUserAuthenticated)
-        {
-            logger.Log("Failed getting account", new("No account is currently logged in."));
-            throw new("No account is currently logged in.");
-        }
+        instagram.ThrowIfUnauthhenticated("Failed getting account!", logger);
 
-        // Get account
+        logger.Log("Getting account");
         IResult<InstaUser> result = await instagram.UserProcessor.GetUserAsync(username);
-        if (!result.Succeeded)
-        {
-            logger.Log("Failed getting account", result.Info.Exception);
-            throw result.Info.Exception;
-        }
+        result.ThrowIfFailed("Failed getting account!", logger);
 
         return result.Value;
     }

@@ -19,6 +19,7 @@
             <conv:IfTrueParameter x:Key="IfTrueParameter" />
             <conv:BoolToPrivatePublic x:Key="BoolToPrivatePublic" />
             <conv:IfNotNullParameter x:Key="IfNotNullParameter" />
+            <conv:IfNotNullOrEmptyParameter x:Key="IfNotNullOrEmptyParameter" />
 
             <!--#endregion-->
 
@@ -142,7 +143,7 @@
 
 
             <Style x:Key="Title" TargetType="Label">
-                <Setter Property="TextColor" Value="{DynamicResource a09}" />
+                <Setter Property="TextColor" Value="{DynamicResource tl01}" />
                 <Setter Property="Opacity" Value="1" />
                 <Setter Property="FontSize" Value="Title" />
                 <Setter Property="TextTransform" Value="Uppercase" />
@@ -355,8 +356,8 @@
 
                     <Grid
                         tlk:TouchEffect.AnimationDuration="100"
-                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.OpenAccountCommand, Source={x:Reference root}}"
-                        tlk:TouchEffect.CommandParameter="{Binding}"
+                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.LoadAccountCommand, Source={x:Reference root}}"
+                        tlk:TouchEffect.CommandParameter="{Binding Username}"
                         tlk:TouchEffect.NormalOpacity="1"
                         tlk:TouchEffect.PressedOpacity="0.4"
                         tlk:TouchEffect.PressedScale="0.98">
