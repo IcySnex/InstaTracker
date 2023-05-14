@@ -1,4 +1,5 @@
 ﻿using InstaTracker.Helpers;
+using InstaTracker.Views;
 using Serilog;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -13,6 +14,16 @@ public class Navigation
         ILogger logger)
     {
         this.logger = logger;
+    }
+
+
+    public void NavigateToTab(
+        int index)
+    {
+        MainView mainView = (MainView)Application.Current.MainPage;
+        mainView.CurrentPage = mainView.Children[index];
+
+        logger.Log($"Navigated to tab [{index}]");
     }
 
 

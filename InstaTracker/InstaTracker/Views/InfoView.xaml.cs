@@ -4,9 +4,9 @@ using Xamarin.Forms.Xaml;
 namespace InstaTracker.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class InfoPage : Components.Page
+public partial class InfoView : Components.Page
 {
-    public InfoPage(
+    public InfoView(
         InfoViewModel viewModel)
     {
         InitializeComponent();

@@ -113,12 +113,21 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty ShowCheckmarkProperty = BindableProperty.Create(
-        nameof(ShowCheckmark), typeof(bool), typeof(Chip), true, BindingMode.OneWay);
+        nameof(ShowCheckmark), typeof(bool), typeof(Chip), false, BindingMode.OneWay);
 
     public bool ShowCheckmark
     {
         get => (bool)GetValue(ShowCheckmarkProperty);
         set => SetValue(ShowCheckmarkProperty, value);
+    }
+
+    public static readonly BindableProperty InteractiveProperty = BindableProperty.Create(
+        nameof(Interactive), typeof(bool), typeof(Chip), true, BindingMode.OneWay);
+
+    public bool Interactive
+    {
+        get => (bool)GetValue(InteractiveProperty);
+        set => SetValue(InteractiveProperty, value);
     }
 
 
@@ -139,7 +148,7 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty CommandProperty = BindableProperty.Create(
-        nameof(ICommand), typeof(bool), typeof(Chip), default(ICommand), BindingMode.OneWay);
+        nameof(ICommand), typeof(ICommand), typeof(Chip), default(ICommand), BindingMode.OneWay);
 
     public ICommand Command
     {
@@ -158,6 +167,7 @@ public partial class Chip : Grid
 
     private void OnTapped(object sender, EventArgs e)
     {
-        IsChecked = !IsChecked;
+        if (Interactive)
+            IsChecked = !IsChecked;
     }
 }

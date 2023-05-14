@@ -5,6 +5,7 @@ using InstaTracker.Helpers;
 using Serilog;
 using System.Threading.Tasks;
 using InstagramApiSharp;
+using InstagramApiSharp.API.Processors;
 
 namespace InstaTracker.Services;
 
@@ -27,7 +28,7 @@ public class InfoManager
     public async Task<InstaUserInfo> GetAccountInfoAsync(
         string username)
     {
-        instagram.ThrowIfUnauthhenticated("Failed getting account info!", logger);
+        instagram.ThrowIfUnauthenticated("Failed getting account info!", logger);
 
         logger.Log("Getting account info");
         IResult<InstaUserInfo> result = await instagram.UserProcessor.GetUserInfoByUsernameAsync(username);
@@ -39,7 +40,7 @@ public class InfoManager
     public async Task<InstaStoryFriendshipStatus> GetFirendshipStatusAsync(
         long id)
     {
-        instagram.ThrowIfUnauthhenticated("Failed getting friendship status!", logger);
+        instagram.ThrowIfUnauthenticated("Failed getting friendship status!", logger);
 
         logger.Log("Getting friendship status");
         IResult<InstaStoryFriendshipStatus> result = await instagram.UserProcessor.GetFriendshipStatusAsync(id);
@@ -51,30 +52,55 @@ public class InfoManager
 
     public async Task<InstaUserShortList> GetFollowersAsync(
         long id,
+        int max = 200,
         string query = "",
         bool mutualsFirst = false)
     {
-        instagram.ThrowIfUnauthhenticated("Failed getting followers!", logger);
+        instagram.ThrowIfUnauthenticated("Failed getting followers!", logger);
 
-        logger.Log("Getting followers");
-        IResult<InstaUserShortList> result = await instagram.UserProcessor.GetUserFollowersByIdAsync(id, PaginationParameters.Empty, query, mutualsFirst);
-        result.ThrowIfFailed("Failed getting followers!", logger);
+        InstaUserShortList followers = new();
+        string maxId = "0";
 
-        return result.Value;
+        while (followers.Count < max)
+        {
+            logger.Log($"Getting followers [{maxId}]");
+            IResult<InstaUserShortList> result = await instagram.UserProcessor.GetUserFollowersByIdAsync(id, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(maxId), query, mutualsFirst);
+            result.ThrowIfFailed("Failed getting followers!", logger);
+
+            if (result.Value.Count == 0)
+                break;
+
+            followers.AddRange(result.Value);
+            maxId = result.Value.NextMaxId;
+        }
+
+        return followers;
     }
 
 
     public async Task<InstaUserShortList> GetFollowingAsync(
         long id,
-        string query = "",
-        bool mutualsFirst = false)
+        int max = 200,
+        string query = "")
     {
-        instagram.ThrowIfUnauthhenticated("Failed getting following!", logger);
+        instagram.ThrowIfUnauthenticated("Failed getting following!", logger);
 
-        logger.Log("Getting following");
-        IResult<InstaUserShortList> result = await instagram.UserProcessor.GetUserFollowingByIdAsync(id, PaginationParameters.Empty, query);
-        result.ThrowIfFailed("Failed getting following!", logger);
+        InstaUserShortList following = new();
+        string maxId = "0";
 
-        return result.Value;
+        while (following.Count < max)
+        {
+            logger.Log($"Getting following [{maxId}]");
+            IResult<InstaUserShortList> result = await instagram.UserProcessor.GetUserFollowingByIdAsync(id, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(maxId), query);
+            result.ThrowIfFailed("Failed getting following!", logger);
+
+            if (result.Value.Count == 0)
+                break;
+
+            following.AddRange(result.Value);
+            maxId = result.Value.NextMaxId;
+        }
+
+        return following;
     }
 }

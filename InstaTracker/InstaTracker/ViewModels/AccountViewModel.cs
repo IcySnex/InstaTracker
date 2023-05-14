@@ -5,6 +5,7 @@ using InstaTracker.Models;
 using InstaTracker.Services;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InstaTracker.ViewModels;
@@ -61,7 +62,7 @@ public partial class AccountViewModel : ObservableObject
 
 
     [ObservableProperty]
-    Account[] savedAccounts = Array.Empty<Account>();
+    List<Account> savedAccounts = new();
 
     async Task LoadSavedAccountsAsync()
     {
@@ -107,7 +108,7 @@ public partial class AccountViewModel : ObservableObject
                     AccountManager.LoginAsync(Username, Password, Config.SaveAccount) :
                     Config.LoginWithState ?
                         AccountManager.LoginAsync(account.StateJson, false) :
-                        AccountManager.LoginAsync(account.Username, account.Password!, false),
+                        AccountManager.LoginAsync(account.Username, account.Password!, true),
                 snackBar.ErrorCallback("Make sure you entered your correct username and password and disable 2FA if enabled.")))
             return;
 
@@ -136,9 +137,7 @@ public partial class AccountViewModel : ObservableObject
     [RelayCommand]
     async Task LogoutAsync()
     {
-        await snackBar.RunAsync(
-            "Logging out...",
-            AccountManager.LogoutAsync(),
-            snackBar.ErrorCallback());
+        await snackBar.DisplayAsync("Logging out...", delay: 1000);
+        AccountManager.Logout();
     }
 }

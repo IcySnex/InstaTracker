@@ -1,12 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using InstagramApiSharp.API;
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Classes.Android.DeviceInfo;
 using InstagramApiSharp.Classes.Models;
+using InstagramApiSharp.Enums;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using Serilog;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace InstaTracker.Services;
 
@@ -37,7 +40,7 @@ public partial class AccountManager : ObservableObject
 
     public InstaUserShort GetLoggedAccount()
     {
-        instagram.ThrowIfUnauthhenticated("Failed getting logged account!", logger);
+        instagram.ThrowIfUnauthenticated("Failed getting logged account!", logger);
 
         logger.Log("Getting logged account");
         UserSessionData result = instagram.GetLoggedUser();
@@ -56,7 +59,8 @@ public partial class AccountManager : ObservableObject
         string password,
         bool saveAccount = false)
     {
-        instagram.ThrowIfAuthhenticated("Failed logging in with username!", logger);
+        // LOGOUT IS DISABLED
+        //instagram.ThrowIfAuthenticated("Failed logging in with username!", logger);
 
         // Login with username
         logger.Log("Logging in with username");
@@ -92,7 +96,8 @@ public partial class AccountManager : ObservableObject
         string stateJson,
         bool saveAccount = false)
     {
-        instagram.ThrowIfAuthhenticated("Failed logging in with state!", logger);
+        // LOGOUT IS DISABLED
+        //instagram.ThrowIfAuthenticated("Failed logging in with state!", logger);
 
         // Login with state
         logger.Log("Logging in with state!");
@@ -120,15 +125,16 @@ public partial class AccountManager : ObservableObject
     }
 
 
-    public async Task LogoutAsync()
+    // LOGOUT IS DISABLED BECAUSE THEN STATE LOGIN IS BROKEN
+    public void Logout()
     {
         // Check if logged in
-        instagram.ThrowIfUnauthhenticated("Failed logging out!", logger);
+        //instagram.ThrowIfUnauthenticated("Failed logging out!", logger);
 
         // Logout
         logger.Log("Logging out");
-        IResult<bool> result = await instagram.LogoutAsync();
-        result.ThrowIfFailed("Failed logging out!", logger);
+        //IResult<bool> result = await instagram.LogoutAsync();
+        //result.ThrowIfFailed("Failed logging out!", logger);
 
         LoggedAccount = null;
         return;

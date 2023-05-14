@@ -1,5 +1,5 @@
 ﻿<com:Page
-    x:Class="InstaTracker.Views.InfoPage"
+    x:Class="InstaTracker.Views.InfoView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:com="clr-namespace:InstaTracker.Components"
@@ -23,6 +23,41 @@
                 Text="Info" />
         </Grid>
 
+        <ScrollView HorizontalScrollBarVisibility="Never" Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal" Spacing="8">
+                <Button
+                    Padding="0,-4,0,0"
+                    BackgroundColor="{DynamicResource bd02}"
+                    BorderColor="{DynamicResource bd05}"
+                    BorderWidth="1"
+                    CornerRadius="{x:OnPlatform Android=24,
+                                                iOS=18}"
+                    FontSize="20"
+                    HeightRequest="36"
+                    Text="+"
+                    TextColor="{DynamicResource tl02}"
+                    WidthRequest="46" />
+
+                <Rectangle
+                    Margin="4,2"
+                    Fill="{DynamicResource bd09}"
+                    VerticalOptions="Fill"
+                    WidthRequest="2" />
+
+                <com:Chip IsChecked="True" Text="13/05/23" />
+                <com:Chip IsChecked="False" Text="03/12/23" />
+                <com:Chip IsChecked="False" Text="26/04/24" />
+            </StackLayout>
+        </ScrollView>
+
+        <Label Margin="0,0,0,-8">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Style="{StaticResource Subpoint}" Text="Statistics from: " />
+                    <Span Style="{StaticResource SubpointSecondary}" Text="13/05/23 09:23" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
         <Frame Padding="12" CornerRadius="8">
             <Frame.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -98,7 +133,7 @@
                         <Label
                             LineBreakMode="NoWrap"
                             Style="{StaticResource Title}"
-                            Text="{Binding FollowersCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                            Text="{Binding Info.FollowersCount, Mode=OneWay, TargetNullValue='N/A'}" />
                         <Label Style="{StaticResource ContentSecondary}" Text="Followers" />
                     </StackLayout>
                 </ScrollView>
@@ -110,7 +145,7 @@
                 BackgroundColor="{DynamicResource bd01}">
                 <ScrollView Padding="12" Orientation="Horizontal">
                     <StackLayout Spacing="-6">
-                        <Label Style="{StaticResource Title}" Text="{Binding FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                        <Label Style="{StaticResource Title}" Text="{Binding Info.FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
                         <Label Style="{StaticResource ContentSecondary}" Text="Following" />
                     </StackLayout>
                 </ScrollView>
@@ -122,11 +157,14 @@
                 BackgroundColor="{DynamicResource bd01}">
                 <ScrollView Padding="12" Orientation="Horizontal">
                     <StackLayout Spacing="-6">
-                        <Label Style="{StaticResource Title}" Text="{Binding FansCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                        <Label Style="{StaticResource Title}" Text="{Binding Info.FansCount, Mode=OneWay, TargetNullValue='N/A'}" />
                         <Label Style="{StaticResource ContentSecondary}" Text="Fans" />
                     </StackLayout>
                 </ScrollView>
             </Frame>
         </Grid>
+
+
+
     </StackLayout>
 </com:Page>

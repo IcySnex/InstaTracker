@@ -17,38 +17,61 @@
             Text="Accounts"
             TextColor="{DynamicResource tl01}" />
 
-        <ContentView
+        <Frame
             AutomationId="Automatically save new accounts"
             ClassId="Save account"
-            ControlTemplate="{StaticResource SettingsCard}">
+            Style="{StaticResource SettingsCard}">
             <Switch IsToggled="{Binding Config.SaveAccount, Mode=TwoWay}" />
-        </ContentView>
+        </Frame>
 
-        <ContentView
+        <Frame
             AutomationId="Automatically log in when starting the app"
             ClassId="Auto login"
-            ControlTemplate="{StaticResource SettingsCard}">
+            Style="{StaticResource SettingsCard}">
             <Switch IsToggled="{Binding AutoLogin, Mode=TwoWay}" />
-        </ContentView>
+        </Frame>
 
-        <ContentView
+        <Frame
             AutomationId="Automatically log in with this account when starting the app"
             ClassId="Auto login account"
-            ControlTemplate="{StaticResource SettingsCard}"
-            IsVisible="{Binding AutoLogin, Mode=OneWay}">
+            IsVisible="{Binding AutoLogin, Mode=OneWay}"
+            Style="{StaticResource SettingsCard}">
             <Picker
                 Title="Username"
                 ItemDisplayBinding="{Binding Username}"
                 ItemsSource="{Binding SavedAccounts, Mode=OneWay}"
                 SelectedItem="{Binding AutoLoginAccount, Mode=TwoWay}"
                 WidthRequest="150" />
-        </ContentView>
+        </Frame>
 
-        <ContentView
+        <Frame
             AutomationId="If disabled a new login request will be created for each login"
             ClassId="Login with state"
-            ControlTemplate="{StaticResource SettingsCard}">
+            Style="{StaticResource SettingsCard}">
             <Switch IsToggled="{Binding Config.LoginWithState, Mode=TwoWay}" />
-        </ContentView>
+        </Frame>
+
+
+        <Frame
+            AutomationId="Maximum followers to fetch when comparing states"
+            ClassId="Fetch Follower Limit"
+            Style="{StaticResource SettingsCard}">
+            <com:Entry
+                Margin="0,0,0,-20"
+                Keyboard="Numeric"
+                Text="{Binding Config.FetchFollowerLimit, Mode=TwoWay}"
+                WidthRequest="100" />
+        </Frame>
+
+        <Frame
+            AutomationId="Maximum following to fetch when comparing states"
+            ClassId="Fetch Following Limit"
+            Style="{StaticResource SettingsCard}">
+            <com:Entry
+                Margin="0,0,0,-20"
+                Keyboard="Numeric"
+                Text="{Binding Config.FetchFollowingLimit, Mode=TwoWay}"
+                WidthRequest="100" />
+        </Frame>
     </StackLayout>
 </com:Page>

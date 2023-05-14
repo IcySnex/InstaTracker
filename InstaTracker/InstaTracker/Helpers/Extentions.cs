@@ -90,7 +90,7 @@ public static class Extentions
     }
 
 
-    public static void ThrowIfUnauthhenticated(this IInstaApi input,
+    public static void ThrowIfUnauthenticated(this IInstaApi input,
         string message,
         ILogger logger)
     {
@@ -103,7 +103,7 @@ public static class Extentions
         throw new(message, innerException);
     }
 
-    public static void ThrowIfAuthhenticated(this IInstaApi input,
+    public static void ThrowIfAuthenticated(this IInstaApi input,
         string message,
         ILogger logger)
     {
@@ -123,7 +123,7 @@ public static class Extentions
         if (input.Succeeded)
             return;
 
-        Exception innerException = new(input.Info.Message);
+        Exception innerException = new($"{char.ToUpper(input.Info.Message[0])}{input.Info.Message.Substring(1).Replace('_', ' ')}.");
         logger.Log(message, innerException);
 
         throw new(message, innerException);

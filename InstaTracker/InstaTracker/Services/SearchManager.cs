@@ -27,7 +27,7 @@ public class SearchManager
     public async Task<List<InstaUser>> SearchAccountsAsync(
         string username)
     {
-        instagram.ThrowIfUnauthhenticated("Failed searching for accounts!", logger);
+        instagram.ThrowIfUnauthenticated("Failed searching for accounts!", logger);
 
         logger.Log("Searching for accounts");
         IResult<InstaDiscoverSearchResult> result = await instagram.DiscoverProcessor.SearchPeopleAsync(username, 10);
@@ -40,7 +40,7 @@ public class SearchManager
     public async Task<InstaUser> GetAccountAsync(
         string username)
     {
-        instagram.ThrowIfUnauthhenticated("Failed getting account!", logger);
+        instagram.ThrowIfUnauthenticated("Failed getting account!", logger);
 
         logger.Log("Getting account");
         IResult<InstaUser> result = await instagram.UserProcessor.GetUserAsync(username);

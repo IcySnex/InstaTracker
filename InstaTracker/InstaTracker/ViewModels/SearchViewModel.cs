@@ -51,7 +51,7 @@ public partial class SearchViewModel : ObservableObject
             refreshed =>
             {
                 if (!refreshed)
-                    snackBar.ErrorCallback("Could not reload account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed refreshing search history!", new("No account is currently logged in.")));
+                    snackBar.ErrorCallback("Could not load account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed loading search history!", new("No account is currently logged in.")));
             });
         IsRefreshing = false;
 
@@ -74,7 +74,10 @@ public partial class SearchViewModel : ObservableObject
         foreach (SearchedAccount account in await database.GetAllAsync())
         {
             InstaUser user = await searchmanager.GetAccountAsync(account.Username);
-            SearchHistory.Add(new SearchedAccount(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext, account.Id));
+
+            SearchedAccount newAccount = new SearchedAccount(user.UserName, user.FullName, user.ProfilePicture, user.IsPrivate, user.FriendshipStatus.Following, user.SearchSocialContext, account.Id);
+            SearchHistory.Add(newAccount);
+            await database.AddAsync(newAccount);
         }
 
         return true;
@@ -113,16 +116,16 @@ public partial class SearchViewModel : ObservableObject
         if (IsRefreshing)
             return;
 
-        try
-        {
-            IsRefreshing = true;
-            if (!await LoadSearchHistory(true))
-                snackBar.ErrorCallback("Could not reload account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed refreshing search history!", new("No account is currently logged in.")));
-        }
-        catch (Exception ex)
-        {
-            snackBar.ErrorCallback().Invoke(ex);
-        }
+        IsRefreshing = true;
+        await snackBar.RunAsync(
+            "Reloading search history...",
+            LoadSearchHistory(true),
+            snackBar.ErrorCallback(),
+            refreshed =>
+            {
+                if (!refreshed)
+                    snackBar.ErrorCallback("Could not reload account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed reloading search history!", new("No account is currently logged in.")));
+            });
         IsRefreshing = false;
     }
 
@@ -193,6 +196,12 @@ public partial class SearchViewModel : ObservableObject
                 snackBar.ErrorCallback()))
             return;
 
-        await navigation.NavigateAsync(new InfoPage(viewModel));
+        await navigation.NavigateAsync(new InfoView(viewModel));
+        if (!viewModel.CanLoad)
+            await snackBar.DisplayAsync(
+                "Failed loading followers/following & fanse!",
+                "More",
+                true,
+                async () => await message.ShowAsync("Failed loading followers/following & fanse", "Since this account is private you, must be a follower to load account information like followers, following and fans."));
     }
 }

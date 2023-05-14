@@ -2,7 +2,7 @@
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using Serilog;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace InstaTracker.ViewModels;
@@ -23,7 +23,7 @@ public partial class SettingsViewModel : ObservableObject
 
 
     public void ReloadAccountSettings(
-        Account[] savedAccounts)
+        List<Account> savedAccounts)
     {
         SavedAccounts = savedAccounts;
         AutoLogin = Config.AutoLoginId.HasValue;
@@ -34,7 +34,7 @@ public partial class SettingsViewModel : ObservableObject
 
 
     [ObservableProperty]
-    Account[] savedAccounts = Array.Empty<Account>();
+    List<Account> savedAccounts = new();
 
 
     [ObservableProperty]

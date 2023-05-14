@@ -6,6 +6,7 @@ using InstaTracker.Models;
 using InstaTracker.Services;
 using InstaTracker.Views;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace InstaTracker.ViewModels;
 public partial class InfoViewModel : ObservableObject
 {
     readonly ILogger logger;
+    readonly Config config;
+    readonly InfoDatabaseConnection database;
     readonly Navigation navigation;
     readonly Message message;
     readonly SnackBar snackBar;
@@ -23,6 +26,8 @@ public partial class InfoViewModel : ObservableObject
 
     public InfoViewModel(
         ILogger logger,
+        Config config,
+        InfoDatabaseConnection database,
         Navigation navigation,
         Message message,
         SnackBar snackBar,
@@ -30,6 +35,8 @@ public partial class InfoViewModel : ObservableObject
         SearchViewModel searchViewModel)
     {
         this.logger = logger;
+        this.config = config;
+        this.database = database;
         this.navigation = navigation;
         this.message = message;
         this.snackBar = snackBar;
@@ -45,60 +52,45 @@ public partial class InfoViewModel : ObservableObject
         FriendshipStatus = await infoManager.GetFirendshipStatusAsync(AccountInfo.Pk);
 
         profilePicture = AccountInfo.HdProfilePicUrlInfo.Uri;
-        FollowersCount = AccountInfo.FollowerCount;
-        FollowingCount = AccountInfo.FollowingCount;
-        FansCount = FollowersCount - FollowingCount < 0 ? 0 : FollowersCount - FollowingCount;
+
+        Info = new()
+        {
+            Username = AccountInfo.Username,
+            FetchedAt = DateTime.UtcNow
+        };
+
+        Info.FollowersCount = AccountInfo.FollowerCount;
+        Info.FollowingCount = AccountInfo.FollowingCount;
 
         // Load followers/following/fans list
         if (AccountInfo.IsPrivate && !FriendshipStatus.Following)
         {
             CanLoad = false;
-            ShowFailedLoading();
             return;
         }
 
-        Followers = await infoManager.GetFollowersAsync(AccountInfo.Pk);
-        Following = await infoManager.GetFollowingAsync(AccountInfo.Pk);
-        Fans = Followers.Except(Following);
+        Info.Followers = await infoManager.GetFollowersAsync(AccountInfo.Pk, config.FetchFollowerLimit);
+        Info.Following = await infoManager.GetFollowingAsync(AccountInfo.Pk, config.FetchFollowingLimit);
+        Info.Fans = Info.Followers.Except(Info.Following).ToList();
+        Info.FansCount = Info.Fans.Count();
+
+        await database.AddAsync(Info);
     }
 
-    async void ShowFailedLoading()
-    {
-        await Task.Delay(1000);
-
-        await snackBar.DisplayAsync(
-            "Failed loading followers/following & fanse!",
-            "More",
-            true,
-            async () => await message.ShowAsync("Failed loading account info", "Since this account is private you, must be a follower to load account information like followers, following and fans."));
-    }
-
-    public InstaUserInfo AccountInfo { get; private set; } = default!;
-
-    public InstaStoryFriendshipStatus FriendshipStatus { get; private set; } = default!;
+    /// <summary>
+    /// //////
+    /// </summary>
+    public InstaUserInfo AccountInfo { get; set; } = default!;
+    /// <summary>
+    /// ///////////
+    /// </summary>
+    public InstaStoryFriendshipStatus FriendshipStatus { get; set; } = default!;
 
     [ObservableProperty]
     bool canLoad = true;
 
-
     [ObservableProperty]
-    long? followersCount = null;
-
-    [ObservableProperty]
-    long? followingCount = null;
-
-    [ObservableProperty]
-    long? fansCount = null;
-
-
-    [ObservableProperty]
-    List<InstaUserShort>? followers = null;
-
-    [ObservableProperty]
-    List<InstaUserShort>? following = null;
-
-    [ObservableProperty]
-    IEnumerable<InstaUserShort>? fans = null;
+    Info info = default!;
 
 
     [RelayCommand]
@@ -109,7 +101,7 @@ public partial class InfoViewModel : ObservableObject
     [RelayCommand]
     async Task RemoveAsync()
     {
-        if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this account will clear all follower, following and fans statistics. You can't undo this action."))
+        if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this entry will clear all follower, following and fans statistics from this date and time. You can't undo this action."))
             return;
 
         await searchViewModel.RemoveAccountFromHistoryAsync(AccountInfo.Username);

@@ -10,6 +10,7 @@ using InstaTracker.ViewModels;
 using InstagramApiSharp.API.Builder;
 using System;
 using System.IO;
+using InstagramApiSharp.Classes.Android.DeviceInfo;
 
 namespace InstaTracker;
 
@@ -41,6 +42,7 @@ public partial class App : Application
             .AddSingleton<DatabaseConnection>()
             .AddSingleton<AccountDatabaseConnection>()
             .AddSingleton<SearchedAccountDatabaseConnection>()
+            .AddSingleton<InfoDatabaseConnection>()
             // Services
             .AddSingleton<AppHandler>()
             .AddSingleton<JsonConverter>()

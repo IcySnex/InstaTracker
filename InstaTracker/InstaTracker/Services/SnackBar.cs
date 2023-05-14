@@ -25,7 +25,9 @@ public class SnackBar
 
     public Action<Exception> ErrorCallback(
         string? errorMessage = null) =>
-        async ex => await DisplayAsync(ex.Message, "More", true, async () => await message.ShowAsync(ex.Message, errorMessage is null ? ex.InnerException.Message : $"{errorMessage}\n\nError: {ex.InnerException.Message}"));
+        async ex =>
+            await DisplayAsync(ex.Message, "More", true, async () => 
+                await message.ShowAsync(ex.Message, errorMessage is null ? ex.InnerException?.Message ?? "Unknown error occurred." : $"{errorMessage}\n\nError: {ex.InnerException?.Message ?? "Unknown error occurred."}"));
 
 
     public async Task<bool> RunAsync<T>(
