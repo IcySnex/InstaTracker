@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using InstagramApiSharp.Classes.Models;
+using InstaTracker.Components;
 using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
+using InstaTracker.Types;
 using InstaTracker.Views;
 using Serilog;
 using System;
@@ -91,6 +93,17 @@ public partial class InfoViewModel : ObservableObject
 
     [ObservableProperty]
     Info info = default!;
+
+
+    [ObservableProperty]
+    SelectedList selectedList = SelectedList.Followers;
+
+    [RelayCommand]
+    void ShowPressed(
+        string text)
+    {
+        SelectedList = (SelectedList)Enum.Parse(typeof(SelectedList), text);
+    }
 
 
     [RelayCommand]

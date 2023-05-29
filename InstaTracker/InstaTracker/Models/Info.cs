@@ -1,7 +1,6 @@
 ﻿using InstagramApiSharp.Classes.Models;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
-using SQLiteNetExtensions.Extensions.TextBlob;
 using System;
 using System.Collections.Generic;
 

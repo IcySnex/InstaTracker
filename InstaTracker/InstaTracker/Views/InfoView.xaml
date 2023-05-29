@@ -164,7 +164,51 @@
             </Frame>
         </Grid>
 
+        <ScrollView
+            Margin="0,12,0,0"
+            HorizontalScrollBarVisibility="Never"
+            Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal" Spacing="8">
+                <Label Text="Show in List: " VerticalOptions="Center" />
 
+                <com:Chip
+                    Command="{Binding ShowPressedCommand}"
+                    CommandParameter="Followers"
+                    Interactive="False"
+                    IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Followers'}"
+                    Text="Followers" />
+                <com:Chip
+                    Command="{Binding ShowPressedCommand}"
+                    CommandParameter="Following"
+                    Interactive="False"
+                    IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Following'}"
+                    Text="Following" />
+                <com:Chip
+                    Command="{Binding ShowPressedCommand}"
+                    CommandParameter="Fans"
+                    Interactive="False"
+                    IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Fans'}"
+                    Text="Fans" />
+            </StackLayout>
+        </ScrollView>
+        <StackLayout
+            Margin="12,0"
+            BindableLayout.ItemTemplate="{StaticResource InstaUserDataTemplate}"
+            BindableLayout.ItemsSource="{Binding SearchResults, Mode=OneWay}"
+            IsVisible="{Binding SomeBool, Mode=OneWay}"
+            Spacing="4">
 
+            <BindableLayout.EmptyView>
+                <Label Style="{StaticResource ContentSecondary}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="It looks like this account has no " />
+                            <Span Text="{Binding SelectedList, Mode=OneWay}" />
+                            <Span Text="." />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </BindableLayout.EmptyView>
+        </StackLayout>
     </StackLayout>
 </com:Page>

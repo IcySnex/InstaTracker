@@ -20,6 +20,7 @@
             <conv:BoolToPrivatePublic x:Key="BoolToPrivatePublic" />
             <conv:IfNotNullParameter x:Key="IfNotNullParameter" />
             <conv:IfNotNullOrEmptyParameter x:Key="IfNotNullOrEmptyParameter" />
+            <conv:SelectedListToBool x:Key="SelectedListToBool" />
 
             <!--#endregion-->
 

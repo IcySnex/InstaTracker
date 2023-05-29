@@ -18,7 +18,10 @@
         HorizontalOptions="Start"
         VerticalOptions="Start">
         <Frame.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding Command, Source={x:Reference root}}" Tapped="OnTapped" />
+            <TapGestureRecognizer
+                Command="{Binding Command, Source={x:Reference root}}"
+                CommandParameter="{Binding CommandParameter, Source={x:Reference root}}"
+                Tapped="OnTapped" />
         </Frame.GestureRecognizers>
 
         <StackLayout Orientation="Horizontal" Spacing="8">

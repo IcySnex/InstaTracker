@@ -148,15 +148,23 @@ public partial class Chip : Grid
 
 
     public static readonly BindableProperty CommandProperty = BindableProperty.Create(
-        nameof(ICommand), typeof(ICommand), typeof(Chip), default(ICommand), BindingMode.OneWay);
+        nameof(Command), typeof(ICommand), typeof(Chip), default(ICommand), BindingMode.OneWay);
 
     public ICommand Command
     {
         get => (ICommand)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
+    
 
+    public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(
+        nameof(CommandParameter), typeof(object), typeof(Chip), default(ICommand), BindingMode.OneWay);
 
+    public object CommandParameter
+    {
+        get => GetValue(CommandParameterProperty);
+        set => SetValue(CommandParameterProperty, value);
+    }
 
 
     public Chip()
