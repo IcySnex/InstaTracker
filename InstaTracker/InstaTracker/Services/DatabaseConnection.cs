@@ -2,8 +2,12 @@
 using InstaTracker.Models;
 using Serilog;
 using SQLite;
+using SQLiteNetExtensionsAsync.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -52,24 +56,14 @@ public class DatabaseConnection
     }
 
 
-    public async Task<List<T>> GetAllAsync<T>(
-        string table) where T : new()
+    public async Task<List<T>> GetAsync<T>(
+        Expression<Func<T, bool>>? predicate = null,
+        CancellationToken cancellationToken = default) where T : new()
     {
         await EnsureInitializedAsync();
 
-        logger.Log($"Getting all {table}s from database");
-        return await Connection.QueryAsync<T>($"SELECT * FROM {table}");
-    }
-
-    public async Task<T?> GetAsync<T>(
-        string table,
-        string property,
-        object predicate) where T : new()
-    {
-        await EnsureInitializedAsync();
-
-        logger.Log($"Getting {table} from database");
-        return (await Connection.QueryAsync<T>($"SELECT * FROM {table} WHERE {property} = ?", predicate)).FirstOrDefault();
+        logger.Log($"Getting all {typeof(T).Name}s from database");
+        return await Connection.GetAllWithChildrenAsync(predicate, false, cancellationToken);
     }
 
     public async Task<int> AddAsync(
@@ -81,21 +75,22 @@ public class DatabaseConnection
         logger.Log("Adding item to database");
 
         if (replace)
-            await Connection.InsertOrReplaceAsync(item);
+            await Connection.InsertOrReplaceWithChildrenAsync(item);
         else
-            await Connection.InsertAsync(item);
+            await Connection.InsertWithChildrenAsync(item);
 
         return await GetLastInsertedId();
     }
 
-    public async Task<int> DeleteAsync(
-        string table,
-        string property,
-        object predicate)
+    public async Task RemoveAsync<T>(
+        Expression<Func<T, bool>>? predicate = null,
+        CancellationToken cancellationToken = default) where T : new()
     {
         await EnsureInitializedAsync();
 
-        logger.Log($"Deleting {table} from database");
-        return await Connection.ExecuteAsync($"DELETE FROM {table} WHERE {property} = ?", predicate);
+        logger.Log($"Deleting {typeof(T).Name} from database");
+
+        List<T> toDelete = await GetAsync(predicate, cancellationToken);
+        await Connection.DeleteAllAsync(toDelete);
     }
 }

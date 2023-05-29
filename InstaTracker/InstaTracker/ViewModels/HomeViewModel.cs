@@ -1,10 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using InstagramApiSharp.Classes.Models;
-using InstaTracker.Models;
 using InstaTracker.Services;
-using InstaTracker.Views;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System.Threading.Tasks;
 
@@ -31,11 +27,7 @@ public partial class HomeViewModel : ObservableObject
     [RelayCommand]
     async Task NavigateToLogin()
     {
-        var v = App.Provider.GetRequiredService<InfoDatabaseConnection>();
-        var f = await v.GetAllAsync();
-
-
-        //navigation.NavigateToTab(1);
+        navigation.NavigateToTab(1);
 
         //JsonConverter c = new(logger);
         //var v = App.Provider.GetRequiredService<InfoViewModel>();

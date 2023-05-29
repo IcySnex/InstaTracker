@@ -1,5 +1,6 @@
 ﻿using InstaTracker.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InstaTracker.Services;
@@ -16,28 +17,28 @@ public class AccountDatabaseConnection
 
 
     public Task<List<Account>> GetAllAsync() =>
-        database.GetAllAsync<Account>("Account");
+        database.GetAsync<Account>();
 
 
-    public Task<Account?> GetAsync(
+    public async Task<Account?> GetAsync(
         int id) =>
-        database.GetAsync<Account>("Account", "Id", id);
+        (await database.GetAsync<Account>(account => account.Id == id)).FirstOrDefault();
 
-    public Task<Account?> GetAsync(
+    public async Task<Account?> GetAsync(
         string username) =>
-        database.GetAsync<Account>("Account", "Username", username);
+        (await database.GetAsync<Account>(account => account.Username == username)).FirstOrDefault();
 
 
-    public Task<int> AddAsync(
+    public  Task<int> AddAsync(
         Account account) =>
         database.AddAsync(account, account.Id.HasValue);
 
 
-    public Task<int> RemoveAsync(
+    public Task RemoveAsync(
         int id) =>
-        database.DeleteAsync("Account", "Id", id);
+        database.RemoveAsync<Account>(account => account.Id == id);
 
-    public Task<int> RemoveAsync(
+    public Task RemoveAsync(
         string username) =>
-        database.DeleteAsync("Account", "Username", username);
+        database.RemoveAsync<Account>(account => account.Username == username);
 }

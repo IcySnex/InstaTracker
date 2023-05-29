@@ -1,4 +1,8 @@
-﻿using InstaTracker.Helpers;
+﻿// Windows Subsystem for Android:
+//   adb connect 127.0.0.1:58526
+//   /data_mirror/data_ce/null/0/com.icysnex.instatracker
+
+using InstaTracker.Helpers;
 using InstaTracker.Services;
 using InstaTracker.Models;
 using Serilog;

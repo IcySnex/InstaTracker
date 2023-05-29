@@ -1,5 +1,6 @@
 ﻿using InstaTracker.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InstaTracker.Services;
@@ -16,16 +17,16 @@ public class SearchedAccountDatabaseConnection
 
 
     public Task<List<SearchedAccount>> GetAllAsync() =>
-        database.GetAllAsync<SearchedAccount>("SearchedAccount");
+        database.GetAsync<SearchedAccount>();
 
 
-    public Task<SearchedAccount?> GetAsync(
+    public async Task<SearchedAccount?> GetAsync(
         int id) =>
-        database.GetAsync<SearchedAccount>("SearchedAccount", "Id", id);
+        (await database.GetAsync<SearchedAccount>(searchedAccount => searchedAccount.Id == id)).FirstOrDefault();
 
-    public Task<SearchedAccount?> GetAsync(
+    public async Task<SearchedAccount?> GetAsync(
         string username) =>
-        database.GetAsync<SearchedAccount>("SearchedAccount", "Username", username);
+        (await database.GetAsync<SearchedAccount>(searchedAccount => searchedAccount.Username == username)).FirstOrDefault();
 
 
     public Task<int> AddAsync(
@@ -33,11 +34,11 @@ public class SearchedAccountDatabaseConnection
         database.AddAsync(searchedAccount, searchedAccount.Id.HasValue);
 
 
-    public Task<int> RemoveAsync(
+    public Task RemoveAsync(
         int id) =>
-        database.DeleteAsync("SearchedAccount", "Id", id);
+        database.RemoveAsync<SearchedAccount>(searchedAccount => searchedAccount.Id == id);
 
-    public Task<int> RemoveAsync(
+    public Task RemoveAsync(
         string username) =>
-        database.DeleteAsync("SearchedAccount", "Username", username);
+        database.RemoveAsync<SearchedAccount>(searchedAccount => searchedAccount.Username == username);
 }

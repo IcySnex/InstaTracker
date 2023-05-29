@@ -68,10 +68,8 @@ public class AppHandler
         };
         instagram.SetDevice(device);
 
-        TextBlobOperations.SetTextSerializer();
-
-        //await accountViewModel.InitializeAsync();
-        //await searchViewModel.InitializeAsync();
+        await accountViewModel.InitializeAsync();
+        await searchViewModel.InitializeAsync();
     }
 
 
