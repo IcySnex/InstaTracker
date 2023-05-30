@@ -6,6 +6,7 @@ using InstaTracker.Services;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InstaTracker.ViewModels;
@@ -13,7 +14,7 @@ namespace InstaTracker.ViewModels;
 public partial class AccountViewModel : ObservableObject
 {
     readonly ILogger logger;
-    readonly AccountDatabaseConnection database;
+    readonly DatabaseConnection database;
     readonly Message message;
     readonly SnackBar snackBar;
     readonly SettingsViewModel settingsViewModel;
@@ -25,7 +26,7 @@ public partial class AccountViewModel : ObservableObject
     public AccountViewModel(
         ILogger logger,
         Config config,
-        AccountDatabaseConnection database,
+        DatabaseConnection database,
         Message message,
         SnackBar snackBar,
         AccountManager accountManager,
@@ -44,7 +45,7 @@ public partial class AccountViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
-        if (Config.AutoLoginId.HasValue && await database.GetAsync(Config.AutoLoginId.Value) is Account savedLogin)
+        if (Config.AutoLoginId.HasValue && (await database.GetAsync<Account>(account => account.Id == Config.AutoLoginId.Value)).FirstOrDefault() is Account savedLogin)
             await snackBar.RunAsync(
                 "Logging in...",
                 Config.LoginWithState ?
@@ -66,7 +67,7 @@ public partial class AccountViewModel : ObservableObject
 
     async Task LoadSavedAccountsAsync()
     {
-        SavedAccounts = await database.GetAllAsync();
+        SavedAccounts = await database.GetAsync<Account>();
         settingsViewModel.ReloadAccountSettings(SavedAccounts);
     }
 
@@ -76,7 +77,7 @@ public partial class AccountViewModel : ObservableObject
     {
         if (!await snackBar.RunAsync(
             "Removing saved account...",
-            database.RemoveAsync(id),
+            database.RemoveAsync<Account>(account => account.Id == id),
             snackBar.ErrorCallback()))
             return;
 
@@ -121,14 +122,17 @@ public partial class AccountViewModel : ObservableObject
         searchViewModel.IsRefreshing = true;
         await snackBar.RunAsync(
             "Loading search history...",
-            searchViewModel.LoadSearchHistory(true),
-            snackBar.ErrorCallback(),
-            refreshed =>
+            searchViewModel.LoadSearchHistoryAsync(true),
+            async ex =>
             {
-                if (refreshed)
-                    return;
-
-                snackBar.ErrorCallback("Could not reload account information from Instagram, instead search history from local database was restored.").Invoke(new("Failed refreshing search history!", new("No account is currently logged in.")));
+                await searchViewModel.LoadSearchHistoryAsync(false);
+                await snackBar.DisplayAsync("Failed reloading search history!", "More", true, async () =>
+                    await message.ShowAsync("Failed reloading search history!", $"Could not reload account information from Instagram, instead search history from local database was restored.\n\nError: {ex.InnerException?.Message ?? "Unknown error occurred."}"));
+            },
+            async refreshed =>
+            {
+                if (!refreshed)
+                    snackBar.ErrorCallback("Could not reload account information from Instagram.").Invoke(new("Failed reloading search history!", new("No account is currently logged in.")));
             });
         searchViewModel.IsRefreshing = false;
     }

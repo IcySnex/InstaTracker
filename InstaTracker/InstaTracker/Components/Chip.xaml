@@ -34,7 +34,7 @@
 
             <Label
                 x:Name="textLabel"
-                Text="{Binding Text, Source={x:Reference root}}"
+                FormattedText="{Binding Text, Source={x:Reference root}}"
                 TextColor="{Binding TextColor, Source={x:Reference root}}"
                 VerticalOptions="Center" />
             <Image

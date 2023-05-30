@@ -12,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
+using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
 
 namespace InstaTracker.ViewModels;
 
@@ -19,7 +22,7 @@ public partial class InfoViewModel : ObservableObject
 {
     readonly ILogger logger;
     readonly Config config;
-    readonly InfoDatabaseConnection database;
+    readonly DatabaseConnection database;
     readonly Navigation navigation;
     readonly Message message;
     readonly SnackBar snackBar;
@@ -29,7 +32,7 @@ public partial class InfoViewModel : ObservableObject
     public InfoViewModel(
         ILogger logger,
         Config config,
-        InfoDatabaseConnection database,
+        DatabaseConnection database,
         Navigation navigation,
         Message message,
         SnackBar snackBar,
@@ -49,60 +52,37 @@ public partial class InfoViewModel : ObservableObject
     public async Task InitializeAsync(
         string username)
     {
-        // Load account info
-        AccountInfo = await infoManager.GetAccountInfoAsync(username);
-        FriendshipStatus = await infoManager.GetFirendshipStatusAsync(AccountInfo.Pk);
-
-        profilePicture = AccountInfo.HdProfilePicUrlInfo.Uri;
-
-        Info = new()
+        if (await database.CountWhereAsync<Info>("Username", username) < 1)
         {
-            Username = AccountInfo.Username,
-            FetchedAt = DateTime.UtcNow
-        };
-
-        Info.FollowersCount = AccountInfo.FollowerCount;
-        Info.FollowingCount = AccountInfo.FollowingCount;
-
-        // Load followers/following/fans list
-        if (AccountInfo.IsPrivate && !FriendshipStatus.Following)
-        {
-            CanLoad = false;
-            return;
+            await CreateCurrentInfoAsync(username);
         }
 
-        Info.Followers = await infoManager.GetFollowersAsync(AccountInfo.Pk, config.FetchFollowerLimit);
-        Info.Following = await infoManager.GetFollowingAsync(AccountInfo.Pk, config.FetchFollowingLimit);
-        Info.Fans = Info.Followers.Except(Info.Following).ToList();
-        Info.FansCount = Info.Fans.Count();
-
-        await database.AddAsync(Info);
+        await LoadInfosAsync(username);
+        SetSelectedInfo(Infos.ElementAt(0));
     }
 
-    /// <summary>
-    /// //////
-    /// </summary>
-    public InstaUserInfo AccountInfo { get; set; } = default!;
-    /// <summary>
-    /// ///////////
-    /// </summary>
-    public InstaStoryFriendshipStatus FriendshipStatus { get; set; } = default!;
 
     [ObservableProperty]
-    bool canLoad = true;
-
-    [ObservableProperty]
-    Info info = default!;
-
-
-    [ObservableProperty]
-    SelectedList selectedList = SelectedList.Followers;
+    Info selectedInfo = default!;
 
     [RelayCommand]
-    void ShowPressed(
-        string text)
+    void SetSelectedInfo(
+        Info info) =>
+        SelectedInfo = info;
+
+
+    [ObservableProperty]
+    IOrderedEnumerable<Info> infos = default!;
+
+    public async Task LoadInfosAsync(
+        string username)
     {
-        SelectedList = (SelectedList)Enum.Parse(typeof(SelectedList), text);
+        await snackBar.RunAsync(
+            $"Loading account statistic states...",
+            database.GetAsync<Info>(info => info.Username == username),
+            snackBar.ErrorCallback(),
+            (List<Info> infos) =>
+                Infos = infos.OrderByDescending(info => info.FetchedAt));
     }
 
 
@@ -111,25 +91,92 @@ public partial class InfoViewModel : ObservableObject
         await navigation.GoBackAsync();
 
 
+    async Task CreateCurrentInfoAsync(
+        string username)
+    {
+        InstaUserInfo accountInfo = await infoManager.GetAccountInfoAsync(username);
+        InstaStoryFriendshipStatus friendshipStatus = await infoManager.GetFirendshipStatusAsync(accountInfo.Pk);
+
+        Info newInfo = new(accountInfo.Username,
+            accountInfo.Pk,
+            accountInfo.HdProfilePicUrlInfo.Uri,
+            friendshipStatus.IsPrivate,
+            friendshipStatus.Following,
+            accountInfo.ProfileContext,
+            DateTime.UtcNow,
+            !friendshipStatus.IsPrivate || friendshipStatus.Following);
+
+        newInfo.FollowersCount = accountInfo.FollowerCount;
+        newInfo.FollowingCount = accountInfo.FollowingCount;
+
+        if (newInfo.IsLoadable)
+        {
+            newInfo.Followers = await infoManager.GetFollowersAsync(newInfo.Pk, config.FetchFollowerLimit);
+            newInfo.Following = await infoManager.GetFollowingAsync(newInfo.Pk, config.FetchFollowingLimit);
+            newInfo.Fans = newInfo.Followers.Except(newInfo.Following).ToList();
+
+        }
+
+        await database.AddAsync(newInfo);
+    }
+
+
+    [ObservableProperty]
+    SelectedList selectedList = SelectedList.Followers;
+
+    [RelayCommand]
+    void ShowPressed(
+        string text) =>
+        SelectedList = (SelectedList)Enum.Parse(typeof(SelectedList), text);
+
+
+    [RelayCommand]
+    async Task AddNewAsync()
+    {
+        if (!await message.ShowQuestionAsync("Are you sure?", "Creating a new statistics creats a lot of API request, you shouldnt do this too often."))
+            return;
+
+        await snackBar.RunAsync(
+            $"Adding new account statistics...",
+            CreateCurrentInfoAsync(SelectedInfo.Username),
+            snackBar.ErrorCallback());
+
+        await LoadInfosAsync(SelectedInfo.Username);
+        SetSelectedInfo(Infos.ElementAt(0));
+
+    }
+
     [RelayCommand]
     async Task RemoveAsync()
     {
-        if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this entry will clear all follower, following and fans statistics from this date and time. You can't undo this action."))
+        if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this entry will clear follower, following and fans statistics from this date and time. You can't undo this action."))
             return;
 
-        await searchViewModel.RemoveAccountFromHistoryAsync(AccountInfo.Username);
-        await GoBackAsync();
+        await snackBar.RunAsync(
+            $"Deleting account statistics...",
+            database.RemoveAsync<Info>(info => info.Username == SelectedInfo.Username && info.FetchedAt == SelectedInfo.FetchedAt),
+            snackBar.ErrorCallback());
+
+        await LoadInfosAsync(SelectedInfo.Username);
+
+        if (infos.Count() >= 1)
+        {
+            SetSelectedInfo(Infos.ElementAt(0));
+            return;
+        }
+
+        await searchViewModel.RemoveAccountFromHistoryAsync(selectedInfo.Username);
+        GoBackCommand.Execute(null);
     }
 
-
-    string profilePicture = default!;
 
     [RelayCommand]
-    async Task OpenProfilePictureAsync()
-    {
-        await snackBar.RunAsync(
-            "Opening profile picture...",
-            navigation.NavigateAsync(new ProfilePictureView(profilePicture, GoBackCommand)),
-            snackBar.ErrorCallback());
-    }
+    Task OpenProfilePictureAsync() =>
+        navigation.NavigateAsync(new ProfilePictureView(SelectedInfo.ProfilePicture, GoBackCommand));
+
+
+    [RelayCommand]
+    Task OpenAccountUrlAsync(
+        string username) =>
+        Browser.OpenAsync($"https://www.instagram.com/{username}");
 }

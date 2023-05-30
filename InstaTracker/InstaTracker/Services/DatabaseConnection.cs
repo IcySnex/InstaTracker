@@ -56,6 +56,21 @@ public class DatabaseConnection
     }
 
 
+    public async Task<int> CountAsync<T>()
+    {
+        logger.Log("Getting count for row from database");
+        return await Connection.ExecuteScalarAsync<int>($"SELECT count(id) FROM {typeof(T).Name}");
+    }
+
+    public async Task<int> CountWhereAsync<T>(
+        string property,
+        string predicate)
+    {
+        logger.Log("Getting count for row from database");
+        return await Connection.ExecuteScalarAsync<int>($"SELECT count(id) FROM {typeof(T).Name} WHERE {property} = ?", predicate);
+    }
+
+
     public async Task<List<T>> GetAsync<T>(
         Expression<Func<T, bool>>? predicate = null,
         CancellationToken cancellationToken = default) where T : new()
@@ -65,6 +80,7 @@ public class DatabaseConnection
         logger.Log($"Getting all {typeof(T).Name}s from database");
         return await Connection.GetAllWithChildrenAsync(predicate, false, cancellationToken);
     }
+
 
     public async Task<int> AddAsync(
         object item,
@@ -81,6 +97,7 @@ public class DatabaseConnection
 
         return await GetLastInsertedId();
     }
+
 
     public async Task RemoveAsync<T>(
         Expression<Func<T, bool>>? predicate = null,

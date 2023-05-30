@@ -12,11 +12,11 @@ namespace InstaTracker.Components;
 public partial class Chip : Grid
 {
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
-        nameof(Text), typeof(string), typeof(Chip), default(string), BindingMode.OneWay);
+        nameof(Text), typeof(FormattedString), typeof(Chip), default(FormattedString), BindingMode.OneWay);
 
-    public string Text
+    public FormattedString Text
     {
-        get => (string)GetValue(TextProperty);
+        get => (FormattedString)GetValue(TextProperty);
         set => SetValue(TextProperty, value);
     }
 
@@ -158,12 +158,22 @@ public partial class Chip : Grid
     
 
     public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(
-        nameof(CommandParameter), typeof(object), typeof(Chip), default(ICommand), BindingMode.OneWay);
+        nameof(CommandParameter), typeof(object), typeof(Chip), default, BindingMode.OneWay);
 
     public object CommandParameter
     {
         get => GetValue(CommandParameterProperty);
         set => SetValue(CommandParameterProperty, value);
+    }
+    
+
+    public static readonly BindableProperty TagProperty = BindableProperty.Create(
+        nameof(Tag), typeof(object), typeof(Chip), default, BindingMode.OneWay);
+
+    public object Tag
+    {
+        get => GetValue(TagProperty);
+        set => SetValue(TagProperty, value);
     }
 
 

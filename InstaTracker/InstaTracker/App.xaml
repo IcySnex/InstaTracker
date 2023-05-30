@@ -21,6 +21,8 @@
             <conv:IfNotNullParameter x:Key="IfNotNullParameter" />
             <conv:IfNotNullOrEmptyParameter x:Key="IfNotNullOrEmptyParameter" />
             <conv:SelectedListToBool x:Key="SelectedListToBool" />
+            <conv:IfDateTimeMatches x:Key="IfDateTimeMatches" />
+            <conv:DateTimeFormatter x:Key="DateTimeFormatter" />
 
             <!--#endregion-->
 
@@ -479,6 +481,75 @@
                         </Label>
                     </Grid>
                 </Frame>
+            </DataTemplate>
+            <!--#endregion-->
+
+            <!--#region InstaUserShort-->
+            <DataTemplate x:Key="InstaUserShortTemplate">
+                <Frame
+                    x:Name="root"
+                    Padding="12,4"
+                    BackgroundColor="Transparent"
+                    CornerRadius="8"
+                    HasShadow="False">
+
+                    <Grid
+                        tlk:TouchEffect.AnimationDuration="100"
+                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.OpenAccountUrlCommand, Source={x:Reference root}}"
+                        tlk:TouchEffect.CommandParameter="{Binding UserName}"
+                        tlk:TouchEffect.NormalOpacity="1"
+                        tlk:TouchEffect.PressedOpacity="0.4"
+                        tlk:TouchEffect.PressedScale="0.98">
+                        <Image
+                            HeightRequest="44"
+                            HorizontalOptions="Start"
+                            Source="{Binding ProfilePicture, TargetNullValue=nopicture.png}"
+                            WidthRequest="44">
+                            <Image.Clip>
+                                <EllipseGeometry
+                                    Center="{OnPlatform Android='22,25',
+                                                        iOS='22,24'}"
+                                    RadiusX="22"
+                                    RadiusY="22" />
+                            </Image.Clip>
+                        </Image>
+
+                        <Label
+                            Margin="56,-2,0,0"
+                            LineBreakMode="TailTruncation"
+                            Opacity="1"
+                            Style="{StaticResource TitleSecondary}"
+                            Text="{Binding UserName, TargetNullValue=N/A}"
+                            TextColor="{DynamicResource tl00}" />
+                        <Label Margin="56,28,0,0" LineBreakMode="TailTruncation">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding IsPrivate, Converter={StaticResource BoolToPrivatePublic}}" />
+                                    <Span Style="{StaticResource Subpoint}" Text="{Binding FullName, Converter={StaticResource IfNotNullOrEmptyParameter}, ConverterParameter=' | ‎'}" />
+                                    <Span Style="{StaticResource Subpoint}" Text="{Binding FullName}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+            <!--#endregion-->
+
+            <!--#region Info-->
+            <DataTemplate x:Key="InfoTemplate">
+                <com:Chip
+                    x:Name="root"
+                    Command="{Binding Parent.BindingContext.SetSelectedInfoCommand, Source={x:Reference root}}"
+                    CommandParameter="{Binding}"
+                    Interactive="False"
+                    IsChecked="{Binding Parent.BindingContext.SelectedInfo.FetchedAt, Mode=OneWay, Source={x:Reference root}, Converter={StaticResource IfDateTimeMatches}, ConverterParameter={x:Reference root}}"
+                    Tag="{Binding FetchedAt}">
+                    <com:Chip.Text>
+                        <FormattedString>
+                            <Span Text="{Binding FetchedAt, Converter={StaticResource DateTimeFormatter}, ConverterParameter='MM/dd/yy'}" />
+                        </FormattedString>
+                    </com:Chip.Text>
+                </com:Chip>
             </DataTemplate>
             <!--#endregion-->
 

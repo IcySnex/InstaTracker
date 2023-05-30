@@ -12,7 +12,13 @@ public class Info
 
     public Info(
         string username,
+        long pk,
+        string profilePicture,
+        bool isPrivate,
+        bool isFollowing,
+        string profileContext,
         DateTime fetchedAt,
+        bool isLoadable,
         long? followersCount = null,
         long? followingCount = null,
         long? fansCount = null,
@@ -22,7 +28,13 @@ public class Info
         int? id = null)
     {
         Username = username;
+        Pk = pk;
+        ProfilePicture = profilePicture;
+        IsPrivate = isPrivate;
+        IsFollowing = isFollowing;
+        ProfileContext = profileContext;
         FetchedAt = fetchedAt;
+        IsLoadable = isLoadable;
         FollowersCount = followersCount;
         FollowingCount = followingCount;
         FansCount = fansCount;
@@ -34,7 +46,19 @@ public class Info
 
     public string Username { get; set; } = default!;
 
+    public long Pk { get; set; } = default!;
+
+    public string ProfilePicture { get; set; } = default!;
+
+    public bool IsPrivate { get; set; } = default!;
+
+    public bool IsFollowing { get; set; } = default!;
+
+    public string ProfileContext { get; set; } = default!;
+
     public DateTime FetchedAt { get; set; } = default!;
+
+    public bool IsLoadable { get; set; } = default!;
 
     public long? FollowersCount { get; set; } = null;
 

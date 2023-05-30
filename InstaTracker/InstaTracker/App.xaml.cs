@@ -42,11 +42,7 @@ public partial class App : Application
             // Application
             .AddSingleton(logger)
             .AddSingleton(configuration)
-            // Database
             .AddSingleton<DatabaseConnection>()
-            .AddSingleton<AccountDatabaseConnection>()
-            .AddSingleton<SearchedAccountDatabaseConnection>()
-            .AddSingleton<InfoDatabaseConnection>()
             // Services
             .AddSingleton<AppHandler>()
             .AddSingleton<JsonConverter>()

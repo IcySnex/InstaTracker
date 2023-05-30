@@ -8,6 +8,7 @@ using InstaTracker.Helpers;
 using InstaTracker.Models;
 using Serilog;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -17,13 +18,13 @@ public partial class AccountManager : ObservableObject
 {
     readonly ILogger logger;
     readonly Config config;
-    readonly AccountDatabaseConnection database;
+    readonly DatabaseConnection database;
     readonly IInstaApi instagram;
 
     public AccountManager(
         ILogger logger,
         Config config,
-        AccountDatabaseConnection database,
+        DatabaseConnection database,
         IInstaApi instagram)
     {
         this.logger = logger;
@@ -79,8 +80,8 @@ public partial class AccountManager : ObservableObject
             return;
 
         logger.Log("Saving login state to database");
-        Account? account = await database.GetAsync(LoggedAccount.UserName);
-        int accountId = await database.AddAsync(new(
+        Account? account = (await database.GetAsync<Account>(account => account.Username == LoggedAccount.UserName)).FirstOrDefault();
+        int accountId = await database.AddAsync(new Account(
             LoggedAccount.UserName,
             password,
             LoggedAccount.FullName,
@@ -111,8 +112,8 @@ public partial class AccountManager : ObservableObject
             return;
 
         logger.Log("Saving login state to database");
-        Account? account = await database.GetAsync(LoggedAccount.UserName);
-        int accountId = await database.AddAsync(new(
+        Account? account = (await database.GetAsync<Account>(account => account.Username == LoggedAccount.UserName)).FirstOrDefault();
+        int accountId = await database.AddAsync(new Account(
             LoggedAccount.UserName,
             account is null ? null : account.Password,
             LoggedAccount.FullName,
