@@ -1,18 +1,18 @@
-﻿<ContentPage
-    x:Class="InstaTracker.Components.Page"
+﻿<com:Page
+    x:Class="InstaTracker.Components.ScrollablePage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:com="clr-namespace:InstaTracker.Components"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:tlk="http://xamarin.com/schemas/2020/toolkit"
-    x:Name="root"
-    ios:Page.UseSafeArea="True"
-    BackgroundColor="{DynamicResource bd00}"
-    NavigationPage.HasNavigationBar="False">
+    x:Name="scrollableRoot">
 
     <ContentPage.ControlTemplate>
         <ControlTemplate>
             <Grid>
-                <ContentPresenter Margin="12,8" Content="{Binding Content, Source={x:Reference root}}" />
+                <ScrollView>
+                    <ContentPresenter Margin="12,8" Content="{Binding Content, Source={x:Reference scrollableRoot}}" />
+                </ScrollView>
 
                 <Frame
                     x:Name="snackBar"
@@ -54,4 +54,4 @@
             </Grid>
         </ControlTemplate>
     </ContentPage.ControlTemplate>
-</ContentPage>
+</com:Page>

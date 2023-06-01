@@ -54,25 +54,12 @@ public static class Extentions
         uint length = 250,
         Easing? easing = null)
     {
-        Func<double, Color> transform = (t) =>
+        Func<double, Color> transform = t =>
           Color.FromRgba(input.BackgroundColor.R + t * (color.R - input.BackgroundColor.R),
                          input.BackgroundColor.G + t * (color.G - input.BackgroundColor.G),
                          input.BackgroundColor.B + t * (color.B - input.BackgroundColor.B),
                          input.BackgroundColor.A + t * (color.A - input.BackgroundColor.A));
         return ColorAnimation(input, "BackgroundColorAnimation", transform, c => input.BackgroundColor = c, length, easing);
-    }
-
-    public static Task<bool> ColorBorderTo(this Frame input,
-        Color color,
-        uint length = 250,
-        Easing? easing = null)
-    {
-        Func<double, Color> transform = (t) =>
-          Color.FromRgba(input.BorderColor.R + t * (color.R - input.BorderColor.R),
-                         input.BorderColor.G + t * (color.G - input.BorderColor.G),
-                         input.BorderColor.B + t * (color.B - input.BorderColor.B),
-                         input.BorderColor.A + t * (color.A - input.BorderColor.A));
-        return ColorAnimation(input, "BorderColorAnimation", transform, c => input.BorderColor = c, length, easing);
     }
 
     static Task<bool> ColorAnimation(

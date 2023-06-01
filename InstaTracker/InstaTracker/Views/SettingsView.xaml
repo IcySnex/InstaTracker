@@ -1,12 +1,8 @@
-﻿<com:Page
+﻿<com:ScrollablePage
     x:Class="InstaTracker.Views.SettingsView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:com="clr-namespace:InstaTracker.Components"
-    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-    ios:Page.UseSafeArea="True"
-    BackgroundColor="{DynamicResource bd00}"
-    NavigationPage.HasNavigationBar="False">
+    xmlns:com="clr-namespace:InstaTracker.Components">
 
     <StackLayout Margin="0,0,0,48" Spacing="12">
         <Label Style="{StaticResource Header}" Text="Settings" />
@@ -74,4 +70,4 @@
                 WidthRequest="100" />
         </Frame>
     </StackLayout>
-</com:Page>
+</com:ScrollablePage>

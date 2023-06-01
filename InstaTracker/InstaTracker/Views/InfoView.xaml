@@ -5,261 +5,305 @@
     xmlns:com="clr-namespace:InstaTracker.Components"
     xmlns:tlk="http://xamarin.com/schemas/2020/toolkit">
 
-    <StackLayout Margin="0,0,0,48" Spacing="12">
-        <Grid>
-            <Image
-                tlk:IconTintColorEffect.TintColor="{DynamicResource tl02}"
-                tlk:TouchEffect.AnimationDuration="100"
-                tlk:TouchEffect.Command="{Binding GoBackCommand}"
-                tlk:TouchEffect.NormalOpacity="1"
-                tlk:TouchEffect.PressedOpacity="0.4"
-                tlk:TouchEffect.PressedScale="0.98"
-                HorizontalOptions="Start"
-                Source="back.png"
-                WidthRequest="36" />
-            <Label
-                Margin="40,0,0,0"
-                Style="{StaticResource Header}"
-                Text="Info" />
-        </Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <ScrollView HorizontalScrollBarVisibility="Never" Orientation="Horizontal">
-            <StackLayout Orientation="Horizontal" Spacing="8">
-                <Button
-                    Padding="0,-4,0,0"
-                    BackgroundColor="{DynamicResource bd02}"
-                    BorderColor="{DynamicResource bd05}"
-                    BorderWidth="1"
-                    Command="{Binding AddNewCommand}"
-                    CornerRadius="{x:OnPlatform Android=24,
-                                                iOS=18}"
-                    FontSize="20"
-                    HeightRequest="36"
-                    Text="+"
-                    TextColor="{DynamicResource tl02}"
-                    WidthRequest="46" />
-                <Button
-                    Padding="0,-4,0,0"
-                    BackgroundColor="{DynamicResource bd02}"
-                    BorderColor="{DynamicResource bd05}"
-                    BorderWidth="1"
-                    Command="{Binding RemoveCommand}"
-                    CornerRadius="{x:OnPlatform Android=24,
-                                                iOS=18}"
-                    FontSize="20"
-                    HeightRequest="36"
-                    Text="×"
-                    TextColor="{DynamicResource tl02}"
-                    WidthRequest="46" />
-
-                <Rectangle
-                    Margin="4,2"
-                    Fill="{DynamicResource bd09}"
-                    VerticalOptions="Fill"
-                    WidthRequest="2" />
-
-                <StackLayout
-                    BindableLayout.ItemTemplate="{StaticResource InfoTemplate}"
-                    BindableLayout.ItemsSource="{Binding Infos, Mode=OneWay}"
-                    Orientation="Horizontal"
-                    Spacing="8">
-
-                    <BindableLayout.EmptyView>
-                        <Label
-                            Style="{StaticResource ContentSecondary}"
-                            Text="Press '+' to add new statistics."
-                            VerticalOptions="Center" />
-                    </BindableLayout.EmptyView>
-                </StackLayout>
-            </StackLayout>
-        </ScrollView>
-
-        <Label Margin="0,0,0,-8">
-            <Label.FormattedText>
-                <FormattedString>
-                    <Span Style="{StaticResource Subpoint}" Text="Statistics from: " />
-                    <Span Style="{StaticResource SubpointSecondary}" Text="{Binding SelectedInfo.FetchedAt, Converter={StaticResource DateTimeFormatter}, ConverterParameter='MM/dd/yyyy - HH:mm', Mode=OneWay}" />
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
-        <Frame Padding="12" CornerRadius="8">
-            <Frame.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Offset="0" Color="{DynamicResource bd04}" />
-                    <GradientStop Offset="1" Color="{DynamicResource bd01}" />
-                </LinearGradientBrush>
-            </Frame.Background>
-
+        <StackLayout Spacing="12">
             <Grid>
-                <Grid
+                <Image
+                    tlk:IconTintColorEffect.TintColor="{DynamicResource tl02}"
                     tlk:TouchEffect.AnimationDuration="100"
-                    tlk:TouchEffect.Command="{Binding OpenProfilePictureCommand}"
+                    tlk:TouchEffect.Command="{Binding GoBackCommand}"
                     tlk:TouchEffect.NormalOpacity="1"
                     tlk:TouchEffect.PressedOpacity="0.4"
                     tlk:TouchEffect.PressedScale="0.98"
-                    HorizontalOptions="Start">
-                    <Image
-                        HeightRequest="54"
-                        Source="{Binding SelectedInfo.ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
-                        WidthRequest="54">
-                        <Image.Clip>
-                            <EllipseGeometry
-                                Center="27,27"
-                                RadiusX="27"
-                                RadiusY="27" />
-                        </Image.Clip>
-                    </Image>
-                    <Image
-                        Margin="40,0,0,0"
-                        tlk:IconTintColorEffect.TintColor="{DynamicResource tl01}"
-                        HorizontalOptions="Start"
-                        IsVisible="{Binding SelectedInfo.IsFollowing, Mode=OneWay}"
-                        Source="following.png"
-                        VerticalOptions="Start"
-                        WidthRequest="20" />
-                </Grid>
-
+                    HorizontalOptions="Start"
+                    Source="back.png"
+                    WidthRequest="36" />
                 <Label
-                    Margin="66,-2,12,0"
-                    LineBreakMode="TailTruncation"
-                    Style="{StaticResource TitleSecondary}"
-                    Text="{Binding SelectedInfo.Username, Mode=OneWay, TargetNullValue=N/A}" />
-                <Label Margin="66,28,12,0" LineBreakMode="TailTruncation">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding SelectedInfo.IsPrivate, Mode=OneWay, Converter={StaticResource BoolToPrivatePublic}}" />
-                            <Span Style="{StaticResource Subpoint}" Text="{Binding SelectedInfo.ProfileContext, Mode=OneWay, Converter={StaticResource IfNotNullOrEmptyParameter}, ConverterParameter=' | ‎'}" />
-                            <Span Style="{StaticResource Subpoint}" Text="{Binding SelectedInfo.ProfileContext, Mode=OneWay}" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
+                    Margin="40,0,0,0"
+                    Style="{StaticResource Header}"
+                    Text="Info" />
             </Grid>
-        </Frame>
 
-        <Grid Margin="0,-5,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <ScrollView
+                Margin="-12,0"
+                HorizontalScrollBarVisibility="Never"
+                Orientation="Horizontal">
+                <StackLayout
+                    Margin="12,0"
+                    Orientation="Horizontal"
+                    Spacing="8">
+                    <Button
+                        Padding="0,-4,0,0"
+                        BackgroundColor="{DynamicResource bd02}"
+                        BorderColor="{DynamicResource bd05}"
+                        BorderWidth="1"
+                        Command="{Binding AddNewCommand}"
+                        CornerRadius="{x:OnPlatform Android=24,
+                                                    iOS=18}"
+                        FontSize="20"
+                        HeightRequest="36"
+                        Text="+"
+                        TextColor="{DynamicResource tl02}"
+                        WidthRequest="46" />
+                    <Button
+                        Padding="0,-4,0,0"
+                        BackgroundColor="{DynamicResource bd02}"
+                        BorderColor="{DynamicResource bd05}"
+                        BorderWidth="1"
+                        Command="{Binding RemoveCommand}"
+                        CornerRadius="{x:OnPlatform Android=24,
+                                                    iOS=18}"
+                        FontSize="20"
+                        HeightRequest="36"
+                        Text="×"
+                        TextColor="{DynamicResource tl02}"
+                        WidthRequest="46" />
+                    <com:Chip
+                        x:Name="ShowComparedInfoChip"
+                        Command="{Binding ShowComparedInfoChangedCommand, Mode=OneWay}"
+                        CommandParameter="{Binding IsChecked, Source={x:Reference ShowComparedInfoChip}, Mode=OneWay}"
+                        FontSize="18"
+                        Text="=" />
 
-            <Frame Padding="0" BackgroundColor="{DynamicResource bd01}">
-                <ScrollView Padding="12" Orientation="Horizontal">
-                    <StackLayout Spacing="-6">
-                        <Label
-                            LineBreakMode="NoWrap"
-                            Style="{StaticResource Title}"
-                            Text="{Binding SelectedInfo.FollowersCount, Mode=OneWay, TargetNullValue='N/A'}" />
-                        <Label Style="{StaticResource ContentSecondary}" Text="Followers" />
+                    <Rectangle
+                        Margin="4,2"
+                        Fill="{DynamicResource bd09}"
+                        VerticalOptions="Fill"
+                        WidthRequest="2" />
+
+                    <StackLayout
+                        BindableLayout.ItemTemplate="{StaticResource InfoTemplate}"
+                        BindableLayout.ItemsSource="{Binding Infos, Mode=OneWay}"
+                        Orientation="Horizontal"
+                        Spacing="8">
+
+                        <BindableLayout.EmptyView>
+                            <Label
+                                Style="{StaticResource ContentSecondary}"
+                                Text="Press '+' to add new statistics."
+                                VerticalOptions="Center" />
+                        </BindableLayout.EmptyView>
                     </StackLayout>
-                </ScrollView>
-            </Frame>
+                </StackLayout>
+            </ScrollView>
 
-            <Frame
-                Grid.Column="1"
-                Padding="0"
-                BackgroundColor="{DynamicResource bd01}">
-                <ScrollView Padding="12" Orientation="Horizontal">
-                    <StackLayout Spacing="-6">
-                        <Label Style="{StaticResource Title}" Text="{Binding SelectedInfo.FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
-                        <Label Style="{StaticResource ContentSecondary}" Text="Following" />
+            <ScrollView
+                Margin="-12,0"
+                HorizontalScrollBarVisibility="Never"
+                IsVisible="{Binding IsChecked, Source={x:Reference ShowComparedInfoChip}, Mode=OneWay}"
+                Orientation="Horizontal">
+                <StackLayout
+                    Margin="12,0"
+                    Orientation="Horizontal"
+                    Spacing="8">
+                    <Label Text="Compare to: " VerticalOptions="Center" />
+
+                    <StackLayout
+                        BindableLayout.ItemTemplate="{StaticResource CompareInfoTemplate}"
+                        BindableLayout.ItemsSource="{Binding CompareableInfos, Mode=OneWay}"
+                        Orientation="Horizontal"
+                        Spacing="8">
+
+                        <BindableLayout.EmptyView>
+                            <Label
+                                Style="{StaticResource ContentSecondary}"
+                                Text="Press '+' to add new statistics."
+                                VerticalOptions="Center" />
+                        </BindableLayout.EmptyView>
                     </StackLayout>
-                </ScrollView>
-            </Frame>
-        </Grid>
-
-        <StackLayout
-            Margin="0,12,0,0"
-            HorizontalOptions="Center"
-            IsVisible="{Binding SelectedInfo.IsLoadable, Converter={StaticResource InverseBool}, Mode=OneWay}"
-            Spacing="8">
-            <Label HorizontalTextAlignment="Center" Text="This account is private. You must be a follower to load account statistics like followers, following and fans" />
-            <Button
-                Command="{Binding SendFollowRequestCommand}"
-                HorizontalOptions="Center"
-                Style="{StaticResource Outlined}"
-                Text="Send Follow Request" />
+                </StackLayout>
+            </ScrollView>
         </StackLayout>
 
-        <ScrollView
-            Margin="0,12,0,0"
-            HorizontalScrollBarVisibility="Never"
-            IsVisible="{Binding SelectedInfo.IsLoadable, Mode=OneWay}"
-            Orientation="Horizontal">
-            <StackLayout Orientation="Horizontal" Spacing="8">
-                <com:Chip
-                    Command="{Binding ShowPressedCommand}"
-                    CommandParameter="Followers"
-                    Interactive="False"
-                    IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Followers'}">
-                    <com:Chip.Text>
-                        <FormattedString>
-                            <Span Text="Followers (" />
-                            <Span Text="{Binding SelectedInfo.Followers.Count, Mode=OneWay}" />
-                            <Span Text=")" />
-                        </FormattedString>
-                    </com:Chip.Text>
-                </com:Chip>
-                <com:Chip
-                    Command="{Binding ShowPressedCommand}"
-                    CommandParameter="Following"
-                    Interactive="False"
-                    IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Following'}">
-                    <com:Chip.Text>
-                        <FormattedString>
-                            <Span Text="Following (" />
-                            <Span Text="{Binding SelectedInfo.Following.Count, Mode=OneWay}" />
-                            <Span Text=")" />
-                        </FormattedString>
-                    </com:Chip.Text>
-                </com:Chip>
-                <com:Chip
-                    Command="{Binding ShowPressedCommand}"
-                    CommandParameter="Fans"
-                    Interactive="False"
-                    IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Fans'}">
-                    <com:Chip.Text>
-                        <FormattedString>
-                            <Span Text="Fans (" />
-                            <Span Text="{Binding SelectedInfo.Fans.Count, Mode=OneWay}" />
-                            <Span Text=")" />
-                        </FormattedString>
-                    </com:Chip.Text>
-                </com:Chip>
-            </StackLayout>
-        </ScrollView>
-        <Grid Margin="12,0" IsVisible="{Binding SelectedInfo.IsLoadable, Mode=OneWay}">
-            <StackLayout
-                BindableLayout.ItemTemplate="{StaticResource InstaUserShortTemplate}"
-                BindableLayout.ItemsSource="{Binding SelectedInfo.Followers, Mode=OneWay}"
-                IsVisible="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Followers'}"
-                Spacing="4">
 
-                <BindableLayout.EmptyView>
-                    <Label Style="{StaticResource ContentSecondary}" Text="It looks like this account has no followers." />
-                </BindableLayout.EmptyView>
-            </StackLayout>
+        <CollectionView
+            Grid.Row="1"
+            Margin="0,8,0,0"
+            ItemTemplate="{StaticResource InstaUserShortTemplate}"
+            ItemsSource="{Binding SelectedListCollection, Mode=OneWay}">
 
-            <StackLayout
-                BindableLayout.ItemTemplate="{StaticResource InstaUserShortTemplate}"
-                BindableLayout.ItemsSource="{Binding SelectedInfo.Following, Mode=OneWay}"
-                IsVisible="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Following'}"
-                Spacing="4">
+            <CollectionView.Header>
+                <StackLayout Spacing="12">
+                    <Label Margin="0,0,0,-8">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Style="{StaticResource Subpoint}" Text="Statistics from: " />
+                                <Span Style="{StaticResource SubpointSecondary}" Text="{Binding SelectedInfo.FetchedAt, Converter={StaticResource DateTimeFormatter}, ConverterParameter='MM/dd/yyyy - HH:mm', Mode=OneWay}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Frame Padding="12" CornerRadius="8">
+                        <Frame.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="{DynamicResource bd04}" />
+                                <GradientStop Offset="1" Color="{DynamicResource bd01}" />
+                            </LinearGradientBrush>
+                        </Frame.Background>
 
-                <BindableLayout.EmptyView>
-                    <Label Style="{StaticResource ContentSecondary}" Text="It looks like this account follows nobody." />
-                </BindableLayout.EmptyView>
-            </StackLayout>
+                        <Grid>
+                            <Image
+                                tlk:TouchEffect.AnimationDuration="100"
+                                tlk:TouchEffect.Command="{Binding OpenProfilePictureCommand}"
+                                tlk:TouchEffect.NormalOpacity="1"
+                                tlk:TouchEffect.PressedOpacity="0.4"
+                                tlk:TouchEffect.PressedScale="0.98"
+                                HeightRequest="54"
+                                HorizontalOptions="Start"
+                                Source="{Binding SelectedInfo.ProfilePicture, Mode=OneWay, TargetNullValue=nopicture.png}"
+                                WidthRequest="54">
+                                <Image.Clip>
+                                    <EllipseGeometry
+                                        Center="27,27"
+                                        RadiusX="27"
+                                        RadiusY="27" />
+                                </Image.Clip>
+                            </Image>
+                            <Image
+                                Margin="40,0,0,0"
+                                tlk:IconTintColorEffect.TintColor="{DynamicResource tl01}"
+                                HorizontalOptions="Start"
+                                IsVisible="{Binding SelectedInfo.IsFollowing, Mode=OneWay}"
+                                Source="following.png"
+                                VerticalOptions="Start"
+                                WidthRequest="20" />
 
-            <StackLayout
-                BindableLayout.ItemTemplate="{StaticResource InstaUserShortTemplate}"
-                BindableLayout.ItemsSource="{Binding SelectedInfo.Fans, Mode=OneWay}"
-                IsVisible="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Fans'}"
-                Spacing="4">
+                            <Label
+                                Margin="66,-2,12,0"
+                                LineBreakMode="TailTruncation"
+                                Style="{StaticResource TitleSecondary}"
+                                Text="{Binding SelectedInfo.Username, Mode=OneWay, TargetNullValue=N/A}" />
+                            <Label Margin="66,28,12,0" LineBreakMode="TailTruncation">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding SelectedInfo.IsPrivate, Mode=OneWay, Converter={StaticResource BoolToPrivatePublic}}" />
+                                        <Span Style="{StaticResource Subpoint}" Text="{Binding SelectedInfo.ProfileContext, Mode=OneWay, Converter={StaticResource IfNotNullOrEmptyParameter}, ConverterParameter=' | ‎'}" />
+                                        <Span Style="{StaticResource Subpoint}" Text="{Binding SelectedInfo.ProfileContext, Mode=OneWay}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </Frame>
 
-                <BindableLayout.EmptyView>
-                    <Label Style="{StaticResource ContentSecondary}" Text="It looks like this account has no fans." />
-                </BindableLayout.EmptyView>
-            </StackLayout>
-        </Grid>
-    </StackLayout>
+                    <Grid Margin="0,-5,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Frame
+                            Padding="0"
+                            BackgroundColor="{DynamicResource bd01}"
+                            CornerRadius="8">
+                            <ScrollView Padding="12" Orientation="Horizontal">
+                                <Grid HeightRequest="48" VerticalOptions="Start">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        LineBreakMode="NoWrap"
+                                        Style="{StaticResource Title}"
+                                        Text="{Binding SelectedInfo.FollowersCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        LineBreakMode="NoWrap"
+                                        Text="+18" />
+                                    <Label
+                                        Grid.ColumnSpan="2"
+                                        Margin="0,28,0,0"
+                                        Style="{StaticResource ContentSecondary}"
+                                        Text="Followers" />
+                                </Grid>
+                            </ScrollView>
+                        </Frame>
+
+                        <Frame
+                            Grid.Column="1"
+                            Padding="0"
+                            BackgroundColor="{DynamicResource bd01}"
+                            CornerRadius="8">
+                            <ScrollView Padding="12" Orientation="Horizontal">
+                                <StackLayout Spacing="-6">
+                                    <Label Style="{StaticResource Title}" Text="{Binding SelectedInfo.FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                                    <Label Style="{StaticResource ContentSecondary}" Text="Following" />
+                                </StackLayout>
+                            </ScrollView>
+                        </Frame>
+                    </Grid>
+
+                    <ScrollView
+                        Margin="0,0,0,4"
+                        HorizontalScrollBarVisibility="Never"
+                        IsVisible="{Binding SelectedInfo.IsLoadable, Mode=OneWay}"
+                        Orientation="Horizontal">
+                        <StackLayout Orientation="Horizontal" Spacing="8">
+                            <com:Chip
+                                Command="{Binding ShowPressedCommand}"
+                                CommandParameter="Followers"
+                                Interactive="False"
+                                IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Followers'}">
+                                <com:Chip.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Followers (" />
+                                        <Span Text="{Binding SelectedInfo.Followers.Count, Mode=OneWay}" />
+                                        <Span Text=")" />
+                                    </FormattedString>
+                                </com:Chip.FormattedText>
+                            </com:Chip>
+                            <com:Chip
+                                Command="{Binding ShowPressedCommand}"
+                                CommandParameter="Following"
+                                Interactive="False"
+                                IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Following'}">
+                                <com:Chip.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Following (" />
+                                        <Span Text="{Binding SelectedInfo.Following.Count, Mode=OneWay}" />
+                                        <Span Text=")" />
+                                    </FormattedString>
+                                </com:Chip.FormattedText>
+                            </com:Chip>
+                            <com:Chip
+                                Command="{Binding ShowPressedCommand}"
+                                CommandParameter="Fans"
+                                Interactive="False"
+                                IsChecked="{Binding SelectedList, Mode=OneWay, Converter={StaticResource SelectedListToBool}, ConverterParameter='Fans'}">
+                                <com:Chip.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Fans (" />
+                                        <Span Text="{Binding SelectedInfo.Fans.Count, Mode=OneWay, FallbackValue='N/A'}" />
+                                        <Span Text=")" />
+                                    </FormattedString>
+                                </com:Chip.FormattedText>
+                            </com:Chip>
+                        </StackLayout>
+                    </ScrollView>
+
+                    <Label
+                        Margin="0,0,0,0"
+                        IsVisible="{Binding SelectedListCollection, Mode=OneWay, Converter={StaticResource IsListNullOrEmpty}}"
+                        Text="{Binding SelectedListEmptyMessage, Mode=OneWay}" />
+
+                    <Label
+                        Margin="0,-35,0,0"
+                        BackgroundColor="{DynamicResource bd00}"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding SelectedInfo.IsLoadable, Converter={StaticResource InverseBool}, Mode=OneWay}"
+                        Text="This account is private. You must be a follower to load account statistics like followers, following and fans" />
+                    <Button
+                        Command="{Binding SendFollowRequestCommand}"
+                        CornerRadius="4"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding SelectedInfo.IsLoadable, Converter={StaticResource InverseBool}, Mode=OneWay}"
+                        Style="{StaticResource Outlined}"
+                        Text="Send Follow Request" />
+                </StackLayout>
+            </CollectionView.Header>
+        </CollectionView>
+    </Grid>
 </com:Page>

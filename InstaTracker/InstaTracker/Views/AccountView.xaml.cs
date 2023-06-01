@@ -6,7 +6,7 @@ using Xamarin.Forms.Xaml;
 namespace InstaTracker.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class AccountView : Components.Page
+public partial class AccountView : Components.ScrollablePage
 {
     public AccountView()
     {

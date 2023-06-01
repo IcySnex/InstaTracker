@@ -30,6 +30,12 @@
 	  <Compile Update="Components\Entry.xaml.cs">
 	    <DependentUpon>Entry.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Components\ScrollablePage.xaml.cs">
+	    <DependentUpon>ScrollablePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Components\RefreshablePage.xaml.cs">
+	    <DependentUpon>RefreshablePage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\AccountView.xaml.cs">
 	    <DependentUpon>AccountView.xaml</DependentUpon>
 	  </Compile>

@@ -5,7 +5,7 @@ using Xamarin.Forms.Xaml;
 namespace InstaTracker.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class SettingsView : Components.Page
+public partial class SettingsView : Components.ScrollablePage
 {
     public SettingsView()
     {

@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using InstagramApiSharp.Classes.Models;
-using InstaTracker.Components;
-using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
 using InstaTracker.Types;
@@ -13,8 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
 
 namespace InstaTracker.ViewModels;
 
@@ -63,15 +59,23 @@ public partial class InfoViewModel : ObservableObject
 
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedListCollection))]
+    [NotifyPropertyChangedFor(nameof(SelectedListEmptyMessage))]
+    [NotifyPropertyChangedFor(nameof(CompareableInfos))]
     Info selectedInfo = default!;
 
     [RelayCommand]
     void SetSelectedInfo(
-        Info info) =>
+        Info info)
+    {
         SelectedInfo = info;
 
+        if (ComparedInfo?.FetchedAt == info.FetchedAt)
+            SetComparedInfo(null);
+    }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CompareableInfos))]
     IOrderedEnumerable<Info> infos = default!;
 
     public async Task LoadInfosAsync(
@@ -84,6 +88,29 @@ public partial class InfoViewModel : ObservableObject
             (List<Info> infos) =>
                 Infos = infos.OrderByDescending(info => info.FetchedAt));
     }
+
+
+    [ObservableProperty]
+    Info? comparedInfo = null;
+
+    [RelayCommand]
+    void SetComparedInfo(
+        Info? info)
+    {
+        ComparedInfo = ComparedInfo is null || ComparedInfo.FetchedAt != info?.FetchedAt ? info ?? null : null ;
+    }
+
+    public IEnumerable<Info> CompareableInfos =>
+        Infos.Where(info => info.FetchedAt != SelectedInfo.FetchedAt);
+
+    [RelayCommand]
+    void OnShowComparedInfoChanged(
+        bool value)
+    {
+        if (value)
+            SetComparedInfo(null);
+    }
+
 
 
     [RelayCommand]
@@ -121,7 +148,31 @@ public partial class InfoViewModel : ObservableObject
     }
 
 
+    public List<InstaUserShort>? SelectedListCollection
+    {
+        get => SelectedList switch
+        {
+            SelectedList.Followers => SelectedInfo.Followers,
+            SelectedList.Following => SelectedInfo.Following,
+            SelectedList.Fans => SelectedInfo.Fans,
+            _ => null
+        } ?? new();
+    }
+
+    public string SelectedListEmptyMessage
+    {
+        get => SelectedList switch
+        {
+            SelectedList.Followers => "It looks like this account has no followers.",
+            SelectedList.Following => "It looks like this account is not following anyone.",
+            SelectedList.Fans => "It looks like this account has no fans.",
+            _ => "Please select a list to display!"
+        };
+    }
+
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedListCollection))]
+    [NotifyPropertyChangedFor(nameof(SelectedListEmptyMessage))]
     SelectedList selectedList = SelectedList.Followers;
 
     [RelayCommand]

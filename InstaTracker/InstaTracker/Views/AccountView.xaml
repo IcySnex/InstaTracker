@@ -1,9 +1,8 @@
-﻿<com:Page
+﻿<com:ScrollablePage
     x:Class="InstaTracker.Views.AccountView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:com="clr-namespace:InstaTracker.Components"
-    xmlns:mds="clr-namespace:InstaTracker.Models">
+    xmlns:com="clr-namespace:InstaTracker.Components">
 
     <StackLayout Margin="0,0,0,48" Spacing="12">
         <Label Style="{StaticResource Header}" Text="Account" />
@@ -123,4 +122,4 @@
             </BindableLayout.EmptyView>
         </StackLayout>
     </StackLayout>
-</com:Page>
+</com:ScrollablePage>

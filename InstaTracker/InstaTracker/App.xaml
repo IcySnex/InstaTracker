@@ -23,6 +23,7 @@
             <conv:SelectedListToBool x:Key="SelectedListToBool" />
             <conv:IfDateTimeMatches x:Key="IfDateTimeMatches" />
             <conv:DateTimeFormatter x:Key="DateTimeFormatter" />
+            <conv:IsListNullOrEmpty x:Key="IsListNullOrEmpty" />
 
             <!--#endregion-->
 
@@ -234,9 +235,10 @@
                 <Setter Property="ChipBackgroundColor" Value="{DynamicResource bd02}" />
                 <Setter Property="ChipBackgroundColorChecked" Value="{DynamicResource a09}" />
                 <Setter Property="BorderColor" Value="{DynamicResource bd05}" />
-                <Setter Property="BorderColorChecked" Value="{DynamicResource a03}" />
+                <Setter Property="BorderColorChecked" Value="{DynamicResource a08}" />
                 <Setter Property="TextColor" Value="{DynamicResource tl02}" />
-                <Setter Property="TextColorChecked" Value="{DynamicResource a03}" />
+                <Setter Property="TextColorChecked" Value="{DynamicResource td01}" />
+                <Setter Property="FontSize" Value="16" />
             </Style>
 
             <!--#endregion-->
@@ -488,6 +490,7 @@
             <DataTemplate x:Key="InstaUserShortTemplate">
                 <Frame
                     x:Name="root"
+                    Margin="12,0"
                     Padding="12,4"
                     BackgroundColor="Transparent"
                     CornerRadius="8"
@@ -543,13 +546,21 @@
                     CommandParameter="{Binding}"
                     Interactive="False"
                     IsChecked="{Binding Parent.BindingContext.SelectedInfo.FetchedAt, Mode=OneWay, Source={x:Reference root}, Converter={StaticResource IfDateTimeMatches}, ConverterParameter={x:Reference root}}"
-                    Tag="{Binding FetchedAt}">
-                    <com:Chip.Text>
-                        <FormattedString>
-                            <Span Text="{Binding FetchedAt, Converter={StaticResource DateTimeFormatter}, ConverterParameter='MM/dd/yy'}" />
-                        </FormattedString>
-                    </com:Chip.Text>
-                </com:Chip>
+                    Tag="{Binding FetchedAt}"
+                    Text="{Binding FetchedAt, Converter={StaticResource DateTimeFormatter}, ConverterParameter='MM/dd/yy - HH:mm:ss'}" />
+            </DataTemplate>
+            <!--#endregion-->
+
+            <!--#region CompareInfo-->
+            <DataTemplate x:Key="CompareInfoTemplate">
+                <com:Chip
+                    x:Name="root"
+                    Command="{Binding Parent.BindingContext.SetComparedInfoCommand, Source={x:Reference root}}"
+                    CommandParameter="{Binding}"
+                    Interactive="False"
+                    IsChecked="{Binding Parent.BindingContext.ComparedInfo.FetchedAt, Mode=OneWay, Source={x:Reference root}, Converter={StaticResource IfDateTimeMatches}, ConverterParameter={x:Reference root}}"
+                    Tag="{Binding FetchedAt}"
+                    Text="{Binding FetchedAt, Converter={StaticResource DateTimeFormatter}, ConverterParameter='MM/dd/yy - HH:mm:ss'}" />
             </DataTemplate>
             <!--#endregion-->
 

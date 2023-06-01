@@ -12,12 +12,31 @@ namespace InstaTracker.Components;
 public partial class Chip : Grid
 {
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
-        nameof(Text), typeof(FormattedString), typeof(Chip), default(FormattedString), BindingMode.OneWay);
+        nameof(Text), typeof(string), typeof(Chip), default(string), BindingMode.OneWay);
 
-    public FormattedString Text
+    public string Text
     {
-        get => (FormattedString)GetValue(TextProperty);
+        get => (string)GetValue(TextProperty);
         set => SetValue(TextProperty, value);
+    }
+    
+    public static readonly BindableProperty FormattedTextProperty = BindableProperty.Create(
+        nameof(FormattedText), typeof(FormattedString), typeof(Chip), default(FormattedString), BindingMode.OneWay);
+
+    public FormattedString FormattedText
+    {
+        get => (FormattedString)GetValue(FormattedTextProperty);
+        set => SetValue(FormattedTextProperty, value);
+    }
+    
+    
+    public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
+        nameof(FontSize), typeof(double), typeof(Chip), default(double), BindingMode.OneWay);
+
+    public double FontSize
+    {
+        get => (double)GetValue(FontSizeProperty);
+        set => SetValue(FontSizeProperty, value);
     }
 
 
@@ -94,15 +113,15 @@ public partial class Chip : Grid
                 if ((bool)newValue)
                     view.checkIcon.IsVisible = true;
                 await Task.WhenAll(
-                    view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 150, Easing.Linear),
-                    view.container.ColorBorderTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 150, Easing.Linear),
+                    view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 250, Easing.Linear),
+                    view.borderContainer.ColorBackgroundTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 250, Easing.Linear),
                     view.checkIcon.WidthTo((bool)newValue ? 20 : 0, 100, Easing.Linear, (f, b) => view.checkIcon.IsVisible = (bool)newValue));
                 return;
             }
 
             await Task.WhenAll(
-                view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 150, Easing.Linear),
-                view.container.ColorBorderTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 150, Easing.Linear));
+                view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 250, Easing.Linear),
+                view.borderContainer.ColorBackgroundTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 250, Easing.Linear));
         });
 
     public bool IsChecked

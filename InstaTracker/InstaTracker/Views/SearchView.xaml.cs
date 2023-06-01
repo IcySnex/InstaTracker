@@ -5,7 +5,7 @@ using Xamarin.Forms.Xaml;
 namespace InstaTracker.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class SearchView : Components.Page
+public partial class SearchView : Components.RefreshablePage
 {
     public SearchView()
     {
