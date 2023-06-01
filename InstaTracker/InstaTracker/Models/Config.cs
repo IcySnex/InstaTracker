@@ -25,4 +25,7 @@ public partial class Config : ObservableObject
 
     [ObservableProperty]
     int fetchFollowingLimit = 200;
+
+    [ObservableProperty]
+    int fetchStatisitcsDelay = 1000;
 }

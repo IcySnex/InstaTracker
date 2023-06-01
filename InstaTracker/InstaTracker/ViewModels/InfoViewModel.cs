@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using InstagramApiSharp.Classes.Models;
+using InstaTracker.Helpers;
 using InstaTracker.Models;
 using InstaTracker.Services;
 using InstaTracker.Types;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Xamarin.Forms.Internals;
 
 namespace InstaTracker.ViewModels;
 
@@ -24,6 +26,8 @@ public partial class InfoViewModel : ObservableObject
     readonly SnackBar snackBar;
     readonly InfoManager infoManager;
     readonly SearchViewModel searchViewModel;
+
+    readonly InstaUserShortComparer userComparer = new();
 
     public InfoViewModel(
         ILogger logger,
@@ -48,6 +52,8 @@ public partial class InfoViewModel : ObservableObject
     public async Task InitializeAsync(
         string username)
     {
+        logger.Log($"Initializing InfoViewModel [{username}]");
+
         if (await database.CountWhereAsync<Info>("Username", username) < 1)
         {
             await CreateCurrentInfoAsync(username);
@@ -58,16 +64,24 @@ public partial class InfoViewModel : ObservableObject
     }
 
 
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SelectedListCollection))]
     [NotifyPropertyChangedFor(nameof(SelectedListEmptyMessage))]
     [NotifyPropertyChangedFor(nameof(CompareableInfos))]
+    [NotifyPropertyChangedFor(nameof(ActualFollowersCount))]
+    [NotifyPropertyChangedFor(nameof(ActualFollowingCount))]
+    [NotifyPropertyChangedFor(nameof(ActualFansCount))]
+    [NotifyPropertyChangedFor(nameof(FollowerCountCompared))]
+    [NotifyPropertyChangedFor(nameof(FollowingCountCompared))]
     Info selectedInfo = default!;
 
     [RelayCommand]
     void SetSelectedInfo(
         Info info)
     {
+        logger.Log($"Setting selected info [{info.Username}]");
+
         SelectedInfo = info;
 
         if (ComparedInfo?.FetchedAt == info.FetchedAt)
@@ -81,6 +95,8 @@ public partial class InfoViewModel : ObservableObject
     public async Task LoadInfosAsync(
         string username)
     {
+        logger.Log($"Loading infos [{username}]");
+
         await snackBar.RunAsync(
             $"Loading account statistic states...",
             database.GetAsync<Info>(info => info.Username == username),
@@ -91,12 +107,20 @@ public partial class InfoViewModel : ObservableObject
 
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedListCollection))]
+    [NotifyPropertyChangedFor(nameof(ActualFollowersCount))]
+    [NotifyPropertyChangedFor(nameof(ActualFollowingCount))]
+    [NotifyPropertyChangedFor(nameof(ActualFansCount))]
+    [NotifyPropertyChangedFor(nameof(FollowerCountCompared))]
+    [NotifyPropertyChangedFor(nameof(FollowingCountCompared))]
     Info? comparedInfo = null;
 
     [RelayCommand]
     void SetComparedInfo(
         Info? info)
     {
+        logger.Log($"Setting compared info [{SelectedInfo.Username}]");
+
         ComparedInfo = ComparedInfo is null || ComparedInfo.FetchedAt != info?.FetchedAt ? info ?? null : null ;
     }
 
@@ -112,6 +136,73 @@ public partial class InfoViewModel : ObservableObject
     }
 
 
+    public int? ActualFollowersCount =>
+        ComparedInfo is null ? SelectedInfo.Followers?.Count : SelectedInfo.Followers?.Count - ComparedInfo?.Followers?.Count ?? null;
+
+    public int? ActualFollowingCount =>
+        ComparedInfo is null ? SelectedInfo.Following?.Count : SelectedInfo.Following?.Count - ComparedInfo?.Following?.Count ?? null;
+
+    public int? ActualFansCount =>
+        ComparedInfo is null ? SelectedInfo.Fans?.Count : SelectedInfo.Fans?.Count - ComparedInfo?.Fans?.Count ?? null;
+
+
+    public long? FollowerCountCompared =>
+        SelectedInfo.FollowersCount - ComparedInfo?.FollowersCount ?? null;
+
+    public long? FollowingCountCompared =>
+         SelectedInfo.FollowingCount - ComparedInfo?.FollowingCount ?? null;
+
+    public IEnumerable<InstaUserShort>? FollowersCompared
+    {
+        get
+        {
+            if (ComparedInfo is null)
+                return null;
+
+            IEnumerable<InstaUserShort>? addedFollowers = SelectedInfo.Followers.Except(ComparedInfo.Followers, userComparer);
+            addedFollowers.ForEach(follower => follower.IsVerified = true);
+
+            IEnumerable<InstaUserShort>? removedFollowers = ComparedInfo.Followers.Except(SelectedInfo.Followers, userComparer);
+            removedFollowers.ForEach(follower => follower.IsVerified = false);
+
+            return addedFollowers.Concat(removedFollowers);
+        }
+    }
+
+    public IEnumerable<InstaUserShort>? FollowingCompared
+    {
+        get
+        {
+            if (ComparedInfo is null)
+                return null;
+
+            IEnumerable<InstaUserShort>? addedFollowing = SelectedInfo.Following.Except(ComparedInfo.Following, userComparer);
+            addedFollowing.ForEach(following => following.IsVerified = true);
+
+            IEnumerable<InstaUserShort>? removedFollowing = ComparedInfo.Following.Except(SelectedInfo.Following, userComparer);
+            removedFollowing.ForEach(following => following.IsVerified = false);
+
+            return addedFollowing.Concat(removedFollowing);
+        }
+    }
+
+    public IEnumerable<InstaUserShort>? FansCompared
+    {
+        get
+        {
+            if (ComparedInfo is null)
+                return null;
+
+            IEnumerable<InstaUserShort>? addedFans = SelectedInfo.Fans.Except(ComparedInfo.Fans, userComparer);
+            addedFans.ForEach(fan => fan.IsVerified = true);
+
+            IEnumerable<InstaUserShort>? removedFans = ComparedInfo.Fans.Except(SelectedInfo.Fans, userComparer);
+            removedFans.ForEach(fan => fan.IsVerified = false);
+
+            return addedFans.Concat(removedFans);
+        }
+    }
+
 
     [RelayCommand]
     async Task GoBackAsync() =>
@@ -121,6 +212,8 @@ public partial class InfoViewModel : ObservableObject
     async Task CreateCurrentInfoAsync(
         string username)
     {
+        logger.Log($"Creating current info [{username}]");
+
         InstaUserInfo accountInfo = await infoManager.GetAccountInfoAsync(username);
         InstaStoryFriendshipStatus friendshipStatus = await infoManager.GetFirendshipStatusAsync(accountInfo.Pk);
 
@@ -138,9 +231,9 @@ public partial class InfoViewModel : ObservableObject
 
         if (newInfo.IsLoadable)
         {
-            newInfo.Followers = await infoManager.GetFollowersAsync(newInfo.Pk, config.FetchFollowerLimit);
-            newInfo.Following = await infoManager.GetFollowingAsync(newInfo.Pk, config.FetchFollowingLimit);
-            newInfo.Fans = newInfo.Followers.Except(newInfo.Following).ToList();
+            newInfo.Followers = await infoManager.GetFollowersAsync(newInfo.Pk, config.FetchFollowerLimit, config.FetchStatisitcsDelay);
+            newInfo.Following = await infoManager.GetFollowingAsync(newInfo.Pk, config.FetchFollowingLimit, config.FetchStatisitcsDelay);
+            newInfo.Fans = newInfo.Followers.Except(newInfo.Following, userComparer).ToList();
 
         }
 
@@ -148,26 +241,50 @@ public partial class InfoViewModel : ObservableObject
     }
 
 
-    public List<InstaUserShort>? SelectedListCollection
+    public IEnumerable<InstaUserShort> SelectedListCollection
     {
-        get => SelectedList switch
+        get
         {
-            SelectedList.Followers => SelectedInfo.Followers,
-            SelectedList.Following => SelectedInfo.Following,
-            SelectedList.Fans => SelectedInfo.Fans,
-            _ => null
-        } ?? new();
+            if (ComparedInfo is null)
+                return SelectedList switch
+                {
+                    SelectedList.Followers => SelectedInfo.Followers,
+                    SelectedList.Following => SelectedInfo.Following,
+                    SelectedList.Fans => SelectedInfo.Fans,
+                    _ => null
+                } ?? Enumerable.Empty<InstaUserShort>();
+
+            return SelectedList switch
+            {
+                SelectedList.Followers => FollowersCompared,
+                SelectedList.Following => FollowingCompared,
+                SelectedList.Fans => FansCompared,
+                _ => null
+            } ?? Enumerable.Empty<InstaUserShort>();
+        }
     }
 
     public string SelectedListEmptyMessage
     {
-        get => SelectedList switch
+        get
         {
-            SelectedList.Followers => "It looks like this account has no followers.",
-            SelectedList.Following => "It looks like this account is not following anyone.",
-            SelectedList.Fans => "It looks like this account has no fans.",
-            _ => "Please select a list to display!"
-        };
+            if (ComparedInfo is null)
+                return SelectedList switch
+                {
+                    SelectedList.Followers => "It looks like this account has no followers.",
+                    SelectedList.Following => "It looks like this account is not following anyone.",
+                    SelectedList.Fans => "It looks like this account has no fans.",
+                    _ => "Please select a list to display!"
+                };
+
+            return SelectedList switch
+            {
+                SelectedList.Followers => "It looks like this account hasnt lost or gained any followers.",
+                SelectedList.Following => "It looks like this account didnt follow or unfollow anyone.",
+                SelectedList.Fans => "It looks like this account hasnt lost or gained any fans.",
+                _ => "Please select a list to display!"
+            };
+        }
     }
 
     [ObservableProperty]
@@ -184,6 +301,8 @@ public partial class InfoViewModel : ObservableObject
     [RelayCommand]
     async Task AddNewAsync()
     {
+        logger.Log($"Adding new info [{SelectedInfo.Username}]");
+
         if (!await message.ShowQuestionAsync("Are you sure?", "Creating a new statistics creats a lot of API request, you shouldnt do this too often."))
             return;
 
@@ -200,6 +319,8 @@ public partial class InfoViewModel : ObservableObject
     [RelayCommand]
     async Task RemoveAsync()
     {
+        logger.Log($"Removing info [{SelectedInfo.Username}]");
+
         if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this entry will clear follower, following and fans statistics from this date and time. You can't undo this action."))
             return;
 

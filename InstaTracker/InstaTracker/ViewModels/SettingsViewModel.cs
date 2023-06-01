@@ -25,11 +25,11 @@ public partial class SettingsViewModel : ObservableObject
     public void ReloadAccountSettings(
         List<Account> savedAccounts)
     {
+        logger.Log("Reloading account settings");
+
         SavedAccounts = savedAccounts;
         AutoLogin = Config.AutoLoginId.HasValue;
         AutoLoginAccount = SavedAccounts.FirstOrDefault(account => account.Id == Config.AutoLoginId);
-
-        logger.Log("Reloaded account settings");
     }
 
 

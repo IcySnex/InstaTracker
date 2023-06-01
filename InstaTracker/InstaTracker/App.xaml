@@ -24,6 +24,9 @@
             <conv:IfDateTimeMatches x:Key="IfDateTimeMatches" />
             <conv:DateTimeFormatter x:Key="DateTimeFormatter" />
             <conv:IsListNullOrEmpty x:Key="IsListNullOrEmpty" />
+            <conv:IntToColor x:Key="IntToColor" />
+            <conv:IntToString x:Key="IntToString" />
+            <conv:BoolToAddedRemoved x:Key="BoolToAddedRemoved" />
 
             <!--#endregion-->
 
@@ -530,6 +533,64 @@
                                     <Span Text="{Binding IsPrivate, Converter={StaticResource BoolToPrivatePublic}}" />
                                     <Span Style="{StaticResource Subpoint}" Text="{Binding FullName, Converter={StaticResource IfNotNullOrEmptyParameter}, ConverterParameter=' | ‎'}" />
                                     <Span Style="{StaticResource Subpoint}" Text="{Binding FullName}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+            <!--#endregion-->
+
+            <!--#region InstaUserShortCompared-->
+            <DataTemplate x:Key="InstaUserShortComparedTemplate">
+                <Frame
+                    x:Name="root"
+                    Margin="12,0"
+                    Padding="12,4"
+                    BackgroundColor="Transparent"
+                    CornerRadius="8"
+                    HasShadow="False">
+
+                    <Grid
+                        tlk:TouchEffect.AnimationDuration="100"
+                        tlk:TouchEffect.Command="{Binding Parent.BindingContext.OpenAccountUrlCommand, Source={x:Reference root}}"
+                        tlk:TouchEffect.CommandParameter="{Binding UserName}"
+                        tlk:TouchEffect.NormalOpacity="1"
+                        tlk:TouchEffect.PressedOpacity="0.4"
+                        tlk:TouchEffect.PressedScale="0.98">
+                        <Image
+                            HeightRequest="44"
+                            HorizontalOptions="Start"
+                            Source="{Binding ProfilePicture, TargetNullValue=nopicture.png}"
+                            WidthRequest="44">
+                            <Image.Clip>
+                                <EllipseGeometry
+                                    Center="{OnPlatform Android='22,25',
+                                                        iOS='22,24'}"
+                                    RadiusX="22"
+                                    RadiusY="22" />
+                            </Image.Clip>
+                        </Image>
+
+                        <Label
+                            Margin="56,-2,0,0"
+                            LineBreakMode="TailTruncation"
+                            Opacity="1"
+                            Style="{StaticResource TitleSecondary}"
+                            Text="{Binding UserName, TargetNullValue=N/A}"
+                            TextColor="{Binding IsVerified, Converter={StaticResource BoolToAddedRemoved}}" />
+                        <Label Margin="56,28,0,0" LineBreakMode="TailTruncation">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding IsPrivate, Converter={StaticResource BoolToPrivatePublic}}" TextColor="{Binding IsVerified, Converter={StaticResource BoolToAddedRemoved}, ConverterParameter=30}" />
+                                    <Span
+                                        Style="{StaticResource Subpoint}"
+                                        Text="{Binding FullName, Converter={StaticResource IfNotNullOrEmptyParameter}, ConverterParameter=' | ‎'}"
+                                        TextColor="{Binding IsVerified, Converter={StaticResource BoolToAddedRemoved}, ConverterParameter=80}" />
+                                    <Span
+                                        Style="{StaticResource Subpoint}"
+                                        Text="{Binding FullName}"
+                                        TextColor="{Binding IsVerified, Converter={StaticResource BoolToAddedRemoved}, ConverterParameter=80}" />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>

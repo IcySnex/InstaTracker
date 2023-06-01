@@ -7,7 +7,6 @@ using InstaTracker.Services;
 using InstaTracker.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,6 +43,8 @@ public partial class SearchViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
+        logger.Log("Initializing SearchViewModel");
+
         IsRefreshing = true;
         await snackBar.RunAsync(
             "Loading search history...",
@@ -60,8 +61,6 @@ public partial class SearchViewModel : ObservableObject
                     snackBar.ErrorCallback("Could not reload account information from Instagram.").Invoke(new("Failed reloading search history!", new("No account is currently logged in.")));
             });
         IsRefreshing = false;
-
-        logger.Log("Initialized SearchViewModel");
     }
 
 
@@ -70,6 +69,8 @@ public partial class SearchViewModel : ObservableObject
     public async Task<bool> LoadSearchHistoryAsync(
         bool reloadAll = false)
     {
+        logger.Log("Loading search history");
+
         SearchHistory.Clear();
         if (!reloadAll || accountManager.LoggedAccount is null)
         {
@@ -89,34 +90,6 @@ public partial class SearchViewModel : ObservableObject
         return true;
     }
 
-    [RelayCommand(AllowConcurrentExecutions = true)]
-    async Task RemoveAccountFromHistoryWarningAsync(
-        string username)
-    {
-        if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this account will clear all follower, following and fans statistics ever created. You can't undo this action."))
-            return;
-
-        await RemoveAccountFromHistoryAsync(username);
-    }
-
-    public async Task RemoveAccountFromHistoryAsync(
-        string username)
-    {
-        await snackBar.RunAsync(
-            "Deleting all account statistics...",
-            Task.WhenAll(
-                database.RemoveAsync<SearchedAccount>(searchedAccount => searchedAccount.Username == username),
-                database.RemoveAsync<Info>(info => info.Username == username)),
-            snackBar.ErrorCallback());
-
-        IsRefreshing = true;
-        await snackBar.RunAsync(
-            "Loading search history...",
-            LoadSearchHistoryAsync(),
-            snackBar.ErrorCallback());
-        IsRefreshing = false;
-    }
-
 
     [ObservableProperty]
     bool isRefreshing = false;
@@ -126,6 +99,8 @@ public partial class SearchViewModel : ObservableObject
     {
         if (IsRefreshing)
             return;
+
+        logger.Log("Refreshing search history accounts");
 
         IsRefreshing = true;
         await snackBar.RunAsync(
@@ -162,6 +137,8 @@ public partial class SearchViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanSearchCommandExecute))]
     async Task SearchAsync()
     {
+        logger.Log($"Searching accounts [{SearchUsername}]");
+
         await snackBar.RunAsync(
             "Searching for users...",
             searchmanager.SearchAccountsAsync(SearchUsername),
@@ -176,6 +153,8 @@ public partial class SearchViewModel : ObservableObject
     [RelayCommand]
     void ClearSearch()
     {
+        logger.Log("Clearing serarch");
+
         SearchResults = null;
         ShowSearchResults = false;
     }
@@ -185,6 +164,8 @@ public partial class SearchViewModel : ObservableObject
     async Task AddAccountAsync(
         InstaUser user)
     {
+        logger.Log($"Adding account [{user.UserName}]");
+
         if (SearchHistory.Any(searchedAccount => searchedAccount.Username == user.UserName))
         {
             snackBar.ErrorCallback().Invoke(new("Failed adding account!", new("This account already exists. You can open it from the search history.")));
@@ -198,6 +179,37 @@ public partial class SearchViewModel : ObservableObject
             return;
 
         ClearSearchCommand.Execute(null);
+
+        IsRefreshing = true;
+        await snackBar.RunAsync(
+            "Loading search history...",
+            LoadSearchHistoryAsync(),
+            snackBar.ErrorCallback());
+        IsRefreshing = false;
+    }
+
+
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    async Task RemoveAccountFromHistoryWarningAsync(
+        string username)
+    {
+        if (!await message.ShowQuestionAsync("Are you sure?", "Deleting this account will clear all follower, following and fans statistics ever created. You can't undo this action."))
+            return;
+
+        await RemoveAccountFromHistoryAsync(username);
+    }
+
+    public async Task RemoveAccountFromHistoryAsync(
+        string username)
+    {
+        logger.Log("Remving account from history");
+
+        await snackBar.RunAsync(
+            "Deleting all account statistics...",
+            Task.WhenAll(
+                database.RemoveAsync<SearchedAccount>(searchedAccount => searchedAccount.Username == username),
+                database.RemoveAsync<Info>(info => info.Username == username)),
+            snackBar.ErrorCallback());
 
         IsRefreshing = true;
         await snackBar.RunAsync(

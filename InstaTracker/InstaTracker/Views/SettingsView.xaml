@@ -69,5 +69,16 @@
                 Text="{Binding Config.FetchFollowingLimit, Mode=TwoWay}"
                 WidthRequest="100" />
         </Frame>
+
+        <Frame
+            AutomationId="The delay in ms to wait inbetween follower/following fetching requests"
+            ClassId="Fetch Statisitcs Delay"
+            Style="{StaticResource SettingsCard}">
+            <com:Entry
+                Margin="0,0,0,-20"
+                Keyboard="Numeric"
+                Text="{Binding Config.FetchStatisitcsDelay, Mode=TwoWay}"
+                WidthRequest="100" />
+        </Frame>
     </StackLayout>
 </com:ScrollablePage>

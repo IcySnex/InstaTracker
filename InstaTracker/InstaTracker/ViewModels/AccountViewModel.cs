@@ -45,6 +45,8 @@ public partial class AccountViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
+        logger.Log("Initializing AccountViewModel");
+
         if (Config.AutoLoginId.HasValue && (await database.GetAsync<Account>(account => account.Id == Config.AutoLoginId.Value)).FirstOrDefault() is Account savedLogin)
             await snackBar.RunAsync(
                 "Logging in...",
@@ -57,8 +59,6 @@ public partial class AccountViewModel : ObservableObject
             "Loading saved accounts...",
             LoadSavedAccountsAsync(),
             snackBar.ErrorCallback());
-
-        logger.Log("Initialized AccountViewModel");
     }
 
 
@@ -67,6 +67,8 @@ public partial class AccountViewModel : ObservableObject
 
     async Task LoadSavedAccountsAsync()
     {
+        logger.Log("Loading saved accounts");
+
         SavedAccounts = await database.GetAsync<Account>();
         settingsViewModel.ReloadAccountSettings(SavedAccounts);
     }
@@ -75,6 +77,8 @@ public partial class AccountViewModel : ObservableObject
     async Task RemoveSavedAccountAsync(
         int id)
     {
+        logger.Log($"Removing saved account [{id}]");
+
         if (!await snackBar.RunAsync(
             "Removing saved account...",
             database.RemoveAsync<Account>(account => account.Id == id),
@@ -103,6 +107,8 @@ public partial class AccountViewModel : ObservableObject
     async Task LoginAsync(
         Account? account = null)
     {
+        logger.Log($"Loging in [{(account?.Username ?? "state")}]");
+
         if (!await snackBar.RunAsync(
                 "Logging in...",
                 account is null ?
@@ -141,6 +147,8 @@ public partial class AccountViewModel : ObservableObject
     [RelayCommand]
     async Task LogoutAsync()
     {
+        logger.Log("Logging out");
+
         await snackBar.DisplayAsync("Logging out...", delay: 1000);
         AccountManager.Logout();
     }

@@ -123,9 +123,22 @@
 
         <CollectionView
             Grid.Row="1"
-            Margin="0,8,0,0"
-            ItemTemplate="{StaticResource InstaUserShortTemplate}"
             ItemsSource="{Binding SelectedListCollection, Mode=OneWay}">
+            <CollectionView.Triggers>
+                <DataTrigger
+                    Binding="{Binding ComparedInfo, Converter={StaticResource IsNull}}"
+                    TargetType="CollectionView"
+                    Value="True">
+                    <Setter Property="ItemTemplate" Value="{StaticResource InstaUserShortTemplate}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding ComparedInfo, Converter={StaticResource IsNull}}"
+                    TargetType="CollectionView"
+                    Value="False">
+                    <Setter Property="ItemTemplate" Value="{StaticResource InstaUserShortComparedTemplate}" />
+                </DataTrigger>
+            </CollectionView.Triggers>
 
             <CollectionView.Header>
                 <StackLayout Spacing="12">
@@ -212,7 +225,8 @@
                                     <Label
                                         Grid.Column="1"
                                         LineBreakMode="NoWrap"
-                                        Text="+18" />
+                                        Text="{Binding FollowerCountCompared, Mode=OneWay, Converter={StaticResource IntToString}}"
+                                        TextColor="{Binding FollowerCountCompared, Mode=OneWay, Converter={StaticResource IntToColor}}" />
                                     <Label
                                         Grid.ColumnSpan="2"
                                         Margin="0,28,0,0"
@@ -228,10 +242,26 @@
                             BackgroundColor="{DynamicResource bd01}"
                             CornerRadius="8">
                             <ScrollView Padding="12" Orientation="Horizontal">
-                                <StackLayout Spacing="-6">
-                                    <Label Style="{StaticResource Title}" Text="{Binding SelectedInfo.FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
-                                    <Label Style="{StaticResource ContentSecondary}" Text="Following" />
-                                </StackLayout>
+                                <Grid HeightRequest="48" VerticalOptions="Start">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        LineBreakMode="NoWrap"
+                                        Style="{StaticResource Title}"
+                                        Text="{Binding SelectedInfo.FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        LineBreakMode="NoWrap"
+                                        Text="{Binding FollowingCountCompared, Mode=OneWay, Converter={StaticResource IntToString}}"
+                                        TextColor="{Binding FollowingCountCompared, Mode=OneWay, Converter={StaticResource IntToColor}}" />
+                                    <Label
+                                        Grid.ColumnSpan="2"
+                                        Margin="0,28,0,0"
+                                        Style="{StaticResource ContentSecondary}"
+                                        Text="Following" />
+                                </Grid>
                             </ScrollView>
                         </Frame>
                     </Grid>
@@ -250,7 +280,7 @@
                                 <com:Chip.FormattedText>
                                     <FormattedString>
                                         <Span Text="Followers (" />
-                                        <Span Text="{Binding SelectedInfo.Followers.Count, Mode=OneWay}" />
+                                        <Span Text="{Binding ActualFollowersCount, Mode=OneWay, Converter={StaticResource IntToString}}" />
                                         <Span Text=")" />
                                     </FormattedString>
                                 </com:Chip.FormattedText>
@@ -263,7 +293,7 @@
                                 <com:Chip.FormattedText>
                                     <FormattedString>
                                         <Span Text="Following (" />
-                                        <Span Text="{Binding SelectedInfo.Following.Count, Mode=OneWay}" />
+                                        <Span Text="{Binding ActualFollowingCount, Mode=OneWay, Converter={StaticResource IntToString}}" />
                                         <Span Text=")" />
                                     </FormattedString>
                                 </com:Chip.FormattedText>
@@ -276,7 +306,7 @@
                                 <com:Chip.FormattedText>
                                     <FormattedString>
                                         <Span Text="Fans (" />
-                                        <Span Text="{Binding SelectedInfo.Fans.Count, Mode=OneWay, FallbackValue='N/A'}" />
+                                        <Span Text="{Binding ActualFansCount, Mode=OneWay, Converter={StaticResource IntToString}}" />
                                         <Span Text=")" />
                                     </FormattedString>
                                 </com:Chip.FormattedText>

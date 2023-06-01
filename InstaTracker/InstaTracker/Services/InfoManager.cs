@@ -55,6 +55,7 @@ public class InfoManager
     public async Task<List<InstaUserShort>> GetFollowersAsync(
         long id,
         int max = 200,
+        int delay = 1000,
         string query = "",
         bool mutualsFirst = false)
     {
@@ -72,6 +73,7 @@ public class InfoManager
                 break;
 
             followers.AddRange(result.Value);
+            await Task.Delay(delay);
         }
 
         return new HashSet<InstaUserShort>(followers).ToList();
@@ -81,6 +83,7 @@ public class InfoManager
     public async Task<List<InstaUserShort>> GetFollowingAsync(
         long id,
         int max = 200,
+        int delay = 1000,
         string query = "")
     {
         instagram.ThrowIfUnauthenticated("Failed getting following!", logger);
@@ -97,6 +100,7 @@ public class InfoManager
                 break;
 
             following.AddRange(result.Value);
+            await Task.Delay(delay);
         }
 
         return new HashSet<InstaUserShort>(following).ToList();
