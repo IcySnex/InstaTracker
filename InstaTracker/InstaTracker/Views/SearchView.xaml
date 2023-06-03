@@ -57,13 +57,12 @@
         </Frame>
 
         <Label
-            Margin="16,0,0,-8"
+            Margin="{x:OnPlatform Android='16,0,0,-8', iOS='8,0,0,-8'}"
             FontAttributes="Italic"
             IsVisible="{Binding ShowSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
             Text="History"
             TextColor="{DynamicResource tl01}" />
         <StackLayout
-            Margin="12,0"
             BindableLayout.ItemTemplate="{StaticResource SearchedAccountDataTemplate}"
             BindableLayout.ItemsSource="{Binding SearchHistory}"
             IsVisible="{Binding ShowSearchResults, Mode=OneWay, Converter={StaticResource InverseBool}}"
@@ -75,13 +74,12 @@
         </StackLayout>
 
         <Label
-            Margin="16,0,0,-8"
+            Margin="{x:OnPlatform Android='16,0,0,-8', iOS='8,0,0,-8'}"
             FontAttributes="Italic"
             IsVisible="{Binding ShowSearchResults, Mode=OneWay}"
             Text="Search Results"
             TextColor="{DynamicResource tl01}" />
         <StackLayout
-            Margin="12,0"
             BindableLayout.ItemTemplate="{StaticResource InstaUserDataTemplate}"
             BindableLayout.ItemsSource="{Binding SearchResults, Mode=OneWay}"
             IsVisible="{Binding ShowSearchResults, Mode=OneWay}"

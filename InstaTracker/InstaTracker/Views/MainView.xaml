@@ -17,16 +17,13 @@
 
     <local:HomeView Title="Home" IconImageSource="home.png" />
 
-    <NavigationPage
-        Title="Search"
-        BackgroundColor="{DynamicResource bd00}"
-        IconImageSource="search.png">
+    <NavigationPage Title="Search" BackgroundColor="{DynamicResource bd00}" IconImageSource="search.png">
         <x:Arguments>
-            <local:SearchView />
+            <local:SearchView/>
         </x:Arguments>
     </NavigationPage>
 
-    <local:AccountView Title="Account" IconImageSource="account.png" />
+    <local:AccountView Title="Account" IconImageSource="account.png"/>
 
-    <local:SettingsView Title="Settings" IconImageSource="settings.png" />
+    <local:SettingsView Title="Settings" IconImageSource="settings.png"/>
 </TabbedPage>

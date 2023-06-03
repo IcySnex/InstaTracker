@@ -62,6 +62,19 @@ public static class Extentions
         return ColorAnimation(input, "BackgroundColorAnimation", transform, c => input.BackgroundColor = c, length, easing);
     }
 
+    public static Task<bool> ColorTextTo(this Label input,
+        Color color,
+        uint length = 250,
+        Easing? easing = null)
+    {
+        Func<double, Color> transform = t =>
+          Color.FromRgba(input.TextColor.R + t * (color.R - input.TextColor.R),
+                         input.TextColor.G + t * (color.G - input.TextColor.G),
+                         input.TextColor.B + t * (color.B - input.TextColor.B),
+                         input.TextColor.A + t * (color.A - input.TextColor.A));
+        return ColorAnimation(input, "TextColorAnimation", transform, c => input.TextColor = c, length, easing);
+    }
+
     static Task<bool> ColorAnimation(
         VisualElement element,
         string name,
@@ -114,5 +127,22 @@ public static class Extentions
         logger.Log(message, innerException);
 
         throw new(message, innerException);
+    }
+
+
+    public static string ToFormattedString(this int? input)
+    {
+        if (input is null)
+            return "0";
+
+        return input > 0 ? $"+{input}" : input < 0 ? input.ToString() : "0";
+    }
+
+    public static string ToFormattedString(this long? input)
+    {
+        if (input is null)
+            return "0";
+
+        return input > 0 ? $"+{input}" : input < 0 ? input.ToString() : "0";
     }
 }

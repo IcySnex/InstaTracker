@@ -24,6 +24,7 @@ public partial class InfoViewModel : ObservableObject
     readonly Navigation navigation;
     readonly Message message;
     readonly SnackBar snackBar;
+    readonly AccountManager accountManager;
     readonly InfoManager infoManager;
     readonly SearchViewModel searchViewModel;
 
@@ -36,6 +37,7 @@ public partial class InfoViewModel : ObservableObject
         Navigation navigation,
         Message message,
         SnackBar snackBar,
+        AccountManager accountManager,
         InfoManager infoManager,
         SearchViewModel searchViewModel)
     {
@@ -45,6 +47,7 @@ public partial class InfoViewModel : ObservableObject
         this.navigation = navigation;
         this.message = message;
         this.snackBar = snackBar;
+        this.accountManager = accountManager;
         this.infoManager = infoManager;
         this.searchViewModel = searchViewModel;
     }
@@ -108,6 +111,7 @@ public partial class InfoViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SelectedListCollection))]
+    [NotifyPropertyChangedFor(nameof(SelectedListEmptyMessage))]
     [NotifyPropertyChangedFor(nameof(ActualFollowersCount))]
     [NotifyPropertyChangedFor(nameof(ActualFollowingCount))]
     [NotifyPropertyChangedFor(nameof(ActualFansCount))]
@@ -136,21 +140,22 @@ public partial class InfoViewModel : ObservableObject
     }
 
 
-    public int? ActualFollowersCount =>
-        ComparedInfo is null ? SelectedInfo.Followers?.Count : SelectedInfo.Followers?.Count - ComparedInfo?.Followers?.Count ?? null;
+    public string ActualFollowersCount =>
+        ComparedInfo is null ? SelectedInfo.Followers?.Count.ToString() ?? "0" : (SelectedInfo.Followers?.Count - ComparedInfo?.Followers?.Count).ToFormattedString() ?? "0";
 
-    public int? ActualFollowingCount =>
-        ComparedInfo is null ? SelectedInfo.Following?.Count : SelectedInfo.Following?.Count - ComparedInfo?.Following?.Count ?? null;
+    public string ActualFollowingCount =>
+        ComparedInfo is null ? SelectedInfo.Following?.Count.ToString() ?? "0" : (SelectedInfo.Following?.Count - ComparedInfo?.Following?.Count).ToFormattedString() ?? "0";
 
-    public int? ActualFansCount =>
-        ComparedInfo is null ? SelectedInfo.Fans?.Count : SelectedInfo.Fans?.Count - ComparedInfo?.Fans?.Count ?? null;
+    public string ActualFansCount =>
+        ComparedInfo is null ? SelectedInfo.Fans?.Count.ToString() ?? "0" : (SelectedInfo.Fans?.Count - ComparedInfo?.Fans?.Count).ToFormattedString() ?? "0";
 
 
-    public long? FollowerCountCompared =>
-        SelectedInfo.FollowersCount - ComparedInfo?.FollowersCount ?? null;
 
-    public long? FollowingCountCompared =>
-         SelectedInfo.FollowingCount - ComparedInfo?.FollowingCount ?? null;
+    public string FollowerCountCompared =>
+        (SelectedInfo.FollowersCount - ComparedInfo?.FollowersCount).ToFormattedString() ?? "0";
+
+    public string FollowingCountCompared =>
+        (SelectedInfo.FollowingCount - ComparedInfo?.FollowingCount).ToFormattedString() ?? "0";
 
     public IEnumerable<InstaUserShort>? FollowersCompared
     {
@@ -217,7 +222,8 @@ public partial class InfoViewModel : ObservableObject
         InstaUserInfo accountInfo = await infoManager.GetAccountInfoAsync(username);
         InstaStoryFriendshipStatus friendshipStatus = await infoManager.GetFirendshipStatusAsync(accountInfo.Pk);
 
-        Info newInfo = new(accountInfo.Username,
+        Info newInfo = new(
+            accountInfo.Username,
             accountInfo.Pk,
             accountInfo.HdProfilePicUrlInfo.Uri,
             friendshipStatus.IsPrivate,
@@ -303,7 +309,7 @@ public partial class InfoViewModel : ObservableObject
     {
         logger.Log($"Adding new info [{SelectedInfo.Username}]");
 
-        if (!await message.ShowQuestionAsync("Are you sure?", "Creating a new statistics creats a lot of API request, you shouldnt do this too often."))
+        if (!await message.ShowQuestionAsync("Are you sure?", "Creating a new statistics creates a lot of API request, you shouldnt do this too often."))
             return;
 
         await snackBar.RunAsync(

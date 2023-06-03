@@ -85,12 +85,12 @@
                 </Image>
 
                 <Label
-                    Margin="66,-2,110,0"
+                    Margin="66,0,110,0"
                     LineBreakMode="TailTruncation"
                     Style="{StaticResource TitleSecondary}"
                     Text="{Binding AccountManager.LoggedAccount.UserName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
                 <Label
-                    Margin="66,28,110,0"
+                    Margin="66,26,110,0"
                     LineBreakMode="TailTruncation"
                     Text="{Binding AccountManager.LoggedAccount.FullName, Mode=OneWay, FallbackValue=N/A, TargetNullValue=N/A}" />
 
@@ -104,14 +104,13 @@
         </Frame>
 
         <Label
-            Margin="16,0,0,-8"
+            Margin="{x:OnPlatform Android='16,0,0,-8', iOS='8,0,0,-8'}"
             FontAttributes="Italic"
             IsVisible="{Binding AccountManager.LoggedAccount, Mode=OneWay, Converter={StaticResource IsNull}}"
             Text="Saved Accounts"
             TextColor="{DynamicResource tl01}" />
         <StackLayout
             x:Name="SavedAccountsCollection"
-            Margin="12,0"
             BindableLayout.ItemTemplate="{StaticResource SavedAccountDataTemplate}"
             BindableLayout.ItemsSource="{Binding SavedAccounts, Mode=OneWay}"
             IsVisible="{Binding AccountManager.LoggedAccount, Mode=OneWay, Converter={StaticResource IsNull}}"

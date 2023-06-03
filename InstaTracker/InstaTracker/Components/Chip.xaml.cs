@@ -105,7 +105,6 @@ public partial class Chip : Grid
         async (bindable, oldValue, newValue) =>
         {
             Chip view = (Chip)bindable;
-            view.textLabel.TextColor = (bool)newValue ? view.TextColorChecked : view.TextColor;
             IconTintColorEffect.SetTintColor(view.iconImage, (bool)newValue ? view.TextColorChecked : view.TextColor);
 
             if (view.ShowCheckmark)
@@ -113,15 +112,17 @@ public partial class Chip : Grid
                 if ((bool)newValue)
                     view.checkIcon.IsVisible = true;
                 await Task.WhenAll(
-                    view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 250, Easing.Linear),
-                    view.borderContainer.ColorBackgroundTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 250, Easing.Linear),
+                    view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 150, Easing.Linear),
+                    view.borderContainer.ColorBackgroundTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 150, Easing.Linear),
+                    view.textLabel.ColorTextTo((bool)newValue ? view.TextColorChecked : view.TextColor, 150, Easing.Linear),
                     view.checkIcon.WidthTo((bool)newValue ? 20 : 0, 100, Easing.Linear, (f, b) => view.checkIcon.IsVisible = (bool)newValue));
                 return;
             }
 
             await Task.WhenAll(
-                view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 250, Easing.Linear),
-                view.borderContainer.ColorBackgroundTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 250, Easing.Linear));
+                view.container.ColorBackgroundTo((bool)newValue ? view.ChipBackgroundColorChecked : view.ChipBackgroundColor, 150, Easing.Linear),
+                view.borderContainer.ColorBackgroundTo((bool)newValue ? view.BorderColorChecked : view.BorderColor, 150, Easing.Linear),
+                    view.textLabel.ColorTextTo((bool)newValue ? view.TextColorChecked : view.TextColor, 150, Easing.Linear));
         });
 
     public bool IsChecked
