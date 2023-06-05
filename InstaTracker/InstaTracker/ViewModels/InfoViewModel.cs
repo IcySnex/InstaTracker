@@ -125,7 +125,7 @@ public partial class InfoViewModel : ObservableObject
     {
         logger.Log($"Setting compared info [{SelectedInfo.Username}]");
 
-        ComparedInfo = ComparedInfo is null || ComparedInfo.FetchedAt != info?.FetchedAt ? info ?? null : null ;
+        ComparedInfo = ComparedInfo?.FetchedAt != info?.FetchedAt ? info ?? null : null ;
     }
 
     public IEnumerable<Info> CompareableInfos =>
@@ -161,7 +161,7 @@ public partial class InfoViewModel : ObservableObject
     {
         get
         {
-            if (ComparedInfo is null)
+            if (ComparedInfo is null || ComparedInfo.Followers is null || SelectedInfo is null || SelectedInfo.Followers is null)
                 return null;
 
             IEnumerable<InstaUserShort>? addedFollowers = SelectedInfo.Followers.Except(ComparedInfo.Followers, userComparer);
@@ -178,7 +178,7 @@ public partial class InfoViewModel : ObservableObject
     {
         get
         {
-            if (ComparedInfo is null)
+            if (ComparedInfo is null || ComparedInfo.Following is null || SelectedInfo is null || SelectedInfo.Following is null)
                 return null;
 
             IEnumerable<InstaUserShort>? addedFollowing = SelectedInfo.Following.Except(ComparedInfo.Following, userComparer);
@@ -195,13 +195,13 @@ public partial class InfoViewModel : ObservableObject
     {
         get
         {
-            if (ComparedInfo is null)
+            if (ComparedInfo is null || ComparedInfo.Fans is null || SelectedInfo is null || SelectedInfo.Fans is null)
                 return null;
 
             IEnumerable<InstaUserShort>? addedFans = SelectedInfo.Fans.Except(ComparedInfo.Fans, userComparer);
             addedFans.ForEach(fan => fan.IsVerified = true);
 
-            IEnumerable<InstaUserShort>? removedFans = ComparedInfo.Fans.Except(SelectedInfo.Fans, userComparer);
+            IEnumerable<InstaUserShort> removedFans = ComparedInfo.Fans.Except(SelectedInfo.Fans, userComparer);
             removedFans.ForEach(fan => fan.IsVerified = false);
 
             return addedFans.Concat(removedFans);
@@ -251,6 +251,7 @@ public partial class InfoViewModel : ObservableObject
     {
         get
         {
+
             if (ComparedInfo is null)
                 return SelectedList switch
                 {
@@ -283,6 +284,8 @@ public partial class InfoViewModel : ObservableObject
                     _ => "Please select a list to display!"
                 };
 
+            if (ComparedInfo.Fans is null || SelectedInfo is null || SelectedInfo.Fans is null)
+                return "You cant compoare statisitcs from a private and a public state.";
             return SelectedList switch
             {
                 SelectedList.Followers => "It looks like this account hasnt lost or gained any followers.",

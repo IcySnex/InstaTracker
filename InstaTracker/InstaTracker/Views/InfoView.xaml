@@ -34,8 +34,8 @@
                 HorizontalScrollBarVisibility="Never"
                 Orientation="Horizontal">
                 <StackLayout
-                    HeightRequest="36"
                     Margin="12,0"
+                    HeightRequest="36"
                     Orientation="Horizontal"
                     Spacing="8">
                     <Button
@@ -111,9 +111,9 @@
                         WidthRequest="2" />
 
                     <StackLayout
-                        HeightRequest="36"
                         BindableLayout.ItemTemplate="{StaticResource CompareInfoTemplate}"
                         BindableLayout.ItemsSource="{Binding CompareableInfos, Mode=OneWay}"
+                        HeightRequest="36"
                         Orientation="Horizontal"
                         Spacing="8">
 
@@ -130,9 +130,9 @@
 
 
         <CollectionView
-                Margin="-12,0"
-                Grid.Row="1"
-                ItemsSource="{Binding SelectedListCollection, Mode=OneWay}">
+            Grid.Row="1"
+            Margin="-12,0"
+            ItemsSource="{Binding SelectedListCollection, Mode=OneWay}">
             <CollectionView.Triggers>
                 <DataTrigger
                     Binding="{Binding ComparedInfo, Converter={StaticResource IsNull}}"
@@ -225,27 +225,27 @@
                             BackgroundColor="{DynamicResource bd01}"
                             CornerRadius="8">
                             <ScrollView Padding="12" Orientation="Horizontal">
-                                <StackLayout Spacing="4" Orientation="Horizontal">
-                                    <Grid HeightRequest="48" VerticalOptions="Fill">
-                                        <Label
-                                            HorizontalOptions="Start"
-                                            LineBreakMode="NoWrap"
-                                            Style="{StaticResource Title}"
-                                            Text="{Binding SelectedInfo.FollowersCount, Mode=OneWay, TargetNullValue='N/A'}" />
-                                        <Label
-                                            HorizontalOptions="Start"
-                                            LineBreakMode="NoWrap"
-                                            Margin="0,28,0,0"
-                                            Style="{StaticResource ContentSecondary}"
-                                            Text="Followers" />
-                                    </Grid>
+                                <Grid HeightRequest="48" VerticalOptions="Fill">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        LineBreakMode="NoWrap"
+                                        Style="{StaticResource Title}"
+                                        Text="{Binding SelectedInfo.FollowersCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                                    <Label
+                                        Margin="0,28,0,0"
+                                        LineBreakMode="NoWrap"
+                                        Style="{StaticResource ContentSecondary}"
+                                        Text="Followers" />
 
                                     <Label
-                                        HorizontalOptions="End"
+                                        Grid.Column="1"
                                         LineBreakMode="NoWrap"
                                         Text="{Binding FollowerCountCompared, Mode=OneWay}"
                                         TextColor="{Binding FollowerCountCompared, Mode=OneWay, Converter={StaticResource IntToColor}}" />
-                                    </StackLayout>
+                                </Grid>
                             </ScrollView>
                         </Frame>
 
@@ -255,27 +255,27 @@
                             BackgroundColor="{DynamicResource bd01}"
                             CornerRadius="8">
                             <ScrollView Padding="12" Orientation="Horizontal">
-                                <StackLayout Spacing="4" Orientation="Horizontal">
-                                    <Grid HeightRequest="48" VerticalOptions="Fill">
-                                        <Label
-                                            HorizontalOptions="Start"
-                                            LineBreakMode="NoWrap"
-                                            Style="{StaticResource Title}"
-                                            Text="{Binding SelectedInfo.FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
-                                        <Label
-                                            HorizontalOptions="Start"
-                                            LineBreakMode="NoWrap"
-                                            Margin="0,28,0,0"
-                                            Style="{StaticResource ContentSecondary}"
-                                            Text="Following" />
-                                    </Grid>
+                                <Grid HeightRequest="48" VerticalOptions="Fill">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        LineBreakMode="NoWrap"
+                                        Style="{StaticResource Title}"
+                                        Text="{Binding SelectedInfo.FollowingCount, Mode=OneWay, TargetNullValue='N/A'}" />
+                                    <Label
+                                        Margin="0,28,0,0"
+                                        LineBreakMode="NoWrap"
+                                        Style="{StaticResource ContentSecondary}"
+                                        Text="Followers" />
 
                                     <Label
-                                        HorizontalOptions="End"
+                                        Grid.Column="1"
                                         LineBreakMode="NoWrap"
                                         Text="{Binding FollowingCountCompared, Mode=OneWay}"
                                         TextColor="{Binding FollowingCountCompared, Mode=OneWay, Converter={StaticResource IntToColor}}" />
-                                    </StackLayout>
+                                </Grid>
                             </ScrollView>
                         </Frame>
                     </Grid>
@@ -285,7 +285,10 @@
                         HorizontalScrollBarVisibility="Never"
                         IsVisible="{Binding SelectedInfo.IsLoadable, Mode=OneWay}"
                         Orientation="Horizontal">
-                        <StackLayout Margin="12,0" Orientation="Horizontal" Spacing="8">
+                        <StackLayout
+                            Margin="12,0"
+                            Orientation="Horizontal"
+                            Spacing="8">
                             <com:Chip
                                 Command="{Binding ShowPressedCommand}"
                                 CommandParameter="Followers"
@@ -328,17 +331,16 @@
                         </StackLayout>
                     </ScrollView>
 
-                    <Label
-                        Margin="12,0"
-                        IsVisible="{Binding SelectedListCollection, Mode=OneWay, Converter={StaticResource IsListNullOrEmpty}}"
-                        Text="{Binding SelectedListEmptyMessage, Mode=OneWay}" />
+                    <Grid Margin="12,-12,0,0">
+                        <Label IsVisible="{Binding SelectedListCollection, Mode=OneWay, Converter={StaticResource IsListNullOrEmpty}}" Text="{Binding SelectedListEmptyMessage, Mode=OneWay}" />
 
-                    <Label
-                        Margin="12,-35,12,0"
-                        BackgroundColor="{DynamicResource bd00}"
-                        HorizontalTextAlignment="Center"
-                        IsVisible="{Binding SelectedInfo.IsLoadable, Converter={StaticResource InverseBool}, Mode=OneWay}"
-                        Text="This account is private. You must be a follower to load account statistics like followers, following and fans" />
+                        <Label
+                            Padding="0,12,0,0"
+                            BackgroundColor="{DynamicResource bd00}"
+                            HorizontalTextAlignment="Center"
+                            IsVisible="{Binding SelectedInfo.IsLoadable, Converter={StaticResource InverseBool}, Mode=OneWay}"
+                            Text="This account is private. You must be a follower to load account statistics like followers, following and fans" />
+                    </Grid>
                     <Button
                         Command="{Binding SendFollowRequestCommand}"
                         CornerRadius="4"
