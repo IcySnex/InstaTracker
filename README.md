@@ -35,6 +35,29 @@ By pressing the '=' icon on the top you can compare different states to each oth
 ‎
 ‏‏‎ ‎
 ## Screenshots
-| Home | Search | Account | Settings | Info
-|---|---|---|---|---|
-| <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/home.jpg?raw=true" height="350"> | <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/search-result.jpg?raw=true" height="350"> | <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/account.jpg?raw=true" height="350"> | <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/settings.jpg?raw=true" height="350"> | <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/info.jpg?raw=true" height="350"> |
+<table>
+  <tr>
+    <th>Home</th>
+    <th>Search</th>
+    <th>Account</th>
+    <th>Settings</th>
+    <th>Info</th>
+  </tr>
+  <tr>
+    <td>
+     <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/home.jpg?raw=true" height="350">
+    </td>
+    <td>
+     <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/search-result.jpg?raw=true" height="350">
+    </td>
+    <td>
+     <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/account.jpg?raw=true" height="350">
+    </td>
+    <td>
+     <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/settings.jpg?raw=true" height="350">
+    </td>
+    <td>
+     <img src="https://github.com/IcySnex/InstaTracker/blob/f4f4aac74001f08344d25c11d221d3bdf722998f/Assets/Demo/info.jpg?raw=true" height="350"> 
+    </td>
+  </tr>
+</table>
